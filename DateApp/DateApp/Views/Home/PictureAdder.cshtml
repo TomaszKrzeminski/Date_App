@@ -1,0 +1,216 @@
+﻿@model UserDetailsModel
+@{
+    ViewData["Title"] = "PictureAdder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    .label{
+        min-width:200px;
+        background-color:white;
+
+    }
+
+    .img-thumbnail {
+       
+        margin-top: 30px;
+    }
+
+
+    .imageR {
+        position: relative;
+    }
+
+    .iconAction {
+
+        position: absolute;
+        bottom: 0;
+        left: 15px;
+    }
+
+    .iconAction:hover {
+        background-color:lightgray;
+    }
+
+</style>
+
+
+<form asp-action="PictureAdder">
+    <div  class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-3  col-sm-8"></div>
+            <div style=" min-height:1900px" class="col-lg-4 col-md-6  col-sm-8">
+                <div class="row">
+                    <div style="min-height:610px;border-style:solid;" class="col-lg-12">
+                        <div class="row">
+                            <div  class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class="imageR  img-thumbnail" src=@Model.MainPhotoPath alt="">
+
+                                    @if (Model.MainPhotoPath != "/AppPictures/photo.png")
+                                    {
+                                        <img class="iconAction img-thumbnail" src="~/AppPictures/remove.jpg" alt="">
+                                    }
+                                    else
+                                    {
+                                        <img class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="">
+                                    }
+
+
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class="imageR  img-thumbnail" src=@Model.PhotoPath1 alt="">
+                                    @if (Model.MainPhotoPath != "/AppPictures/photo.png")
+                                    {
+                                        <img class="iconAction img-thumbnail" src="~/AppPictures/remove.jpg" alt="">
+                                    }
+                                    else
+                                    {
+                                        <img class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="">
+                                    }
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class="imageR  img-thumbnail" src=@Model.PhotoPath2 alt="">
+                                    @if (Model.MainPhotoPath != "/AppPictures/photo.png")
+                                    {
+                                        <img class="iconAction img-thumbnail" src="~/AppPictures/remove.jpg" alt="">
+                                    }
+                                    else
+                                    {
+                                        <img class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="">
+                                    }
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class="imageR  img-thumbnail" src=@Model.PhotoPath3 alt="">
+                                    @if (Model.MainPhotoPath != "/AppPictures/photo.png")
+                                    {
+                                        <img class="iconAction img-thumbnail" src="~/AppPictures/remove.jpg" alt="">
+                                    }
+                                    else
+                                    {
+                                        <img class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="">
+                                    }
+                                </a>
+                            </div>
+                            @*<div class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 ">
+                                <a href="#">
+                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                </a>
+                            </div>*@
+                        </div>
+                       
+
+
+                    </div>
+                    <div style="min-height:200px;border-style:solid; " class="col-lg-12 form-group">
+
+                        <label class="font-weight-bold" asp-for="Description">Opis</label>
+                        <input style="height:140px" class="form-control" asp-for="Description" />
+
+                    </div>
+                    <div style="min-height:200px;border-style:solid; " class="col-lg-12 form-group">
+
+                        <label class="font-weight-bold" asp-for="JobPosition">Stanowisko</label>
+                        <input style="height:140px" class="form-control" asp-for="JobPosition" />
+
+                    </div>
+                    <div style="min-height:200px;border-style:solid; " class="col-lg-12 form-group">
+
+                        <label class="font-weight-bold" asp-for="CompanyName">Firma</label>
+                        <input style="height:140px" class="form-control" asp-for="CompanyName" />
+
+                    </div>
+                    <div style="min-height:200px;border-style:solid; " class="col-lg-12 form-group">
+
+                        <label class="font-weight-bold" asp-for="School">Szkoła</label>
+                        <input style="height:140px" class="form-control" asp-for="School" />
+
+                    </div>
+                    <div style="min-height:200px;border-style:solid; " class="col-lg-12 form-group">
+
+                        <label class="font-weight-bold" asp-for="CityOfResidence">Mieszkam w</label>
+                        <input style="height:140px" class="form-control" asp-for="CityOfResidence" />
+
+                    </div>
+                    <div>
+                        <input type="hidden" asp-for="DetailsId" />
+                    </div>
+                    <div>
+                        <input type="hidden" asp-for="UserId" />
+                    </div>
+                  <div>
+                      <button class="btn btn-warning" type="submit">Zapisz</button>
+                  </div>
+
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-3  col-sm-8"></div>
+        </div>
+    </div>
+</form>
+<div id="dialog">
+
+</div>
+
+<script>
+
+    $(document).ready(
+
+
+        function () {
+
+
+            $("#dialog").dialog({
+                autoOpen: false,
+                dialogClass: "no-close",
+                buttons: [
+                    {
+                       
+                        text: "OK",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+
+
+
+            $(".iconAction").click(function () { $("#dialog").dialog("open"); });
+
+        }
+
+
+
+    );
+
+
+
+
+</script>

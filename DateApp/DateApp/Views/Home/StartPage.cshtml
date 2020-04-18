@@ -1,0 +1,57 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+
+<style type="text/css">
+    .btn-xlarge {
+        background-color: #fc0366;
+        
+        padding: 18px 28px;
+        font-size: 22px;
+        //change this to your desired size line-height: normal;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+    }
+
+
+        .btn-xlarge:hover {
+            color: white;
+            background-color: #fc033d;
+            border-color: #fc033d; /*set the color you want here*/
+        }
+
+
+
+</style>
+
+
+<div  style="height:1024px; background: url(/AppPictures/men.jpg);" class="container-fluid">
+
+   
+    
+    <div class="row">
+        <div class="col-lg-2"><img class="rounded float-left" src="~/AppPictures/android-chrome-192x192.png" /></div><div class="col-lg-8"></div> <div class="col-lg-2 "><a style="margin-top:20px;" class="btn btn-danger" asp-action="Login" asp-controller="Account">Zaloguj się</a></div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-4"></div> <div class="col-lg-4"><h1 class="font-weight-bold text-light  display-1">Wybieraj.Rozmawiaj.</h1></div> <div class="col-lg-4"></div>
+        <div class="col-lg-4"></div> <div class="col-lg-4"><h1 class="font-weight-bold text-light display-1">Randkuj.</h1></div> <div class="col-lg-4"></div>
+    </div>
+    <div class="row">
+
+        <div class=" col-lg-4"></div> <div class="text-center col-lg-4"><a class="btn btn-info btn-xlarge" asp-action="Create" asp-controller="Admin">Zarejestruj się</a></div> <div class="col-lg-4"></div>
+    </div>
+
+   
+   
+
+</div>
+
+<script>
+   
+    //function check() { alert("check"); }
+    //check();
+</script>

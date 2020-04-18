@@ -1,0 +1,23 @@
+﻿@model IEnumerable<AppUser>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    @foreach (AppUser user in Model)
+    {
+      <div>
+          <div>@user.Id</div>
+          <div>@user.UserName</div>
+          <div>@user.Email</div>
+      </div>
+    }
+</body>
+</html>
