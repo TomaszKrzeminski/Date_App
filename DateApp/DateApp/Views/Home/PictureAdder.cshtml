@@ -5,14 +5,12 @@
 }
 
 <style type="text/css">
-    .label{
-        min-width:200px;
-        background-color:white;
-
+    .label {
+        min-width: 200px;
+        background-color: white;
     }
 
     .img-thumbnail {
-       
         margin-top: 30px;
     }
 
@@ -22,38 +20,50 @@
     }
 
     .iconAction {
-
         position: absolute;
         bottom: 0;
         left: 15px;
     }
 
-    .iconAction:hover {
-        background-color:lightgray;
+        .iconAction:hover {
+            background-color: lightgray;
+        }
+
+
+    .error {
+        color: red;
+       
+        margin-left: 15px;
+        color: red;
+        font-weight: bold;
+       
+        font-size: 22px;
+        line-height: 20px;
+       
     }
 
 </style>
 
 
 <form asp-action="PictureAdder">
-    <div  class="container-fluid">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-lg-4 col-md-3  col-sm-8"></div>
             <div style=" min-height:1900px" class="col-lg-4 col-md-6  col-sm-8">
                 <div class="row">
                     <div style="min-height:610px;border-style:solid;" class="col-lg-12">
                         <div class="row">
-                            <div  class="col-lg-6 col-md-6 ">
+                            <div class="col-lg-6 col-md-6 ">
                                 <a href="#">
                                     <img class="imageR  img-thumbnail" src=@Model.MainPhotoPath alt="">
 
                                     @if (Model.MainPhotoPath != "/AppPictures/photo.png")
                                     {
-                                        <img class="iconAction img-thumbnail" src="~/AppPictures/remove.jpg" alt="">
+                                        <img alt="MainPhotoPath" class="iconAction img-thumbnail" src="~/AppPictures/remove.jpg" alt="">
                                     }
                                     else
                                     {
-                                        <img class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="">
+                                        <img alt="MainPhotoPath" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="">
                                     }
 
 
@@ -64,11 +74,11 @@
                                     <img class="imageR  img-thumbnail" src=@Model.PhotoPath1 alt="">
                                     @if (Model.MainPhotoPath != "/AppPictures/photo.png")
                                     {
-                                        <img class="iconAction img-thumbnail" src="~/AppPictures/remove.jpg" alt="">
+                                        <img alt="PhotoPath1" class="iconAction img-thumbnail" src="~/AppPictures/remove.jpg" alt="">
                                     }
                                     else
                                     {
-                                        <img class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="">
+                                        <img alt="PhotoPath1" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="">
                                     }
                                 </a>
                             </div>
@@ -99,32 +109,32 @@
                                 </a>
                             </div>
                             @*<div class="col-lg-6 col-md-6 ">
-                                <a href="#">
-                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
-                                </a>
-                            </div>
-                            <div class="col-lg-6 col-md-6 ">
-                                <a href="#">
-                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
-                                </a>
-                            </div>
-                            <div class="col-lg-6 col-md-6 ">
-                                <a href="#">
-                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
-                                </a>
-                            </div>
-                            <div class="col-lg-6 col-md-6 ">
-                                <a href="#">
-                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
-                                </a>
-                            </div>
-                            <div class="col-lg-6 col-md-6 ">
-                                <a href="#">
-                                    <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
-                                </a>
-                            </div>*@
+                                    <a href="#">
+                                        <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                    </a>
+                                </div>
+                                <div class="col-lg-6 col-md-6 ">
+                                    <a href="#">
+                                        <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                    </a>
+                                </div>
+                                <div class="col-lg-6 col-md-6 ">
+                                    <a href="#">
+                                        <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                    </a>
+                                </div>
+                                <div class="col-lg-6 col-md-6 ">
+                                    <a href="#">
+                                        <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                    </a>
+                                </div>
+                                <div class="col-lg-6 col-md-6 ">
+                                    <a href="#">
+                                        <img class=" img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                                    </a>
+                                </div>*@
                         </div>
-                       
+
 
 
                     </div>
@@ -164,9 +174,9 @@
                     <div>
                         <input type="hidden" asp-for="UserId" />
                     </div>
-                  <div>
-                      <button class="btn btn-warning" type="submit">Zapisz</button>
-                  </div>
+                    <div>
+                        <button class="btn btn-warning" type="submit">Zapisz</button>
+                    </div>
 
                 </div>
             </div>
@@ -176,7 +186,31 @@
 </form>
 <div id="dialog">
 
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <form id="PictureAddForm" asp-action="AddPictureAsync" method="post" enctype="multipart/form-data">
+        <div>
+            <div>
+                <label>Dodaj Zdjęcie</label>
+            </div>
+            <div>
+                <input title="Musisz wybrać plik" class="required error" id="choose" type="file" name="file" @*multiple*@ />
+                <input id="PictureNumber"  style="display:none"   name="PictureNumber" value="" />
+                <input id="Upload" style="display:none" type="submit" value="Upload" />
+
+            </div>
+            
+        </div>
+
+    </form>
 </div>
+
+<div  >
+
+    
+
+    
+</div>
+
 
 <script>
 
@@ -185,16 +219,39 @@
 
         function () {
 
+            $('#PictureAddForm').validate({
+
+                errorPlacement: function (error, element) {
+                    error.insertBefore(element);
+                }
+
+            });
 
             $("#dialog").dialog({
                 autoOpen: false,
+                draggable: false,
+                resizable: false,
+                width: 500,
+                height: 400,
+                modal: true,
+                show: 'slideDown',
+                hide: 'slideUp',
                 dialogClass: "no-close",
                 buttons: [
                     {
-                       
-                        text: "OK",
+
+                        text: "Anuluj",
                         click: function () {
                             $(this).dialog("close");
+                        }
+
+
+                    },
+                    {
+
+                        text: "Potwierdź",
+                        click: function () {
+                            $("#Upload").click();
                         }
                     }
                 ]
@@ -202,7 +259,12 @@
 
 
 
-            $(".iconAction").click(function () { $("#dialog").dialog("open"); });
+            $(".iconAction").click(function () {
+               
+                var numb = $(this).attr("alt");
+                $("#PictureNumber").val(numb);
+                $("#dialog").dialog("open");
+            });
 
         }
 

@@ -13,6 +13,7 @@ namespace DateApp.Models
 
         SearchDetails GetUserDetails(string UserId);
         bool ChangeUserDetails(UserDetailsModel model);
+        bool AddPicture(SearchDetails details,string UserId);
 
     }
 
@@ -26,15 +27,35 @@ namespace DateApp.Models
             context = ctx;
         }
 
-        public bool ChangeUserDetails(UserDetailsModel model)
+        public bool AddPicture(SearchDetails details, string UserId)
         {
 
             try
             {
 
+                SearchDetails d = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+
+                d = details;
+
+                context.SaveChanges();
 
 
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
 
+
+        }
+
+        public bool ChangeUserDetails(UserDetailsModel model)
+        {
+
+            try
+            {             
+                
                 if (model.DetailsId != 0)
                 {
 
@@ -51,20 +72,7 @@ namespace DateApp.Models
                     details.UserId = model.UserId;
 
                     AppUser user = context.Users.Find(model.UserId);
-                    //user.Details = new SearchDetails()
-                    //{
-                    //    MainPhotoPath = model.MainPhotoPath,
-                    //    PhotoPath1 = model.PhotoPath1,
-                    //    PhotoPath2 = model.PhotoPath2,
-                    //    PhotoPath3 = model.PhotoPath3,
-                    //    Description = model.Description,
-                    //    CityOfResidence = model.CityOfResidence,
-                    //    JobPosition = model.JobPosition,
-                    //    CompanyName = model.CompanyName,
-                    //    School = model.School,
-                    //    UserId = model.UserId,
-                    //    AppUserId=model.UserId
-                    //};
+                  
 
                     user.Details = details;
 
