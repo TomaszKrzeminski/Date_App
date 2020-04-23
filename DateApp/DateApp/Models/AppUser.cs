@@ -33,6 +33,13 @@ namespace DateApp.Models
 
     public class SearchDetails
     {
+        public SearchDetails()
+        {
+
+        }
+
+        
+
         public int SearchDetailsId { get; set; }
         public string UserId { get; set; }
         public string SearchSex { get; set; }
@@ -54,6 +61,8 @@ namespace DateApp.Models
 
        public string AppUserId { get; set; }
         public AppUser User { get; set; }
+
+       
     }
 
 

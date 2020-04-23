@@ -24,6 +24,9 @@ namespace DateApp
 
         public void ConfigureServices(IServiceCollection services)
         {
+           //
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+            //
 
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
 

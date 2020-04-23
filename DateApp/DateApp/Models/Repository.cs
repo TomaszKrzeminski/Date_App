@@ -13,7 +13,8 @@ namespace DateApp.Models
 
         SearchDetails GetUserDetails(string UserId);
         bool ChangeUserDetails(UserDetailsModel model);
-        bool AddPicture(SearchDetails details,string UserId);
+        bool AddPicture( string UserId,PictureType type,string FilePath);
+        bool RemovePicture(string UserId, PictureType type);
 
     }
 
@@ -27,35 +28,45 @@ namespace DateApp.Models
             context = ctx;
         }
 
-        public bool AddPicture(SearchDetails details, string UserId)
+        public bool AddPicture(string UserId, PictureType type, string FilePath)
         {
+
+            PictureSaver main = new MainPhoto();
+            PictureSaver photo1 = new Photo1();
+            PictureSaver photo2 = new Photo2();
+            PictureSaver photo3 = new Photo3();
+
+            main.setNumber(photo1);
+            photo1.setNumber(photo2);
+            photo2.setNumber(photo3);
 
             try
             {
-
-                SearchDetails d = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
-
-                d = details;
-
+                SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+                main.ForwardRequest(type, details, FilePath);
                 context.SaveChanges();
-
-
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
 
 
+
+
+
+
         }
+
+       
 
         public bool ChangeUserDetails(UserDetailsModel model)
         {
 
             try
-            {             
-                
+            {
+
                 if (model.DetailsId != 0)
                 {
 
@@ -72,7 +83,7 @@ namespace DateApp.Models
                     details.UserId = model.UserId;
 
                     AppUser user = context.Users.Find(model.UserId);
-                  
+
 
                     user.Details = details;
 
@@ -91,7 +102,7 @@ namespace DateApp.Models
                     details.CompanyName = model.CompanyName;
                     details.School = model.School;
                     details.UserId = model.UserId;
-                   
+
 
                     AppUser user = context.Users.Find(model.UserId);
                     user.Details = new SearchDetails()
@@ -106,18 +117,18 @@ namespace DateApp.Models
                         CompanyName = model.CompanyName,
                         School = model.School,
                         UserId = model.UserId,
-                      
+
                     };
 
                     context.SaveChanges();
 
                 }
 
-               
+
                 return true;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
 
@@ -128,13 +139,38 @@ namespace DateApp.Models
         {
             try
             {
-                AppUser user = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First();
-                
+                AppUser user = context.Users.AsNoTracking().Include(x => x.Details).Where(u => u.Id == UserId).First(); //
+
                 return user.Details;
             }
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public bool RemovePicture(string UserId, PictureType type)
+        {
+
+            PictureRemover main = new MainPhotoRemove();
+            PictureRemover photo1 = new Photo1Remove();
+            PictureRemover photo2 = new Photo2Remove();
+            PictureRemover photo3 = new Photo3Remove();
+
+            main.setNumber(photo1);
+            photo1.setNumber(photo2);
+            photo2.setNumber(photo3);
+
+            try
+            {
+                SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+                main.ForwardRequest(type, details);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }
