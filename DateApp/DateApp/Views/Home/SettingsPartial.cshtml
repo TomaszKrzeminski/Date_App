@@ -1,0 +1,292 @@
+﻿@model UserSettingsModel
+
+
+<style type="text/css">
+
+    .box {
+        background-color: #EBE9E9;
+    }
+
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color:deeppink;
+        /*#2196F3*/
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+
+
+
+</style>
+
+
+
+<div class="row">
+    <div style="min-height:1900px;border-style:solid;" class="col-lg-6">
+        <div class="row">
+            <div class="col-lg-12" style="min-height:100px;border-style:solid;background-color:#fd267d;">
+                <div class="row">
+                    <div class="col-lg-4" style="max-height:80px;max-width:80px;"> <img alt="0" class="img-thumbnail" src=@Model.MainPhotoPath></div>
+                    <div class="col-lg-8"> <label>@Model.Name  @Model.Surname</label></div>
+                </div>
+
+
+
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <label>Dodatkowe Obcje</label>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <label>Dodatkowe Obcje Prenium</label>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <label>Liczba lików   @Model.Likes</label>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <label>Liczba super lików  @Model.SuperLikes     </label>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <label>Ustawienia</label>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <label>@Model.Email</label>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <a asp-action="ChangePhoneNumber" asp-controller="Home" class="btn btn-primary"> @Model.PhoneNumber</a>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+            <label>Lokalizacja</label>   <h3 id="GeoLocation"></h3>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <form id="DistanceForm" asp-action="SetDistance" asp-controller="Home" method="post">
+                    <div  id="sliderD"></div>
+                    <div class="row">
+
+                        <label class="col col-lg-6 ">Odległość</label>
+                       
+                        <input class="col col-lg-6 form-control" @*type="hidden"*@ asp-for="Distance" id="slideinputDistance" />
+                      
+                    </div>
+
+
+                </form>
+
+               
+            </div>
+            <div class="box col-lg-12 " style="min-height:100px;border-style:solid;">
+                <div class="row">
+                    <div class="col col-lg-4"><label>Szukam</label></div>
+                    <div class="col col-lg-2"></div>
+                    <div class="col col-lg-6">
+                        <form asp-action="SetSearchSex" asp-controller="Home">
+                            <select id="SelectSex" asp-for="SearchSex" class="browser-default custom-select" style="max-width:100px">
+
+                                <option value="Kobieta">Kobieta</option>
+                                <option value="Mężczyzna">Mężczyzna</option>
+                                <option value="Inne">Inne</option>
+                            </select>
+
+                        </form>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <form id="AgeForm" asp-action="SetAge" asp-controller="Home" method="post">
+                    <div id="sliderA"></div>
+                    <div class="row">
+
+                        <label class="col col-lg-6 ">Wiek</label>
+
+                        <input class="col col-lg-6 form-control" @*type="hidden" *@ asp-for="SearchAge" id="slideinputAge" />
+
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+
+                <form asp-action="SetShowProfile">
+                    <label class="switch">
+                        <input type="checkbox" asp-for="ShowProfile" id="inputShowProfile">
+                        <span class="slider"></span>
+                    </label>
+                    <label>Pokaż Profil</label>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6"></div>
+</div>
+
+<script>
+
+    ///SearchAge
+
+    $("#sliderA").slider({
+        value: @Model.SearchAge,
+        min: 18,
+        max: 100,
+        step: 1,
+        slide: function (event, ui) {
+                   
+            $("#slideinputAge").val(ui.value).change();
+        }
+    });
+
+
+    $(document).on('change propertychange', '#slideinputAge', function () {
+        $.post("/Home/SetAge",
+            {
+                Age: $('#slideinputAge').val(),
+            }
+            ,
+            function (data, status) {
+
+            });
+    });
+          
+    //SearchDistance
+
+    $("#sliderD").slider({
+        value: @Model.Distance,
+        min: 0,
+        max: 100,
+        step: 5,
+        slide: function (event, ui) {
+            //$("#slideDD").html(ui.value);           
+            $("#slideinputDistance").val(ui.value).change();
+        }
+    });
+
+
+    $(document).on('change propertychange', '#slideinputDistance', function () {
+        $.post("/Home/SetDistance",
+            {
+                Distance: $('#slideinputDistance').val(),
+            }
+            ,
+            function (data, status) {
+
+            });
+    });
+
+    //SelectSex
+
+
+    $('#SelectSex').change(function () {
+        var sex = $("#SelectSex option:selected").text();
+        $.post("/Home/SetSearchSex",
+            {
+                SearchSex: sex,
+
+            }
+            ,
+            function (data, status) {
+
+            });
+
+    });
+
+    //ShowProfile
+    $(document).on('change propertychange', '#inputShowProfile', function () {
+        $.post("/Home/SetShowProfile",
+            {
+                Show: $('#inputShowProfile').val(),
+            }
+            ,
+            function (data, status) {
+
+            });
+    });
+
+
+   
+    
+
+   
+
+    ///// Geolocation
+
+
+
+
+
+
+
+    var key = '40d73d471222945bade47359c39e9236';
+    var ip = '5.184.82.191';
+    fetch('http://api.ipstack.com/'+ip+'?access_key='+key
+        )
+        .then((response) => {
+            var data = response.json();
+            return data;
+
+        }).then
+        ((data) => {
+
+            alert(data.city);
+            var text = data.city;
+            $("#GeoLocation").empty();
+            $("#GeoLocation").append(text);
+        })
+        ;
+
+
+
+
+
+</script>

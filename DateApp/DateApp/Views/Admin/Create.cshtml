@@ -24,15 +24,15 @@
                     <label asp-for="Email">Email</label>
                     <input class="form-control" asp-for="Email" />
                 </div>
-              
+
 
                 <div class="form-group">
                     <lablel asp-for="Sex">Płeć</lablel>
-                    <select class="browser-default custom-select" asp-for="Sex" >
+                    <select class="browser-default custom-select" asp-for="Sex">
                         <option asp-for="Sex" value="Mężczyzna">Mężczyzna</option>
                         <option asp-for="Sex" value="Kobieta">Kobieta</option>
                         <option asp-for="Sex" value="Inne">Inne</option>
-                       
+
                     </select>
 
 
@@ -52,6 +52,7 @@
                     <label asp-for="Password">Hasło</label>
                     <input class="form-control" asp-for="Password" />
                 </div>
+             
                 <button class="btn btn-warning" type="submit">Utwórz</button>
                 <a class="btn btn-danger" asp-action="Index">Anuluj</a>
 

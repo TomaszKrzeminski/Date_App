@@ -12,9 +12,16 @@ namespace DateApp.Models
     {
 
         SearchDetails GetUserDetails(string UserId);
+
         bool ChangeUserDetails(UserDetailsModel model);
-        bool AddPicture( string UserId,PictureType type,string FilePath);
+        bool AddPicture(string UserId, PictureType type, string FilePath);
         bool RemovePicture(string UserId, PictureType type);
+        string GetPhoneNumber(string Id);
+        bool ChangePhoneNumber(string Id, string PhoneNumber);
+        bool ChangeSearchSex(string Sex,string Id);
+        bool SetDistance(string Id, int Distance);
+        bool SetSearchAge(string UserId, int Age);
+        bool SetShowProfile(string Id,bool Show);
 
     }
 
@@ -51,15 +58,51 @@ namespace DateApp.Models
             {
                 return false;
             }
+        }
 
+        public bool ChangePhoneNumber(string Id, string PhoneNumber)
+        {
+
+            try
+            {
+                AppUser user = context.Users.Where(u => u.Id == Id).First();
+                user.PhoneNumber = PhoneNumber;
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool ChangeSearchSex(string Sex,string Id)
+        {
+
+            if (Sex != null)
+            {
+                try
+                {
+                    SearchDetails model = context.Users.Include(s=>s.Details).Where(u => u.Id == Id).First().Details;
+                    model.SearchSex = Sex;
+                    context.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
 
 
 
 
 
         }
-
-       
 
         public bool ChangeUserDetails(UserDetailsModel model)
         {
@@ -135,13 +178,26 @@ namespace DateApp.Models
             }
         }
 
+        public string GetPhoneNumber(string UserId)
+        {
+            try
+            {
+                string phone = context.Users.Where(u => u.Id == UserId).First().PhoneNumber;
+
+                return phone;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public SearchDetails GetUserDetails(string UserId)
         {
             try
             {
-                AppUser user = context.Users.AsNoTracking().Include(x => x.Details).Where(u => u.Id == UserId).First(); //
-
-                return user.Details;
+                SearchDetails details = context.SearchDetails.Include(u => u.User).Where(s => s.UserId == UserId).First();
+                return details;
             }
             catch (Exception ex)
             {
@@ -165,6 +221,57 @@ namespace DateApp.Models
             {
                 SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
                 main.ForwardRequest(type, details);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool SetDistance(string UserId, int Distance)
+        {
+            try
+            {
+                SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+                details.SearchDistance = Distance;
+                context.SaveChanges();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+
+
+
+        }
+
+        public bool SetSearchAge(string UserId, int Age)
+        {
+            try
+            {
+                SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+                details.SearchAge = Age;
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+
+
+        }
+
+        public bool SetShowProfile(string UserId, bool Show)
+        {
+            try
+            {
+                SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+                details.ShowProfile = Show;
                 context.SaveChanges();
                 return true;
             }

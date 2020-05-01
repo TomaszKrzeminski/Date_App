@@ -43,7 +43,7 @@ namespace DateApp.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, details.Password, false, false);
                     if(result.Succeeded)
                     {
-                        return RedirectToRoute(new { controller = "Home", action = "PictureAdder", Id = "MyId" });
+                        return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
                     }
                 }
                 ModelState.AddModelError(nameof(LoginModel.Email), "Nieprawidłowa nazwa użytkownika lub hasło");

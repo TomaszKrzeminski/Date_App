@@ -53,6 +53,7 @@ namespace DateApp.Models
         public string PhotoPath3 { get; set; }
         public string Description { get; set; }
         public string CityOfResidence { get; set; }
+        public string Localization { get; set; }
         public string JobPosition { get; set; }
         public string CompanyName { get; set; }
         public string School { get; set; }

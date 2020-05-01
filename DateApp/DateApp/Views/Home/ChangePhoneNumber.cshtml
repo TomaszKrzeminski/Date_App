@@ -1,0 +1,24 @@
+﻿@model ChangePhoneNumberView
+@{
+    ViewData["Title"] = "ChangePhoneNumber";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col col-lg-4"></div>
+        <div class="col col-lg-4">
+            <h1 class="text-center">Zmień Numer</h1>
+            <form asp-action="ChangePhoneNumber" method="post" asp-controller="Home">
+                <div class="btn-group">
+                    <label class="font-weight-bold" asp-for="PhoneNumber">Numer Telefonu</label>
+                    <input  class="form-control" asp-for="PhoneNumber" />
+                    <input type="hidden" class="form-control" asp-for="UserId" />
+                    <button type="submit" class="btn btn-danger form-control">Zapisz</button>
+                </div>
+            </form>
+        </div>
+        <div class="col col-lg-4"></div>
+    </div>
+</div>
+

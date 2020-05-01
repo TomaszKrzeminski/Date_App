@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using DateApp.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace DateApp.Controllers
 {
@@ -25,6 +24,88 @@ namespace DateApp.Controllers
         }
 
 
+        
+
+        [HttpPost]
+        public IActionResult SetShowProfile(bool Show)
+        {
+            string Id = userManager.GetUserId(HttpContext.User);
+            bool succes = repository.SetShowProfile(Id, Show);
+            if (succes)
+            {
+                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
+            }
+            else
+            {
+                string Message = "Zmiana wieku nie powiodła się";
+                return View("Error", Message);
+            }
+
+        }
+
+
+
+
+        [HttpPost]
+        public IActionResult SetAge(int Age)
+        {
+            string Id = userManager.GetUserId(HttpContext.User);
+            bool succes = repository.SetSearchAge(Id, Age);
+            if (succes)
+            {
+                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
+            }
+            else
+            {
+                string Message = "Zmiana wieku nie powiodła się";
+                return View("Error", Message);
+            }
+
+        }
+
+        [HttpPost]
+        public IActionResult SetDistance(int Distance)
+        {
+            string Id = userManager.GetUserId(HttpContext.User);
+            bool succes = repository.SetDistance(Id, Distance);
+
+            if (succes)
+            {
+                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
+            }
+            else
+            {
+                string Message = "Zmiana Dystansu nie powiodła się";
+                return View("Error", Message);
+            }
+
+        }
+
+
+        [HttpPost]
+        public IActionResult SetSearchSex(string SearchSex)
+        {
+
+            string Id = userManager.GetUserId(HttpContext.User);
+            bool succes = repository.ChangeSearchSex(SearchSex, Id);
+
+            if (succes)
+            {
+                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
+            }
+            else
+            {
+                string Message = "Zmiana poszukiwanej płci nie powiodła się";
+                return View("Error", Message);
+            }
+
+
+
+        }
+
+
+
+
         public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env)
         {
             repository = repo;
@@ -37,15 +118,68 @@ namespace DateApp.Controllers
             return View();
         }
 
-        public IActionResult PictureAdder()
+
+
+        public IActionResult ChangePhoneNumber()
         {
+            ChangePhoneNumberView model = new ChangePhoneNumberView();
+            string Id = userManager.GetUserId(HttpContext.User);
+            model.PhoneNumber = repository.GetPhoneNumber(Id);
+            model.UserId = Id;
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ChangePhoneNumber(ChangePhoneNumberView model)
+        {
+            bool succes = false;
+            succes = repository.ChangePhoneNumber(model.UserId, model.PhoneNumber);
+            if (succes)
+            {
+                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
+            }
+            else
+            {
+                string Message = "Zmiana numeru nie powiodła się";
+                return View("Error", Message);
+            }
+
+            return View();
+        }
+
+
+        public IActionResult Panel()
+        {
+
             string Id = userManager.GetUserId(HttpContext.User);
 
             SearchDetails details = repository.GetUserDetails(Id);
-            UserDetailsModel model = new UserDetailsModel() { DetailsId = details.SearchDetailsId, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = Id };
+            UserDetailsModel detailsmodel = new UserDetailsModel() { DetailsId = details.SearchDetailsId, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = Id };
+
+            UserSettingsModel settingsmodel = new UserSettingsModel() { MainPhotoPath = details.MainPhotoPath, Name = details.User.UserName, Surname = details.User.Surname, Likes = details.Likes, SuperLikes = details.SuperLikes, Email = details.User.Email, PhoneNumber = details.User.PhoneNumber ?? "Update", Localization = details.CityOfResidence, SearchAge = details.SearchAge, Distance = details.SearchDistance, SearchSex = details.SearchSex ?? "Male", ShowProfile = details.ShowProfile };
+            settingsmodel.SetSex(details.User);
+
+            PanelViewModel model = new PanelViewModel(detailsmodel, settingsmodel);
 
             return View(model);
         }
+
+
+
+
+
+        //public IActionResult PictureAdder()
+        //{
+        //    string Id = userManager.GetUserId(HttpContext.User);
+
+        //    SearchDetails details = repository.GetUserDetails(Id);
+        //    UserDetailsModel model = new UserDetailsModel() { DetailsId = details.SearchDetailsId, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = Id };
+
+        //    UserSettingsModel settings = new UserSettingsModel() {Name=details.User.UserName,Surname=details.User.Surname, Likes=details.Likes,SuperLikes=details.SuperLikes,Email= details.User.Email,PhoneNumber=details.User.PhoneNumber??"Update",Localization=details.CityOfResidence,SearchAge=details.SearchAge,Distance=details.SearchDistance,SearchSex=details.SearchSex??"Male",ShowProfile=details.ShowProfile };
+        //    settings.SetSex(details.User);
+
+        //    return View(model);
+        //}
 
         [HttpPost]
         public IActionResult PictureAdder(UserDetailsModel model)
@@ -53,7 +187,7 @@ namespace DateApp.Controllers
             bool success = repository.ChangeUserDetails(model);
             if (success)
             {
-                return RedirectToRoute(new { controller = "Home", action = "PictureAdder", Id = "MyId" });
+                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
             }
             else
             {
@@ -83,7 +217,7 @@ namespace DateApp.Controllers
 
             if (success)
             {
-                return RedirectToRoute(new { controller = "Home", action = "PictureAdder", Id = "MyId" });
+                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
             }
             else
             {
@@ -137,7 +271,7 @@ namespace DateApp.Controllers
 
                 if (success)
                 {
-                    return RedirectToRoute(new { controller = "Home", action = "PictureAdder", Id = "MyId" });
+                    return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
                 }
                 else
                 {
@@ -148,7 +282,7 @@ namespace DateApp.Controllers
 
 
             }
-            return RedirectToRoute(new { controller = "Home", action = "PictureAdder", Id = "MyId" });
+            return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
 
 
         }

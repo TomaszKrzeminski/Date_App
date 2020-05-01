@@ -1,0 +1,194 @@
+﻿@model UserDetailsModel
+
+
+
+
+
+
+
+
+<div style=" min-height:1900px" class="col-lg-4 col-md-6  col-sm-8">
+    <div class="row">
+        <div style="min-height:610px;" class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 ">
+                    <a href="#">
+                        <img class="imageR  img-thumbnail" src=@Model.MainPhotoPath alt="">
+
+                        @if (Model.MainPhotoPath != "/AppPictures/photo.png")
+                        {
+                            <img alt="0" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
+                        }
+                        else
+                        {
+                            <img alt="0" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
+                        }
+
+
+                    </a>
+                </div>
+                <div class="col-lg-6 col-md-6 ">
+                    <a href="#">
+                        <img class="imageR  img-thumbnail" src=@Model.PhotoPath1 alt="">
+                        @if (Model.PhotoPath1 != "/AppPictures/photo.png")
+                        {
+                            <img alt="1" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
+                        }
+                        else
+                        {
+                            <img alt="1" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
+                        }
+                    </a>
+                </div>
+                <div class="col-lg-6 col-md-6 ">
+                    <a href="#">
+                        <img class="imageR  img-thumbnail" src=@Model.PhotoPath2 alt="">
+                        @if (Model.PhotoPath2 != "/AppPictures/photo.png")
+                        {
+                            <img class="Remove img-thumbnail" src="~/AppPictures/remove.png" alt="2">
+                        }
+                        else
+                        {
+                            <img class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="2">
+                        }
+                    </a>
+                </div>
+                <div class="col-lg-6 col-md-6 ">
+                    <a href="#">
+                        <img class="imageR  img-thumbnail" src=@Model.PhotoPath3 alt="">
+                        @if (Model.PhotoPath3 != "/AppPictures/photo.png")
+                        {
+                            <img class="Remove img-thumbnail" src="~/AppPictures/remove.png" alt="3">
+                        }
+                        else
+                        {
+                            <img class="iconAction img-thumbnail" src="~/AppPictures/add.jpg" alt="3">
+                        }
+                    </a>
+                </div>
+
+            </div>
+
+
+
+        </div>
+        <div style="min-height:200px; " class="col-lg-12 form-group">
+
+            <label class="font-weight-bold" asp-for="Description">Opis</label>
+            <input style="height:140px" class="form-control" asp-for="Description" />
+
+        </div>
+        <div style="min-height:200px; " class="col-lg-12 form-group">
+
+            <label class="font-weight-bold" asp-for="JobPosition">Stanowisko</label>
+            <input style="height:140px" class="form-control" asp-for="JobPosition" />
+
+        </div>
+        <div style="min-height:200px; " class="col-lg-12 form-group">
+
+            <label class="font-weight-bold" asp-for="CompanyName">Firma</label>
+            <input style="height:140px" class="form-control" asp-for="CompanyName" />
+
+        </div>
+        <div style="min-height:200px; " class="col-lg-12 form-group">
+
+            <label class="font-weight-bold" asp-for="School">Szkoła</label>
+            <input style="height:140px" class="form-control" asp-for="School" />
+
+        </div>
+        <div style="min-height:200px; " class="col-lg-12 form-group">
+
+            <label class="font-weight-bold" asp-for="CityOfResidence">Mieszkam w</label>
+            <input style="height:140px" class="form-control" asp-for="CityOfResidence" />
+
+        </div>
+        <div>
+            <input type="hidden" asp-for="DetailsId" />
+        </div>
+        <div>
+            <input type="hidden" asp-for="UserId" />
+        </div>
+        <div>
+            <button class="btn btn-warning" type="submit">Zapisz</button>
+        </div>
+
+    </div>
+
+
+
+   
+
+
+</div>
+
+
+<script>
+
+    $(document).ready(
+
+        function () {
+
+            $('#PictureAddForm').validate({
+
+                errorPlacement: function (error, element) {
+                    error.insertBefore(element);
+                }
+
+            });
+
+            $("#dialog").dialog({
+                autoOpen: false,
+                draggable: false,
+                resizable: false,
+                width: 500,
+                height: 400,
+                modal: true,
+                show: 'slideDown',
+                hide: 'slideUp',
+                dialogClass: "no-close",
+                buttons: [
+                    {
+
+                        text: "Anuluj",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+
+
+                    },
+                    {
+
+                        text: "Potwierdź",
+                        click: function () {
+                                                    
+                            $("#Upload").click();
+                        }
+                    }
+                ]
+            });
+
+
+
+            $(".iconAction").click(function () {
+
+                var numb = $(this).attr("alt");
+
+                $("#PictureNumber").val(numb);
+                $("#dialog").dialog("open");
+            });
+
+
+            $(".Remove").click(function () {
+
+
+                var numb = $(this).attr("alt");
+                $("#RemovePicture").val(numb);
+                $("#RemoveForm").submit();
+
+            });
+
+        }
+
+    );
+
+</script>

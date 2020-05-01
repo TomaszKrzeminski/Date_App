@@ -1,0 +1,95 @@
+﻿@model PanelViewModel
+@{
+    ViewData["Title"] = "Panel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    .label {
+        min-width: 200px;
+        background-color: white;
+    }
+
+    .img-thumbnail {
+        margin-top: 30px;
+    }
+
+
+    .imageR {
+        position: relative;
+    }
+
+    .iconAction {
+        position: absolute;
+        bottom: 0;
+        left: 15px;
+    }
+
+    .Remove {
+        position: absolute;
+        bottom: 0;
+        left: 15px;
+    }
+
+    .iconAction:hover {
+        background-color: lightgray;
+    }
+
+
+    .error {
+        color: red;
+        margin-left: 15px;
+        color: red;
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 20px;
+    }
+</style>
+
+
+<form asp-action="PictureAdder">
+    <div id="Pan" class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-3  col-sm-8">
+                @Html.Partial("SettingsPartial", Model.settingsmodel)
+            </div>
+            @Html.Partial("DetailsPartial", Model.detailsmodel)
+            <div class="col-lg-4 col-md-3  col-sm-8"></div>
+        </div>
+    </div>
+</form>
+
+
+
+<div id="dialog">
+
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <form id="PictureAddForm" asp-action="AddPictureAsync" method="post" enctype="multipart/form-data">
+        <div>
+            <div>
+                <label>Dodaj Zdjęcie</label>
+            </div>
+            <div>
+                <input title="Musisz wybrać plik" class="required error" id="choose" type="file" name="file" @*multiple*@ />
+                <input id="PictureNumber" style="display:none" name="PictureNumber" value="" />
+                <input id="Upload" style="display:none" type="submit" value="Upload" />
+
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+
+<div>
+    <form id="RemoveForm" asp-action="RemovePicture" asp-controller="Home" method="post">
+        <input id="RemovePicture" style="display:none" name="Number" value="" />
+    </form>
+</div>
+
+
+
+
+
+
