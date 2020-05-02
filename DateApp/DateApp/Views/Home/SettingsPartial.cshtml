@@ -103,7 +103,8 @@
                 <a asp-action="ChangePhoneNumber" asp-controller="Home" class="btn btn-primary"> @Model.PhoneNumber</a>
             </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
-            <label>Lokalizacja</label>   <h3 id="GeoLocation"></h3>
+                <label>Lokalizacja</label>   <h3 id="GeoLocation"></h3>
+                <h3 id="GeoLocation2"></h3>
             </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <form id="DistanceForm" asp-action="SetDistance" asp-controller="Home" method="post">
@@ -261,31 +262,119 @@
 
     ///// Geolocation
 
+   
+
+    
+
+   
+
+  //$.getJSON('https://api.ipify.org?format=jsonp&callback=?', function (data) {
+
+      
+
+  //    var key = '40d73d471222945bade47359c39e9236';
+  //    var ip = data.ip;
+  //    fetch('http://api.ipstack.com/' + ip + '?access_key=' + key
+  //    )
+  //        .then((response) => {
+  //            var x = response.json();
+  //            return x;
+
+  //        }).then
+  //        ((dat) => {
+
+
+  //            var text = dat.city;
+  //            $("#GeoLocation").empty();
+  //            $("#GeoLocation").append(text);
+  //        })
+  //        ;
 
 
 
+       
+  //  });
+   
 
+///GeoLocation 2
 
+    function showPosition(position) {
+       
 
-    var key = '40d73d471222945bade47359c39e9236';
-    var ip = '5.184.82.191';
-    fetch('http://api.ipstack.com/'+ip+'?access_key='+key
+       
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+
+        var text = latitude + " " + longitude;     
+               
+        fetch('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + latitude + '&lon=' + longitude
         )
-        .then((response) => {
-            var data = response.json();
-            return data;
+            .then((response) => {
+                var x = response.json();
+                return x;
 
-        }).then
-        ((data) => {
+            }).then
+            ((dat) => {               
 
-            alert(data.city);
-            var text = data.city;
-            $("#GeoLocation").empty();
-            $("#GeoLocation").append(text);
-        })
-        ;
+                if (dat.features[0].properties.address.city != null) {
+                    text = dat.features[0].properties.address.city;
+                }
+                else if (dat.features[0].properties.address.village != null) {
+                    text = dat.features[0].properties.address.village;
+                }
+                else if (dat.features[0].properties.address.town != null) {
+                    text = dat.features[0].properties.address.town;
+                }
+
+                else {
+                    $.getJSON('https://api.ipify.org?format=jsonp&callback=?', function (data) {
 
 
+
+                        var key = '40d73d471222945bade47359c39e9236';
+                        var ip = data.ip;
+                        fetch('http://api.ipstack.com/' + ip + '?access_key=' + key
+                        )
+                            .then((response) => {
+                                var x = response.json();
+                                return x;
+
+                            }).then
+                            ((dat) => {
+
+
+                                var text = dat.city;
+                                $("#GeoLocation2").empty();
+                                $("#GeoLocation2").append(text);
+                            })
+                            ;
+
+
+
+
+                    });
+                }
+
+                $("#GeoLocation2").empty();
+                $("#GeoLocation2").append(text);
+            });
+                      
+    }
+
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+   
+
+
+    getLocation();
+
+   
 
 
 
