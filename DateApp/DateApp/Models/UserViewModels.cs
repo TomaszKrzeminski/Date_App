@@ -60,6 +60,11 @@ namespace DateApp.Models
 
 
 
+
+
+
+
+
     public class UserDetailsModel
     {
         public int DetailsId { get; set; }
@@ -124,6 +129,50 @@ namespace DateApp.Models
 
     }
 
+
+    //////PairController
+
+    public class PairViewModel
+    {
+        public MessageViewModel messageview;
+        public MessageOptionsViewModel messageOptionsview;
+        public PairPartialViewModel pairpartial;
+        public PairOptionsViewModel pairoptions;
+
+        public PairViewModel()
+        {
+
+        }
+
+
+        public PairViewModel( MessageViewModel messageview,MessageOptionsViewModel messageOptionsview , PairPartialViewModel pairpartial , PairOptionsViewModel pairoptions )        
+        {
+            this.messageview = messageview;
+            this.messageOptionsview = messageOptionsview;
+            this.pairpartial = pairpartial;
+            this.pairoptions = pairoptions;
+        }
+
+
+    }
+
+    public class MessageOptionsViewModel
+    {
+
+    }
+
+    public class MessageViewModel
+    {
+
+    }
+    public class PairPartialViewModel
+    {
+
+    }
+    public class PairOptionsViewModel
+    {
+
+    }
 
 
 }

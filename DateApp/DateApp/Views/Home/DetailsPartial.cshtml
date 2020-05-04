@@ -13,6 +13,7 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 ">
                     <a href="#">
+                        <input type="hidden" asp-for="MainPhotoPath" />
                         <img class="imageR  img-thumbnail" src=@Model.MainPhotoPath alt="">
 
                         @if (Model.MainPhotoPath != "/AppPictures/photo.png")
@@ -29,6 +30,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 ">
                     <a href="#">
+                        <input type="hidden" asp-for="PhotoPath1" />
                         <img class="imageR  img-thumbnail" src=@Model.PhotoPath1 alt="">
                         @if (Model.PhotoPath1 != "/AppPictures/photo.png")
                         {
@@ -42,6 +44,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 ">
                     <a href="#">
+                        <input type="hidden" asp-for="PhotoPath2" />
                         <img class="imageR  img-thumbnail" src=@Model.PhotoPath2 alt="">
                         @if (Model.PhotoPath2 != "/AppPictures/photo.png")
                         {
@@ -55,6 +58,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 ">
                     <a href="#">
+                        <input type="hidden" asp-for="PhotoPath3" />
                         <img class="imageR  img-thumbnail" src=@Model.PhotoPath3 alt="">
                         @if (Model.PhotoPath3 != "/AppPictures/photo.png")
                         {

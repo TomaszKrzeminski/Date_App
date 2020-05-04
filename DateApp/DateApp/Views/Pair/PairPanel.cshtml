@@ -1,0 +1,75 @@
+﻿@model PairViewModel
+@{
+    ViewData["Title"] = "Panel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    .label {
+        min-width: 200px;
+        background-color: white;
+    }
+
+    .img-thumbnail {
+        margin-top: 30px;
+    }
+
+
+    .imageR {
+        position: relative;
+    }
+
+    .iconAction {
+        position: absolute;
+        bottom: 0;
+        left: 15px;
+    }
+
+    .Remove {
+        position: absolute;
+        bottom: 0;
+        left: 15px;
+    }
+
+    .iconAction:hover {
+        background-color: lightgray;
+    }
+
+
+    .error {
+        color: red;
+        margin-left: 15px;
+        color: red;
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 20px;
+    }
+</style>
+
+
+
+<div  class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4 col-md-3  col-sm-1">
+            @Html.Partial("PairOptionsPartial", Model.pairpartial)
+        </div>
+        <div class="col-lg-4 col-md-3  col-sm-8">
+            @Html.Partial("PairPartial", Model.pairoptions)
+        </div>
+
+        <div class="col-lg-4 col-md-3  col-sm-1"></div>
+    </div>
+</div>
+
+
+
+@*@Html.Partial("MessageOptionsPartial", Model.messageview)*@
+
+@*@Html.Partial("MessagePartial", Model.messageOptionsview)*@
+
+
+
+
+
+
+
