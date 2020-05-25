@@ -1,24 +1,167 @@
-﻿
+﻿@model PairPartialViewModel
 
 
 
-<div style=" min-height:1900px; border:solid;" >
+<div id="PartialMatch" style=" min-height:1900px; border:solid;">
     <div class="row">
         <div style="min-height:610px;" class="col-lg-12">
-            <div class="row">
 
-            </div>
+
+            @if (Model.match != null&&Model.match.PairId!="")
+            {
+                <div class="row">
+                    <div class="col-lg-12">
+                        <img alt="0" class="img-thumbnail" src="@Model.match.PairMainPhotoPath" style="width:500px;height:500px;">
+                        <p>@Model.match.PairId</p>
+                    </div>
+
+
+                    <div class="choose  col-lg-12">
+                        <form id="NextMatchCancel" asp-action="ShowNextMatch" asp-controller="Pair">
+                            <input id="CancelId" name="Id" type="hidden" value="@Model.match.PairId">
+                            <input id="CancelDecision" name="Decision" type="hidden" value="Cancel" />
+                            <button type="button" class="btn btn-danger">Odrzuć</button>
+
+                        </form>
+                        <form id="NextMatchAccept" asp-action="ShowNextMatch" asp-controller="Pair">
+                            <input id="AcceptId" type="hidden" value="@Model.match.PairId">
+                            <input id="AcceptDecision" type="hidden" value="Accept" />
+                            <button type="button" class="btn btn-warning">Potwierdź</button>
+                        </form>
+                        <form id="NextMatchSuperLike" asp-action="ShowNextMatch" asp-controller="Pair">
+                            <input id="SuperLikeId" type="hidden" value="@Model.match.PairId">
+                            <input id="SuperLikeDecision" type="hidden" value="SuperLike" />
+                            <button type="button" class="btn btn-info">Super Like</button>
+                        </form>
+
+
+
+
+                    </div>
+                </div>
+            }
+
+
+
+
+
+
 
         </div>
-
-
-
     </div>
 
 
 </div>
 
+<script>
 
+
+    $("#NextMatchCancel").on("click", function () {
+
+
+        var data = {};
+        data["Id"] = $("#CancelId").val();
+        data["Decision"] = $("#CancelDecision").val();
+ $.ajax({
+     url: '@Url.Action("ShowNextMatch", "Pair")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+     success: function (result) {
+         $("#PartialMatch").html(result);
+        
+     }
+ });
+                          
+
+    }
+    );
+    /////
+    $("#NextMatchAccept").on("click", function () {
+
+
+        var data = {};
+        data["Id"] = $("#AcceptId").val();
+        data["Decision"] = $("#AcceptDecision").val();
+ $.ajax({
+     url: '@Url.Action("ShowNextMatch", "Pair")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+     success: function (result) {
+         $("#PartialMatch").html(result);
+        
+     }
+ });
+                          
+
+    }
+    );
+    /////
+    $("#NextMatchSuperLike").on("click", function () {
+
+
+        var data = {};
+        data["Id"] = $("#SuperLikeId").val();
+        data["Decision"] = $("#SuperLikeDecision").val();
+ $.ajax({
+     url: '@Url.Action("ShowNextMatch", "Pair")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+     success: function (result) {
+         $("#PartialMatch").html(result);
+         ////
+
+
+
+
+         ////
+        
+     }
+ });
+                          
+
+    }
+    );
+
+    ///////Update Matches
+
+
+    $(".choose button").on("click", function () {
+
+      
+        $.ajax({
+     url: '@Url.Action("UpdateMatches", "Pair")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',    
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+                
+         $("#PairOptionsMatch").html(result);
+        
+     }
+ });
+
+    });
+
+
+</script>
 
 
 

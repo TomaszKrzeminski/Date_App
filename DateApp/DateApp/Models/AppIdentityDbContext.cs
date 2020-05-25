@@ -22,12 +22,29 @@ namespace DateApp.Models
         .HasOne(a => a.Details)
         .WithOne(b => b.User)
         .HasForeignKey<SearchDetails>(b => b.AppUserId);
+
+            modelBuilder.Entity<MatchUser>().HasKey(sc => new { sc.AppUserId, sc.MatchId });
+
+            modelBuilder.Entity<AppUser>()
+       .HasOne(a => a.coordinates)
+       .WithOne(b => b.User)
+       .HasForeignKey<Coordinates>(b => b.AppUserId);
         }
 
+
+
+
+
         public DbSet<SearchDetails> SearchDetails { get; set; }
-        public DbSet<Pair> Pairs { get; set; }
+
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Match> Matches { get; set; }
+
+        public DbSet<Coordinates> Coordinates { get; set; }
+
+        ///
+        public DbSet<MatchUser> MatchUsers { get; set; }
 
 
 

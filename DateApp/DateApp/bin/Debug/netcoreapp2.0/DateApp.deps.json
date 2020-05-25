@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "98455629b0cc53a573bcd94e5b62725a907492c6"
+    "signature": "1ee9ff43e10360c78b1ad5b67f5dfdd9fad4249d"
   },
   "compilationOptions": {
     "defines": [
@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v2.0": {
       "DateApp/1.0.0": {
         "dependencies": {
+          "GeoCoordinate.NetCore": "1.0.0.1",
           "Microsoft.AspNetCore.All": "2.0.9",
           "Microsoft.NETCore.App": "2.0.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.0.4"
@@ -33,6 +34,17 @@
         },
         "compile": {
           "DateApp.dll": {}
+        }
+      },
+      "GeoCoordinate.NetCore/1.0.0.1": {
+        "runtime": {
+          "lib/netstandard1.6/GeoCoordinate.NetCore.dll": {
+            "assemblyVersion": "1.0.0.1",
+            "fileVersion": "1.0.0.1"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.6/GeoCoordinate.NetCore.dll": {}
         }
       },
       "Libuv/1.10.0": {
@@ -4814,6 +4826,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "GeoCoordinate.NetCore/1.0.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VrR5MLkh0u2qka79JcQ/GUrgHwGidayCA7nKy2430qYX/JHdrHLgwp1MuBTSsygWs0s2V6GQ0Hp8HUMatHiWFw==",
+      "path": "geocoordinate.netcore/1.0.0.1",
+      "hashPath": "geocoordinate.netcore.1.0.0.1.nupkg.sha512"
     },
     "Libuv/1.10.0": {
       "type": "package",

@@ -10,8 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
-
-
+using UndergroundSound.Models;
 
 namespace DateApp
 {
@@ -33,12 +32,16 @@ namespace DateApp
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
             services.AddTransient<IRepository, Repository>();
 
+            //EF
+            services.AddMvc()
+                .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //
 
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppIdentityDbContext context)
         {
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
@@ -51,7 +54,7 @@ namespace DateApp
                     template: "{controller=Home}/{action=StartPage}/{id?}");
             });
 
-
+            SeedData.EnsurePopulated(context);
 
 
 

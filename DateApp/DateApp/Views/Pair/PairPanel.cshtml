@@ -51,22 +51,72 @@
 <div  class="container-fluid">
     <div class="row">
         <div class="col-lg-4 col-md-3  col-sm-1">
-            @Html.Partial("PairOptionsPartial", Model.pairpartial)
+            @if (Model.select == "Pair")
+            {
+                @Html.Partial("PairOptionsPartial", Model.pairoptions)
+            }
+            else
+            {
+                <div id="Geo"></div>
+                @Html.Partial("MessageOptionsPartial", Model.messageview)
+            }
+
         </div>
         <div class="col-lg-4 col-md-3  col-sm-8">
-            @Html.Partial("PairPartial", Model.pairoptions)
+            @if (Model.select == "Pair")
+            {
+                @Html.Partial("PairPartial", Model.pairpartial)
+            }
+            else
+            {
+                @Html.Partial("MessagePartial", Model.messageview)
+            }
+
         </div>
 
         <div class="col-lg-4 col-md-3  col-sm-1"></div>
     </div>
 </div>
 
+<div>
+    <form asp-action="Coordinates" asp-controller="Pair" method="Post">
+        <input type="hidden" id="Longitude" name="Longitude" />
+        <input type="hidden"  id="Langitude" name="Langitude" />
+    </form>
+</div>
 
 
-@*@Html.Partial("MessageOptionsPartial", Model.messageview)*@
+<script>
+    var x = document.getElementById("Geo");
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
 
-@*@Html.Partial("MessagePartial", Model.messageOptionsview)*@
+    function showPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
 
+        
+
+        $.post("/Pair/Coordinates",
+            {
+                Latitude: latitude,
+                Longitude: longitude
+            },
+            function (data, status) {
+                           });
+
+             
+    }
+
+
+    getLocation();
+
+</script>
 
 
 

@@ -25,8 +25,7 @@ namespace DateApp.Models
 
 
     }
-
-
+    
     public class LoginModel
     {
         [Required]
@@ -36,8 +35,7 @@ namespace DateApp.Models
         [UIHint("password")]
         public string Password { get; set; }
     }
-
-
+    
     public class PanelViewModel
     {
         public UserDetailsModel detailsmodel;
@@ -57,14 +55,7 @@ namespace DateApp.Models
 
 
     }
-
-
-
-
-
-
-
-
+          
     public class UserDetailsModel
     {
         public int DetailsId { get; set; }
@@ -85,8 +76,7 @@ namespace DateApp.Models
 
 
     }
-
-
+    
     public class UserSettingsModel
     {
 
@@ -118,9 +108,7 @@ namespace DateApp.Models
         public int SearchAge { get; set; }
         public bool ShowProfile { get; set; }
     }
-
-
-
+    
     public class ChangePhoneNumberView
     {
         [Required]
@@ -134,6 +122,7 @@ namespace DateApp.Models
 
     public class PairViewModel
     {
+        public string select;
         public MessageViewModel messageview;
         public MessageOptionsViewModel messageOptionsview;
         public PairPartialViewModel pairpartial;
@@ -145,13 +134,23 @@ namespace DateApp.Models
         }
 
 
-        public PairViewModel( MessageViewModel messageview,MessageOptionsViewModel messageOptionsview , PairPartialViewModel pairpartial , PairOptionsViewModel pairoptions )        
+        public PairViewModel( MessageViewModel messageview,MessageOptionsViewModel messageOptionsview  )        
         {
             this.messageview = messageview;
             this.messageOptionsview = messageOptionsview;
+            this.pairpartial = new PairPartialViewModel();
+            this.pairoptions = new PairOptionsViewModel();
+        }
+
+        public PairViewModel( PairPartialViewModel pairpartial, PairOptionsViewModel pairoptions)
+        {
+            this.messageview = new MessageViewModel();
+            this.messageOptionsview = new MessageOptionsViewModel();
             this.pairpartial = pairpartial;
             this.pairoptions = pairoptions;
         }
+
+
 
 
     }
@@ -167,12 +166,29 @@ namespace DateApp.Models
     }
     public class PairPartialViewModel
     {
-
+      public  MatchView match { get; set; }
     }
     public class PairOptionsViewModel
     {
+        public PairOptionsViewModel()
+        {
+            list = new List<MatchView>();
+        }
+
+        public List<MatchView> list;
+        public string UserName { get; set; }
+        public string UserMainPhotoPath { get; set; }
 
     }
 
+    public class MatchView
+    {
+
+        public string PairMainPhotoPath { get; set; }
+        public string PairMail { get; set; }
+        public string PairId { get; set; }
+       
+
+    }
 
 }

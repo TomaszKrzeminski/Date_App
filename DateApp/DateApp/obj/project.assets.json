@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
+      "GeoCoordinate.NetCore/1.0.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.6/GeoCoordinate.NetCore.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/GeoCoordinate.NetCore.dll": {}
+        }
+      },
       "Libuv/1.10.0": {
         "type": "package",
         "dependencies": {
@@ -5032,6 +5041,19 @@
     }
   },
   "libraries": {
+    "GeoCoordinate.NetCore/1.0.0.1": {
+      "sha512": "VrR5MLkh0u2qka79JcQ/GUrgHwGidayCA7nKy2430qYX/JHdrHLgwp1MuBTSsygWs0s2V6GQ0Hp8HUMatHiWFw==",
+      "type": "package",
+      "path": "geocoordinate.netcore/1.0.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "geocoordinate.netcore.1.0.0.1.nupkg.sha512",
+        "geocoordinate.netcore.nuspec",
+        "lib/netstandard1.6/GeoCoordinate.NetCore.deps.json",
+        "lib/netstandard1.6/GeoCoordinate.NetCore.dll"
+      ]
+    },
     "Libuv/1.10.0": {
       "sha512": "GsCf4q+eyaI49rCPlgYxdxa1SQCysXFFdSJWdstrwxytg4+VPYLYrXD4AT2rjHVJ+UF7SSWX9CapWEYaU4ejVQ==",
       "type": "package",
@@ -13635,6 +13657,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
+      "GeoCoordinate.NetCore >= 1.0.0.1",
       "Microsoft.AspNetCore.All >= 2.0.9",
       "Microsoft.NETCore.App >= 2.0.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 2.0.4"
@@ -13681,6 +13704,10 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
+          "GeoCoordinate.NetCore": {
+            "target": "Package",
+            "version": "[1.0.0.1, )"
+          },
           "Microsoft.AspNetCore.All": {
             "target": "Package",
             "version": "[2.0.9, )"

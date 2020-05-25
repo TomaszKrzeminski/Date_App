@@ -144,7 +144,7 @@ namespace DateApp.Controllers
                 return View("Error", Message);
             }
 
-            return View();
+           
         }
 
 
@@ -154,6 +154,13 @@ namespace DateApp.Controllers
             string Id = userManager.GetUserId(HttpContext.User);
 
             SearchDetails details = repository.GetUserDetails(Id);
+            
+
+            if(details==null)
+            {
+                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
+            }
+
             UserDetailsModel detailsmodel = new UserDetailsModel() { DetailsId = details.SearchDetailsId, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = Id };
 
             UserSettingsModel settingsmodel = new UserSettingsModel() { MainPhotoPath = details.MainPhotoPath, Name = details.User.UserName, Surname = details.User.Surname, Likes = details.Likes, SuperLikes = details.SuperLikes, Email = details.User.Email, PhoneNumber = details.User.PhoneNumber ?? "Update", Localization = details.CityOfResidence, SearchAge = details.SearchAge, Distance = details.SearchDistance, SearchSex = details.SearchSex ?? "Male", ShowProfile = details.ShowProfile };
@@ -163,23 +170,7 @@ namespace DateApp.Controllers
 
             return View(model);
         }
-
-
-
-
-
-        //public IActionResult PictureAdder()
-        //{
-        //    string Id = userManager.GetUserId(HttpContext.User);
-
-        //    SearchDetails details = repository.GetUserDetails(Id);
-        //    UserDetailsModel model = new UserDetailsModel() { DetailsId = details.SearchDetailsId, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = Id };
-
-        //    UserSettingsModel settings = new UserSettingsModel() {Name=details.User.UserName,Surname=details.User.Surname, Likes=details.Likes,SuperLikes=details.SuperLikes,Email= details.User.Email,PhoneNumber=details.User.PhoneNumber??"Update",Localization=details.CityOfResidence,SearchAge=details.SearchAge,Distance=details.SearchDistance,SearchSex=details.SearchSex??"Male",ShowProfile=details.ShowProfile };
-        //    settings.SetSex(details.User);
-
-        //    return View(model);
-        //}
+                                     
 
         [HttpPost]
         public IActionResult PictureAdder(UserDetailsModel model)

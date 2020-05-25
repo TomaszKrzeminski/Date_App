@@ -79,7 +79,7 @@
                             <img alt="0" class="img-thumbnail" src=@Model.MainPhotoPath>
                         </a>
                     </div>
-                   
+
 
 
                     <div class="col-lg-8"> <label>@Model.Name  @Model.Surname</label></div>
@@ -175,27 +175,25 @@
 
 
             </div>
+
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
-
-                <form asp-action="LogOut">
+                <form asp-action="Delete" asp-controller="Admin">
                     <label class="switch">
-                       
+
                     </label>
-                    <label>Wyloguj</label>
+
+                    <button class="btn btn-danger" type="submit">Usuń Konto</button>
+
                 </form>
-
-
             </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
-
-                <form asp-action="RemoveAccount">
+                <form asp-action="Logout" asp-controller="Account">
                     <label class="switch">
-                      
+
                     </label>
-                    <label>Usuń Konto</label>
+                    <button class="btn btn-warning" type="submit">Wyloguj</button>
+
                 </form>
-
-
             </div>
         </div>
     </div>
@@ -293,39 +291,7 @@
 
    
 
-    
-
    
-
-  //$.getJSON('https://api.ipify.org?format=jsonp&callback=?', function (data) {
-
-      
-
-  //    var key = '40d73d471222945bade47359c39e9236';
-  //    var ip = data.ip;
-  //    fetch('http://api.ipstack.com/' + ip + '?access_key=' + key
-  //    )
-  //        .then((response) => {
-  //            var x = response.json();
-  //            return x;
-
-  //        }).then
-  //        ((dat) => {
-
-
-  //            var text = dat.city;
-  //            $("#GeoLocation").empty();
-  //            $("#GeoLocation").append(text);
-  //        })
-  //        ;
-
-
-
-       
-  //  });
-   
-
-///GeoLocation 2
 
     function showPosition(position) {
        

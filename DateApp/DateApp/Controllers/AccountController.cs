@@ -21,6 +21,12 @@ namespace DateApp.Controllers
             signInManager = signinMgr;
         }
 
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
 
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
