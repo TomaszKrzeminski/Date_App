@@ -70,13 +70,44 @@ namespace DateApp.Models
         public string School { get; set; }
         public string UserId { get; set; }
 
+
+        
+
         /// Settings
         /// 
 
 
 
     }
-    
+
+
+    public class PairDetailsViewModel
+    {
+        public int DetailsId { get; set; }
+        public string MainPhotoPath { get; set; }
+        public string PhotoPath1 { get; set; }
+        public string PhotoPath2 { get; set; }
+        public string PhotoPath3 { get; set; }
+        public string Description { get; set; }
+        public string CityOfResidence { get; set; }
+        public string JobPosition { get; set; }
+        public string CompanyName { get; set; }
+        public string School { get; set; }
+        public string UserId { get; set; }
+
+
+        public int Age { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Sex { get; set; }
+        public DateTime Dateofbirth { get; set; }
+        public string City { get; set; }    
+
+
+
+    }
+
     public class UserSettingsModel
     {
 

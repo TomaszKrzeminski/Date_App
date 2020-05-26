@@ -108,8 +108,17 @@ namespace DateApp.Controllers
 
         [HttpPost]
         public IActionResult GoToPair(string id)
-        {
-            return View();
+        {         
+         SearchDetails details = repository.GetUserDetails(id);
+            AppUser user = repository.GetUser(id);
+            if (details == null)
+            {
+                return RedirectToRoute(new { controller = "Pair", action = "PairPanel" });
+            }
+
+            PairDetailsViewModel detailsmodel = new PairDetailsViewModel() { DetailsId = details.SearchDetailsId, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = details.AppUserId,Age=user.Age,Name=user.UserName,Surname=user.Surname,Email=user.Email,Dateofbirth=user.Dateofbirth,City=user.City,Sex=user.Sex };                      
+
+            return View("PairDetails",detailsmodel);
         }
 
 

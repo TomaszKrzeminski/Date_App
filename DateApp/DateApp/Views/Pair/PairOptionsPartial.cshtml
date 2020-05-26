@@ -37,22 +37,22 @@
             </form>
         </div>
         <div class="row" >
+            <div class="PairImage  col-lg-12">
+                @foreach (var match in Model.list)
+                {
 
-            @foreach (var match in Model.list)
-            {
-                <div class="PairImage  col-lg-12" >                    
-                    <form id="GoToPair" asp-action="GoToPair" asp-controller="Pair" method="post">
+                    <form  class="formPairDetails"   @*id="GoToPair"*@ asp-action="GoToPair" asp-controller="Pair" method="post">
                         <input type="hidden" value=@match.PairId name="id" />
                         <img border="0" style="border-style:outset" alt=@match.PairMail class="" src=@match.PairMainPhotoPath width="100" height="100">
                         <div>
                             <label>@match.PairMail</label>
                         </div>
-                        
+
                     </form>
-                </div>
 
-            }
 
+                }
+            </div>
 
 
 
@@ -74,12 +74,11 @@
         $('#PairPanelForm').submit();
     });
 
+    $('body').on('click', '.formPairDetails', function (event) {            
 
-    $(".PairImage").click(function () {
+        $(this).submit();
 
-        $("#GoToPair").submit();
     });
-
 
     $("button[name='Message']").click(function () {
         $('#SelectP').val("Message");

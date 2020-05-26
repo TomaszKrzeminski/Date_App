@@ -627,6 +627,7 @@ namespace DateApp.Models
 
                     int distance = GetDistance(Latitude, Longitude, c.Latitude, c.Longitude);
 
+                    //if (distance <= SearchDistance && c.User.Age >= SearchAge && c.User.Details.SearchSex != SearchSex)
                     if (distance <= SearchDistance && c.User.Age >= SearchAge && c.User.Details.SearchSex != SearchSex)
                     {
                         CheckList.Add(c);

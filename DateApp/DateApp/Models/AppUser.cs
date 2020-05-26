@@ -9,6 +9,32 @@ namespace DateApp.Models
     public class AppUser : IdentityUser
     {
 
+        public AppUser(string Sex)
+        {
+
+            this.Sex = Sex;
+
+
+            //Pair = new List<Pair>();
+            MessageUser = new List<MessageUser>();
+
+            if (Sex == "Mężczyzna")
+            {
+                Details = new SearchDetails("Empty", "Kobieta");
+            }
+            else
+            {
+                Details = new SearchDetails("Empty", "Mężczyzna");
+            }
+
+
+            coordinates = new Coordinates();
+            MatchUser = new List<MatchUser>();
+        }
+
+
+
+
         public AppUser()
         {
             //Pair = new List<Pair>();
@@ -58,7 +84,36 @@ namespace DateApp.Models
         }
 
 
-        public SearchDetails(string Empty, string searchsex = "Kobieta")
+        public SearchDetails(string Empty)
+        {
+            SearchDetailsId = 0;
+            UserId = "";
+            SearchSex = "Kobieta";
+            SearchDistance = 50;
+            SearchAge = 20;
+            ShowProfile = false;
+
+            MainPhotoPath = "/AppPictures/photo.png";
+            PhotoPath1 = "/AppPictures/photo.png";
+            PhotoPath2 = "/AppPictures/photo.png";
+            PhotoPath3 = "/AppPictures/photo.png";
+            Description = "Lorem Ipsum";
+            CityOfResidence = "Uzupełnij";
+            Localization = "Uzupełnij";
+            JobPosition = "Uzupełnij";
+            CompanyName = "Uzupełnij";
+            School = "Uzupełnij";
+            Likes = 20;
+            SuperLikes = 1;
+
+
+        }
+
+
+
+
+
+        public SearchDetails(string Empty, string searchsex)
         {
             SearchDetailsId = 0;
             UserId = "";
