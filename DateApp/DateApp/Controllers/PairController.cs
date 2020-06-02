@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace DateApp.Controllers
 {
@@ -38,6 +39,38 @@ namespace DateApp.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult PairReport(string Reason, string UserId)
+        {
+            string Id = userManager.GetUserId(HttpContext.User);
+            bool check = repository.ReportUser(Id, UserId, Reason);
+
+            if (check)
+            {
+                return RedirectToAction("GoToPair", new { @PairId = UserId });
+            }
+            else
+            {
+                return View("Error", "Problem nie można zgłosić użytkownika");
+            }
+
+        }
+
+        public IActionResult PairCancel(string UserId)
+        {
+            string Id = userManager.GetUserId(HttpContext.User);
+            bool check = repository.PairCancel(Id, UserId);
+
+            if (check)
+            {
+                return RedirectToRoute(new { controller = "Pair", action = "PairPanel", });
+            }
+            else
+            {
+                return View("Error", "Problem z usunięciem pary");
+            }
+
+        }
 
         [Authorize]
         public IActionResult Coordinates(string Longitude, string Latitude)
@@ -68,16 +101,17 @@ namespace DateApp.Controllers
         {
             string UserId = userManager.GetUserId(HttpContext.User);
             bool check = repository.MatchAction(Id, UserId, Decision);
-            MatchView match = repository.GetMatchViews(UserId,"",true).FirstOrDefault();
+            MatchView match = repository.GetMatchViews(UserId, "", true).FirstOrDefault();
             PairPartialViewModel model = new PairPartialViewModel();
-            if (match!=null&&match.PairId != "" )
+            if (match != null && match.PairId != "")
             {
+                match.UserId = UserId;
                 model.match = match;
             }
             else
             {
-                model.match = new MatchView() { PairMail = "", PairId = "", PairMainPhotoPath = "" };
-                
+                model.match = new MatchView() {UserId=UserId, PairMail = "", PairId = "", PairMainPhotoPath = "" };
+
             }
 
 
@@ -88,7 +122,7 @@ namespace DateApp.Controllers
 
 
 
-        public PartialViewResult  UpdateMatches()
+        public PartialViewResult UpdateMatches()
         {
             string Id = userManager.GetUserId(HttpContext.User);
             SearchDetails details = repository.GetUserDetails(Id);
@@ -106,19 +140,20 @@ namespace DateApp.Controllers
 
 
 
-        [HttpPost]
-        public IActionResult GoToPair(string id)
-        {         
-         SearchDetails details = repository.GetUserDetails(id);
+
+        public IActionResult GoToPair(string PairId)
+        {
+            string id = PairId;
+            SearchDetails details = repository.GetUserDetails(id);
             AppUser user = repository.GetUser(id);
             if (details == null)
             {
                 return RedirectToRoute(new { controller = "Pair", action = "PairPanel" });
             }
 
-            PairDetailsViewModel detailsmodel = new PairDetailsViewModel() { DetailsId = details.SearchDetailsId, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = details.AppUserId,Age=user.Age,Name=user.UserName,Surname=user.Surname,Email=user.Email,Dateofbirth=user.Dateofbirth,City=user.City,Sex=user.Sex };                      
+            PairDetailsViewModel detailsmodel = new PairDetailsViewModel() { DetailsId = details.Id, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = details.AppUserId, Age = user.Age, Name = user.UserName, Surname = user.Surname, Email = user.Email, Dateofbirth = user.Dateofbirth, City = user.City, Sex = user.Sex };
 
-            return View("PairDetails",detailsmodel);
+            return View("PairDetails", detailsmodel);
         }
 
 
@@ -136,7 +171,7 @@ namespace DateApp.Controllers
                 List<Match> list = repository.GetMatches(Id);
                 bool check = repository.SearchForMatches(Id);
                 PairOptionsViewModel options = new PairOptionsViewModel();
-                List<MatchView> listMatch = repository.GetMatchViews(Id,"Yes",false);
+                List<MatchView> listMatch = repository.GetMatchViews(Id, "Yes", false);
                 options.list = listMatch;
                 options.UserMainPhotoPath = details.MainPhotoPath;
                 options.UserName = user.UserName + " " + user.Surname;

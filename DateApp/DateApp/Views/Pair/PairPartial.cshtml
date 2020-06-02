@@ -9,36 +9,54 @@
 
             @if (Model.match != null&&Model.match.PairId!="")
             {
-                <div class="row">
-                    <div class="col-lg-12">
-                        <img alt="0" class="img-thumbnail" src="@Model.match.PairMainPhotoPath" style="width:500px;height:500px;">
-                        <p>@Model.match.PairId</p>
-                    </div>
+            <div class="row">
+                @*<div class="col-lg-12">
+                    <img alt="0" class="img-thumbnail" src="@Model.match.PairMainPhotoPath" style="width:500px;height:500px;">
+                    <p>@Model.match.PairId</p>
+                </div>*@
 
+                <div class="col-lg-12 text-center">
+                    <form class="formPairDetails" @*id="GoToPair" *@ asp-action="GoToPair" asp-controller="Pair" method="post">
+                        <input type="hidden" value=@Model.match.PairId name="PairId" />
+                        <img class="img-thumbnail" style="border-style:outset;width:400px;height:400px;" alt=@Model.match.PairMail src=@Model.match.PairMainPhotoPath width="100" height="100">
+                        <div>
+                            <label>@Model.match.PairMail</label>
+                        </div>
 
-                    <div class="choose  col-lg-12">
-                        <form id="NextMatchCancel" asp-action="ShowNextMatch" asp-controller="Pair">
-                            <input id="CancelId" name="Id" type="hidden" value="@Model.match.PairId">
-                            <input id="CancelDecision" name="Decision" type="hidden" value="Cancel" />
-                            <button type="button" class="btn btn-danger">Odrzuć</button>
-
-                        </form>
-                        <form id="NextMatchAccept" asp-action="ShowNextMatch" asp-controller="Pair">
-                            <input id="AcceptId" type="hidden" value="@Model.match.PairId">
-                            <input id="AcceptDecision" type="hidden" value="Accept" />
-                            <button type="button" class="btn btn-warning">Potwierdź</button>
-                        </form>
-                        <form id="NextMatchSuperLike" asp-action="ShowNextMatch" asp-controller="Pair">
-                            <input id="SuperLikeId" type="hidden" value="@Model.match.PairId">
-                            <input id="SuperLikeDecision" type="hidden" value="SuperLike" />
-                            <button type="button" class="btn btn-info">Super Like</button>
-                        </form>
-
-
-
-
-                    </div>
+                    </form>
                 </div>
+               
+
+
+
+
+
+
+
+
+                <div class="choose  col-lg-12">
+                    <form id="NextMatchCancel" asp-action="ShowNextMatch" asp-controller="Pair">
+                        <input id="CancelId" name="Id" type="hidden" value="@Model.match.PairId">
+                        <input id="CancelDecision" name="Decision" type="hidden" value="Cancel" />
+                        <button type="button" class="btn btn-danger">Odrzuć</button>
+
+                    </form>
+                    <form id="NextMatchAccept" asp-action="ShowNextMatch" asp-controller="Pair">
+                        <input id="AcceptId" type="hidden" value="@Model.match.PairId">
+                        <input id="AcceptDecision" type="hidden" value="Accept" />
+                        <button type="button" class="btn btn-warning">Potwierdź</button>
+                    </form>
+                    <form id="NextMatchSuperLike" asp-action="ShowNextMatch" asp-controller="Pair">
+                        <input id="SuperLikeId" type="hidden" value="@Model.match.PairId">
+                        <input id="SuperLikeDecision" type="hidden" value="SuperLike" />
+                        <button type="button" class="btn btn-info">Super Like</button>
+                    </form>
+
+
+
+
+                </div>
+            </div>
             }
 
 

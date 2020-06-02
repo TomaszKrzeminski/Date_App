@@ -52,6 +52,10 @@ namespace DateApp
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=StartPage}/{id?}");
+
+                routes.MapRoute(
+                    name: "default2",
+                    template: "{controller}/{action}/{PairId?}");
             });
 
             SeedData.EnsurePopulated(context);

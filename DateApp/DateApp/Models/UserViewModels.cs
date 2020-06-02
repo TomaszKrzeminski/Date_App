@@ -214,7 +214,7 @@ namespace DateApp.Models
 
     public class MatchView
     {
-
+        public string UserId { get; set; }
         public string PairMainPhotoPath { get; set; }
         public string PairMail { get; set; }
         public string PairId { get; set; }

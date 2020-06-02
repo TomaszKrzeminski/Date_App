@@ -4,6 +4,7 @@ using System.Linq;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace DateApp.Models
 {
 
@@ -30,6 +31,8 @@ namespace DateApp.Models
         bool RemoveCoordinates(string Id);
         bool RemoveMatchesAll(string Id);
         bool RemoveMatch();
+        bool ReportUser(string ComplainUserId, string UserToReport, string Reason);
+        bool PairCancel(string UserId, string PairId);
 
 
     }
@@ -239,7 +242,7 @@ namespace DateApp.Models
                 if (User.Details != null)
                 {
 
-                    SearchDetails details = context.SearchDetails.Find(User.Details.SearchDetailsId);
+                    SearchDetails details = context.SearchDetails.Find(User.Details.Id);
                     details.MainPhotoPath = model.MainPhotoPath;
                     details.PhotoPath1 = model.PhotoPath1;
                     details.PhotoPath2 = model.PhotoPath2;
@@ -325,7 +328,7 @@ namespace DateApp.Models
             {
                 AppUser user = context.Users.Include(s => s.Details).Where(u => u.Id == UserId).First();
 
-                if (user.Details != null && user.Details.SearchDetailsId != 0)
+                if (user.Details != null && user.Details.Id != 0)
                 {
 
                     return user.Details;
@@ -552,7 +555,153 @@ namespace DateApp.Models
             return longitude;
         }
 
+
+
+
         public bool SearchForMatches(string UserId)
+        {
+            try
+            {
+
+                ///GetUser             
+                AppUser user = context.Users.Include(u => u.MatchUser).Where(x => x.Id == UserId).First();
+                /////
+
+
+                //// Get Coordinates
+                Coordinates coordinates = context.Users.Include(c => c.coordinates).Where(u => u.Id == UserId).First().coordinates;
+                double Longitude = coordinates.Longitude;
+                double Latitude = coordinates.Latitude;
+                /////
+
+
+                ////Get Search details
+                SearchDetails details = context.Users.Include(d => d.Details).Where(u => u.Id == UserId).First().Details;
+                string SearchSex = details.SearchSex;
+                int SearchDistance = details.SearchDistance;
+                int SearchAge = details.SearchAge;
+                ////
+
+
+                ///Get Matches
+                List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
+                List<Match> matches = list.Select(m => m.Match).ToList();
+                ///
+
+                ///Except Coordinates             
+
+                List<string> userIdList = new List<string>();
+
+                foreach (var m in matches)
+                {
+                    userIdList.Add(m.FirstUserId);
+                    userIdList.Add(m.SecondUserId);
+                }
+
+                userIdList = userIdList.Distinct().ToList();
+
+
+                List<Coordinates> exceptList = new List<Coordinates>();
+
+                foreach (var u in userIdList)
+                {
+                    Coordinates C = context.Coordinates.Where(c => c.UserId == u).First();
+                    exceptList.Add(C);
+                }
+
+
+
+                ///
+
+
+                ///Filtering results
+
+                double MaxLon = Longitude + 1;
+                double MaxLat = Latitude + 1;
+                double MinLat = Latitude - 1;
+                double MinLon = Longitude - 1;
+
+
+
+                List<Coordinates> listCoordinates = context.Coordinates.Include(u => u.User).ThenInclude(d=>d.Details).Where(l => l.Longitude >= MinLon && l.Longitude <= MaxLon).Where(x => x.Latitude >= MinLat && x.Latitude <= MaxLat).Except(exceptList).Take(100).ToList();
+
+
+
+
+
+                List<Coordinates> CheckList = new List<Coordinates>();
+
+
+
+                foreach (var c in listCoordinates)
+                {
+                    int distance = GetDistance(Latitude, Longitude, c.Latitude, c.Longitude);
+                    MatchDetails matchDetails = new MatchDetails(SearchAge,SearchDistance,SearchSex);
+                    UserDetails userDetails = new UserDetails(c.User.Age,distance, c.User.Details.SearchSex);
+                    SexMatch sexMatch = new SexMatch(c, CheckList);
+                    AgeMatch ageMatch = new AgeMatch(c, CheckList);
+                    DistanceMatch distanceMatch = new DistanceMatch(c, CheckList);
+
+                    sexMatch.setMatch(ageMatch);
+                    ageMatch.setMatch(distanceMatch);
+
+
+                    sexMatch.ForwardRequest(matchDetails, userDetails); 
+
+                }
+
+
+
+
+
+                ////MakeMatch/
+
+
+                List<Match> listMatches = new List<Match>();
+
+                foreach (var c in CheckList)
+                {
+                    AppUser user2 = context.Users.Include(s => s.Details).Where(i => i.Id == c.AppUserId).First();
+                    SearchDetails user2SearchDetails = user2.Details;
+                    listMatches.Add(new Match(UserId, c.AppUserId, details.MainPhotoPath, user2SearchDetails.MainPhotoPath));
+                }
+
+
+
+                foreach (var m in listMatches)
+                {
+
+                    context.Matches.Add(m);
+                    context.SaveChanges();
+                    MatchUser mU1 = new MatchUser();
+                    MatchUser mU2 = new MatchUser();
+                    mU1.Match = m;
+                    mU1.AppUser = user;
+                    AppUser secondUser = context.Users.Where(x => x.Id == m.SecondUserId).First();
+                    mU2.AppUser = secondUser;
+                    mU2.Match = m;
+
+                    user.MatchUser.Add(mU1);
+                    secondUser.MatchUser.Add(mU2);
+                    context.SaveChanges();
+
+                }
+
+
+
+                /////////
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+
+
+        public bool SearchForMatches2(string UserId)
         {
 
             try
@@ -879,7 +1028,7 @@ namespace DateApp.Models
                 context.SaveChanges();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -909,7 +1058,7 @@ namespace DateApp.Models
                 AppUser user = context.Users.Include(x => x.MatchUser).Where(z => z.Id == Id).First();
                 List<MatchUser> list = user.MatchUser.ToList();
 
-                if(list!=null&&list.Count>0)
+                if (list != null && list.Count > 0)
                 {
                     foreach (var m in list)
                     {
@@ -935,6 +1084,49 @@ namespace DateApp.Models
             {
                 return false;
             }
+        }
+
+        public bool ReportUser(string ComplainUserId, string UserToReport, string Reason)
+        {
+            try
+            {
+                ReportUser report = new ReportUser();
+                report.Reason = Reason;
+                report.ComplainUserId = ComplainUserId;
+                AppUser user = context.Users.Find(UserToReport);
+                user.ReportUsers.Add(report);
+                context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool PairCancel(string UserId, string PairId)
+        {
+            try
+            {
+                AppUser user = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First();
+                Match match = user.MatchUser.Where(x => x.Match.FirstUserId == PairId || x.Match.SecondUserId == PairId).First().Match;
+                match.Reject = true;
+                match.RejectFirst = "Yes";
+                match.RejectSecond = "Yes";
+                match.AcceptFirst = "No";
+                match.AcceptSecond = "No";
+                match.Pair = "No";
+                match.Time = DateTime.Now;
+                context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
         }
     }
 }

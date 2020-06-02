@@ -27,10 +27,14 @@ namespace DateApp.Models
                 Details = new SearchDetails("Empty", "Mężczyzna");
             }
 
-
+            ReportUsers = new List<ReportUser>();
             coordinates = new Coordinates();
             MatchUser = new List<MatchUser>();
         }
+
+
+
+
 
 
 
@@ -40,16 +44,16 @@ namespace DateApp.Models
             //Pair = new List<Pair>();
             MessageUser = new List<MessageUser>();
 
-            if(Sex== "Mężczyzna")
+            if (Sex == "Mężczyzna")
             {
-                Details = new SearchDetails("Empty","Kobieta");
+                Details = new SearchDetails("Empty", "Kobieta");
             }
             else
             {
                 Details = new SearchDetails("Empty", "Mężczyzna");
             }
 
-            
+            ReportUsers = new List<ReportUser>();
             coordinates = new Coordinates();
             MatchUser = new List<MatchUser>();
         }
@@ -69,10 +73,23 @@ namespace DateApp.Models
         public IList<MatchUser> MatchUser { get; set; }
 
         public IList<MessageUser> MessageUser { get; set; }
+        public IList<ReportUser> ReportUsers { get; set; }
 
 
     }
 
+    public class ReportUser
+    {
+        public int ReportUserId { get; set; }
+        public string Reason { get; set; }
+        //Id of user that complain
+        public string ComplainUserId { get; set; }
+
+
+        public string ApplicationUserID { get; set; }
+        public AppUser User { get; set; }
+
+    }
 
     public class SearchDetails
     {
@@ -86,7 +103,7 @@ namespace DateApp.Models
 
         public SearchDetails(string Empty)
         {
-            SearchDetailsId = 0;
+
             UserId = "";
             SearchSex = "Kobieta";
             SearchDistance = 50;
@@ -104,18 +121,24 @@ namespace DateApp.Models
             CompanyName = "Uzupełnij";
             School = "Uzupełnij";
             Likes = 20;
-            SuperLikes = 1;
+            SuperLikes = 3;
 
 
         }
+                
+        public void SetSuperLikeDate()
+        {
+            SuperLikeDate = DateTime.Now;           
+        }
 
-
-
-
+        public void SetLikeDate()
+        {            
+            LikeDate = DateTime.Now;
+        }
 
         public SearchDetails(string Empty, string searchsex)
         {
-            SearchDetailsId = 0;
+
             UserId = "";
             SearchSex = searchsex;
             SearchDistance = 50;
@@ -133,13 +156,86 @@ namespace DateApp.Models
             CompanyName = "Uzupełnij";
             School = "Uzupełnij";
             Likes = 20;
-            SuperLikes = 1;
+            SuperLikes = 3;
 
+            
         }
 
 
 
-        public int SearchDetailsId { get; set; }
+        public void ResetLike()
+        {
+            Likes = 20;
+        }
+
+        public void ResetSuperLike()
+        {
+            SuperLikes = 3;
+        }
+
+        public void ReduceLike()
+        {
+
+            bool check = CheckIfLikeIsAvailable();
+
+            if(check)
+            {
+                Likes--;
+
+                if(Likes==0)
+                {
+                    SetLikeDate();
+                }
+            }
+
+
+        }
+
+        public void ReduceSuperLike()
+        {
+            bool check = CheckIfSuperLikeIsAvailable();
+
+            if (check)
+            {
+                SuperLikes--;
+
+                if (SuperLikes == 0)
+                {
+                    SetSuperLikeDate();
+                }
+            }
+        }
+
+
+
+
+        public bool CheckIfLikeIsAvailable()
+        {
+            if (Likes > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CheckIfSuperLikeIsAvailable()
+        {
+            if (Likes > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        //public int SearchDetailsId { get; set; }
+        public int Id { get; set; }
         public string UserId { get; set; }
         public string SearchSex { get; set; }
         public int SearchDistance { get; set; }
@@ -158,13 +254,15 @@ namespace DateApp.Models
         public string School { get; set; }
         public int Likes { get; set; }
         public int SuperLikes { get; set; }
+        public DateTime SuperLikeDate { get; set; }
+        public DateTime LikeDate { get; set; }
 
         public string AppUserId { get; set; }
         public AppUser User { get; set; }
 
 
     }
-         
+
 
     public class MessageUser
     {
@@ -260,6 +358,8 @@ namespace DateApp.Models
 
         public string Pair { get; set; }
         public DateTime Time { get; set; }
+        public bool DontShow { get; set; }
+        public bool Reject { get; set; }
 
 
 

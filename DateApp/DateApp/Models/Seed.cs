@@ -81,25 +81,25 @@ namespace UndergroundSound.Models
 
                                                                               
 
-            void AddSearchDetailsToUser(string UserEmail,string Sex="Kobieta")
-            {
+            //void AddSearchDetailsToUser(string UserEmail,string Sex="Kobieta")
+            //{
 
-                try
-                {
-                    AppUser user = context.Users.Include(s=>s.Details).Where(u => u.Email == UserEmail).First();
-                    SearchDetails details = new SearchDetails("Empty",Sex);
-                    user.Details = details;
-                    context.SaveChanges();
+            //    try
+            //    {
+            //        AppUser user = context.Users.Include(s=>s.Details).Where(u => u.Email == UserEmail).First();
+            //        SearchDetails details = new SearchDetails("Empty",Sex);
+            //        user.Details = details;
+            //        context.SaveChanges();
 
-                }
-                catch (Exception ex)
-                {
+            //    }
+            //    catch (Exception ex)
+            //    {
 
-                }
+            //    }
 
 
 
-            }
+            //}
 
           
 
@@ -138,19 +138,7 @@ namespace UndergroundSound.Models
                 SeedUser("Ania", "Przybylska", "Kobieta", "Bydgoszcz", "U10@gmail.com", new DateTime(2001, 8, 21));
                 SeedUser("Karolina", "Świerczyński", "Kobieta", "Świecie", "U11@gmail.com", new DateTime(1950, 8, 21));
                 SeedUser("Kasia", "Przybylska", "Kobieta", "Bydgoszcz", "U12@gmail.com", new DateTime(1992, 8, 21));
-
-                //AddSearchDetailsToUser("U1@gmail.com", "Kobieta");
-                //AddSearchDetailsToUser("U2@gmail.com", "Mężczyzna");
-                //AddSearchDetailsToUser("U3@gmail.com", "Kobieta");
-                //AddSearchDetailsToUser("U4@gmail.com", "Męszczyzna");
-                //AddSearchDetailsToUser("U5@gmail.com", "Kobieta");
-                //AddSearchDetailsToUser("U6@gmail.com", "Kobieta");
-                //AddSearchDetailsToUser("U7@gmail.com", "Kobieta");
-                //AddSearchDetailsToUser("U8@gmail.com", "Kobieta");
-                //AddSearchDetailsToUser("U9@gmail.com", "Męszczyzna");
-                //AddSearchDetailsToUser("U1@0gmail.com", "Mężczyzna");
-                //AddSearchDetailsToUser("U11@gmail.com", "Męszczyzna");
-                //AddSearchDetailsToUser("U12@gmail.com", "Męszczyzna");
+                            
 
 
 

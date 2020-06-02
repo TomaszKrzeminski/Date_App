@@ -48,9 +48,9 @@
 
 
 
-<div  class="container-fluid">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-lg-4 col-md-3  col-sm-1">
+        <div class="col-lg-4 col-md-3  col-sm-3">
             @if (Model.select == "Pair")
             {
                 @Html.Partial("PairOptionsPartial", Model.pairoptions)
@@ -81,9 +81,18 @@
 <div>
     <form asp-action="Coordinates" asp-controller="Pair" method="Post">
         <input type="hidden" id="Longitude" name="Longitude" />
-        <input type="hidden"  id="Langitude" name="Langitude" />
+        <input type="hidden" id="Langitude" name="Langitude" />
     </form>
 </div>
+
+
+
+
+
+
+
+
+
 
 
 <script>
@@ -100,7 +109,7 @@
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
 
-        
+
 
         $.post("/Pair/Coordinates",
             {
@@ -108,9 +117,9 @@
                 Longitude: longitude
             },
             function (data, status) {
-                           });
+            });
 
-             
+
     }
 
 
