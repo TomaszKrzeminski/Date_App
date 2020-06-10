@@ -120,20 +120,20 @@ namespace DateApp.Models
             JobPosition = "Uzupełnij";
             CompanyName = "Uzupełnij";
             School = "Uzupełnij";
-            Likes = 20;
-            SuperLikes = 3;
+            Likes = 2;
+            SuperLikes = 2;
 
 
         }
                 
         public void SetSuperLikeDate()
         {
-            SuperLikeDate = DateTime.Now;           
+            SuperLikeDate = DateTime.Now.AddDays(1);           
         }
 
         public void SetLikeDate()
         {            
-            LikeDate = DateTime.Now;
+            LikeDate = DateTime.Now.AddDays(1);
         }
 
         public SearchDetails(string Empty, string searchsex)
@@ -155,8 +155,8 @@ namespace DateApp.Models
             JobPosition = "Uzupełnij";
             CompanyName = "Uzupełnij";
             School = "Uzupełnij";
-            Likes = 20;
-            SuperLikes = 3;
+            Likes = 2;
+            SuperLikes = 2;
 
             
         }
@@ -165,12 +165,12 @@ namespace DateApp.Models
 
         public void ResetLike()
         {
-            Likes = 20;
+            Likes = 2;
         }
 
         public void ResetSuperLike()
         {
-            SuperLikes = 3;
+            SuperLikes = 2;
         }
 
         public void ReduceLike()
@@ -206,11 +206,42 @@ namespace DateApp.Models
             }
         }
 
+        /// <summary>
+        /// ///////        uzupełnić
+        /// </summary>
 
+        public bool CheckDateLike()
+        {
+            if(LikeDate<=DateTime.Now&&Likes==0)
+            {
+                ResetLike();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CheckDateSuperLike()
+        {
+            if (SuperLikeDate <= DateTime.Now&&SuperLikes==0)
+            {
+                ResetSuperLike();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
         public bool CheckIfLikeIsAvailable()
         {
+
+            CheckDateLike();
+
             if (Likes > 0)
             {
                 return true;
@@ -223,7 +254,10 @@ namespace DateApp.Models
 
         public bool CheckIfSuperLikeIsAvailable()
         {
-            if (Likes > 0)
+
+            CheckDateSuperLike();
+
+            if (SuperLikes > 0)
             {
                 return true;
             }

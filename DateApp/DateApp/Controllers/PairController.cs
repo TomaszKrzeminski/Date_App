@@ -97,20 +97,48 @@ namespace DateApp.Controllers
 
 
 
+        //public PartialViewResult ShowNextMatch(string Id, string Decision)
+        //{
+        //    string UserId = userManager.GetUserId(HttpContext.User);
+        //    bool check = repository.MatchAction(Id, UserId, Decision);
+        //    MatchView match = repository.GetMatchViews(UserId, "", true).FirstOrDefault();
+        //    PairPartialViewModel model = new PairPartialViewModel();
+        //    if (match != null && match.PairId != "")
+        //    {
+        //        match.UserId = UserId;
+        //        model.match = match;
+        //    }
+        //    else
+        //    {
+        //        model.match = new MatchView() { UserId = UserId, PairMail = "", PairId = "", PairMainPhotoPath = "" };
+
+        //    }
+
+
+
+        //    return PartialView("PairPartial", model);
+        //}
+
+
         public PartialViewResult ShowNextMatch(string Id, string Decision)
         {
             string UserId = userManager.GetUserId(HttpContext.User);
-            bool check = repository.MatchAction(Id, UserId, Decision);
-            MatchView match = repository.GetMatchViews(UserId, "", true).FirstOrDefault();
             PairPartialViewModel model = new PairPartialViewModel();
+
+            MatchAction action = repository.MatchAction2(Id, UserId, Decision);
+            MatchView match = repository.GetMatchViews(UserId, "", true).FirstOrDefault();
+
             if (match != null && match.PairId != "")
             {
-                match.UserId = UserId;
                 model.match = match;
+                match.UserId = UserId;
+                match.action = action;
+
+
             }
             else
             {
-                model.match = new MatchView() {UserId=UserId, PairMail = "", PairId = "", PairMainPhotoPath = "" };
+                model.match = new MatchView() { UserId = UserId, PairMail = "", PairId = "", PairMainPhotoPath = "" };
 
             }
 
@@ -158,7 +186,6 @@ namespace DateApp.Controllers
 
 
 
-
         public IActionResult PairPanel(string select = "Pair")
         {
             PairViewModel model;
@@ -177,6 +204,14 @@ namespace DateApp.Controllers
                 options.UserName = user.UserName + " " + user.Surname;
                 PairPartialViewModel pair = new PairPartialViewModel();
                 pair.match = repository.GetMatchViews(Id, "", true).FirstOrDefault();
+
+                if (pair.match != null)
+                {
+                    pair.match.UserId = Id;
+                    pair.match.action = new MatchAction("", true, true, false);
+                }
+
+
                 model = new PairViewModel(pair, options);
                 model.select = select;
 
@@ -194,5 +229,50 @@ namespace DateApp.Controllers
 
 
         }
+
+
+
+
+
+
+
+
+
+
+        //public IActionResult PairPanel(string select = "Pair")
+        //{
+        //    PairViewModel model;
+        //    string Id = userManager.GetUserId(HttpContext.User);
+        //    SearchDetails details = repository.GetUserDetails(Id);
+        //    AppUser user = repository.GetUser(Id);
+
+        //    if (select == "Pair")
+        //    {
+        //        List<Match> list = repository.GetMatches(Id);
+        //        bool check = repository.SearchForMatches(Id);
+        //        PairOptionsViewModel options = new PairOptionsViewModel();
+        //        List<MatchView> listMatch = repository.GetMatchViews(Id, "Yes", false);
+        //        options.list = listMatch;
+        //        options.UserMainPhotoPath = details.MainPhotoPath;
+        //        options.UserName = user.UserName + " " + user.Surname;
+        //        PairPartialViewModel pair = new PairPartialViewModel();
+        //        pair.match = repository.GetMatchViews(Id, "", true).FirstOrDefault();
+        //        model = new PairViewModel(pair, options);
+        //        model.select = select;
+
+
+        //    }
+        //    else
+        //    {
+        //        MessageOptionsViewModel pair = new MessageOptionsViewModel();
+        //        MessageViewModel message = new MessageViewModel();
+        //        model = new PairViewModel(message, pair);
+        //        model.select = select;
+        //    }
+
+        //    return View(model);
+
+
+        //}
     }
 }

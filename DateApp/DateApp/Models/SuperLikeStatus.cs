@@ -6,26 +6,5 @@ using System.Threading.Tasks;
 
 namespace DateApp.Models
 {
-    public class SuperLikeStatus:ViewComponent
-    {
-
-        private IRepository repo;
-
-        public SuperLikeStatus(IRepository repository)
-        {
-            repo = repository;
-        }
-
-        public IViewComponentResult Invoke(string UserId)
-        {
-
-
-
-
-        }
-
-
-
-
-    }
+    
 }

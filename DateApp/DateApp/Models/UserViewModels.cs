@@ -197,6 +197,12 @@ namespace DateApp.Models
     }
     public class PairPartialViewModel
     {
+
+        public PairPartialViewModel()
+        {
+            match = new MatchView();
+        }
+
       public  MatchView match { get; set; }
     }
     public class PairOptionsViewModel
@@ -214,11 +220,22 @@ namespace DateApp.Models
 
     public class MatchView
     {
+
+        public MatchView()
+        {
+            action = new MatchAction();
+            UserId = "";
+            PairMail = "";
+            PairId = "";
+            PairMainPhotoPath = "";
+        }
+
         public string UserId { get; set; }
         public string PairMainPhotoPath { get; set; }
         public string PairMail { get; set; }
         public string PairId { get; set; }
-       
+        public MatchAction action { get; set; }      
+
 
     }
 

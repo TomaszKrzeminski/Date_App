@@ -33,7 +33,7 @@ namespace DateApp.Models
         bool RemoveMatch();
         bool ReportUser(string ComplainUserId, string UserToReport, string Reason);
         bool PairCancel(string UserId, string PairId);
-
+        MatchAction MatchAction2(string PairId, string UserId, string Decision);
 
     }
 
@@ -136,6 +136,146 @@ namespace DateApp.Models
 
 
         }
+
+        public MatchAction MatchAction2(string PairId, string UserId, string Decision)
+        {
+            MatchAction action = new MatchAction();
+            action.LikeAvailable = true;
+            action.SuperLikeAvailable = true;
+            action.Error = false;
+            action.Message = "";
+
+            try
+            {
+                bool UserIdIsFirst;
+                Match match = new Match();
+
+                SearchDetails details = context.Users.Include(d => d.Details).Where(i => i.Id == UserId).First().Details;
+
+
+                if (context.Matches.Where(m => m.FirstUserId == PairId && m.SecondUserId == UserId).FirstOrDefault() != null)
+                {
+                    match = context.Matches.Where(m => m.FirstUserId == PairId && m.SecondUserId == UserId).First();
+                    UserIdIsFirst = false;
+
+                }
+                else
+                {
+                    match = context.Matches.Where(m => m.FirstUserId == UserId && m.SecondUserId == PairId).First();
+                    UserIdIsFirst = true;
+                }
+
+                if (Decision == "Accept")
+                {
+
+                    if (details.CheckIfLikeIsAvailable())
+                    {
+                        if (UserIdIsFirst)
+                        {
+                            match.AcceptFirst = "Yes";
+                        }
+                        else
+                        {
+                            match.AcceptSecond = "Yes";
+                        }
+
+                        details.ReduceLike();
+
+                    }
+                    else
+                    {
+                        action.LikeAvailable = false;
+                        action.SuperLikeAvailable = true;
+                        action.Message = "Brak lików do " + details.LikeDate;
+                    }
+
+
+
+                }
+                else if (Decision == "Cancel")
+                {
+                    if (UserIdIsFirst)
+                    {
+                        match.RejectFirst = "Yes";
+                    }
+                    else
+                    {
+                        match.RejectSecond = "Yes";
+                    }
+                }
+                else if (Decision == "SuperLike")
+                {
+
+
+                    if (details.CheckIfSuperLikeIsAvailable())
+                    {
+                        if (UserIdIsFirst)
+                        {
+                            match.SuperLikeFirst = "Yes";
+                        }
+                        else
+                        {
+                            match.SuperLikeSecond = "Yes";
+                        }
+
+                        details.ReduceSuperLike();
+                    }
+                    else
+                    {
+                        action.LikeAvailable = true;
+                        action.SuperLikeAvailable = false;
+                        action.Message = "Brak Superlików do " + details.SuperLikeDate;
+                    }
+
+
+
+
+                }
+                else
+                {
+                    action.Error = true;
+                    action.LikeAvailable = false;
+                    action.SuperLikeAvailable = false;
+                }
+                match.Time = DateTime.Now;
+
+                ////Check  Pair
+                if (match.SuperLikeFirst == "Yes" && match.SuperLikeSecond == "Yes" || match.AcceptFirst == "Yes" && match.AcceptSecond == "Yes")
+                {
+                    match.Pair = "Yes";
+                }
+                else if (match.SuperLikeFirst == "Yes" && match.AcceptSecond == "Yes" || match.AcceptFirst == "Yes" && match.SuperLikeSecond == "Yes")
+                {
+                    match.Pair = "Yes";
+                }
+                else if (match.RejectFirst == "Yes" || match.RejectSecond == "Yes")
+                {
+                    match.Pair = "No";
+                }
+
+
+                context.SaveChanges();
+                ////  check if it is a pair or not
+
+
+                return action;
+            }
+            catch (Exception ex)
+            {
+                action.Error = true;
+                action.LikeAvailable = false;
+                action.SuperLikeAvailable = false;
+                action.Message = "Wystąpił nieoczekiwany błąd";
+                return action;
+            }
+
+
+        }
+
+
+
+
+
 
         bool CheckIfExist(string UserId)
         {
@@ -623,7 +763,7 @@ namespace DateApp.Models
 
 
 
-                List<Coordinates> listCoordinates = context.Coordinates.Include(u => u.User).ThenInclude(d=>d.Details).Where(l => l.Longitude >= MinLon && l.Longitude <= MaxLon).Where(x => x.Latitude >= MinLat && x.Latitude <= MaxLat).Except(exceptList).Take(100).ToList();
+                List<Coordinates> listCoordinates = context.Coordinates.Include(u => u.User).ThenInclude(d => d.Details).Where(l => l.Longitude >= MinLon && l.Longitude <= MaxLon).Where(x => x.Latitude >= MinLat && x.Latitude <= MaxLat).Except(exceptList).Take(100).ToList();
 
 
 
@@ -636,8 +776,8 @@ namespace DateApp.Models
                 foreach (var c in listCoordinates)
                 {
                     int distance = GetDistance(Latitude, Longitude, c.Latitude, c.Longitude);
-                    MatchDetails matchDetails = new MatchDetails(SearchAge,SearchDistance,SearchSex);
-                    UserDetails userDetails = new UserDetails(c.User.Age,distance, c.User.Details.SearchSex);
+                    MatchDetails matchDetails = new MatchDetails(SearchAge, SearchDistance, SearchSex);
+                    UserDetails userDetails = new UserDetails(c.User.Age, distance, c.User.Details.SearchSex);
                     SexMatch sexMatch = new SexMatch(c, CheckList);
                     AgeMatch ageMatch = new AgeMatch(c, CheckList);
                     DistanceMatch distanceMatch = new DistanceMatch(c, CheckList);
@@ -646,7 +786,7 @@ namespace DateApp.Models
                     ageMatch.setMatch(distanceMatch);
 
 
-                    sexMatch.ForwardRequest(matchDetails, userDetails); 
+                    sexMatch.ForwardRequest(matchDetails, userDetails);
 
                 }
 
@@ -911,6 +1051,7 @@ namespace DateApp.Models
 
 
             List<MatchView> list = new List<MatchView>();
+           
             try
             {
                 List<MatchUser> listmatchuser = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
