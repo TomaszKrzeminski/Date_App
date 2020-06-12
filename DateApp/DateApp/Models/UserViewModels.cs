@@ -111,6 +111,12 @@ namespace DateApp.Models
     public class UserSettingsModel
     {
 
+
+        public UserSettingsModel()
+        {
+            Coordinates = new CoordinatesString();
+        }
+
         public void SetSex(AppUser user)
         {
             if (SearchSex == null)
@@ -126,6 +132,7 @@ namespace DateApp.Models
             }
         }
 
+        public CoordinatesString Coordinates { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string MainPhotoPath { get; set; }

@@ -34,6 +34,7 @@ namespace DateApp.Models
         bool ReportUser(string ComplainUserId, string UserToReport, string Reason);
         bool PairCancel(string UserId, string PairId);
         MatchAction MatchAction2(string PairId, string UserId, string Decision);
+        Coordinates GetCoordinates(string UserId);
 
     }
 
@@ -1268,6 +1269,22 @@ namespace DateApp.Models
                 return false;
             }
 
+        }
+
+        public Coordinates GetCoordinates(string UserId)
+        {
+            Coordinates coordinates = new Coordinates();
+
+            try
+            {
+                AppUser user = context.Users.Include(x => x.coordinates).Where(y=>y.Id==UserId).First();
+                coordinates = user.coordinates;
+                return coordinates;
+            }
+            catch(Exception ex)
+            {
+                return coordinates;
+            }
         }
     }
 }

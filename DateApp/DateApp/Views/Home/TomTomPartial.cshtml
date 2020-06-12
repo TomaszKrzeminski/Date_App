@@ -1,0 +1,46 @@
+﻿@model CoordinatesString
+
+   
+    <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.37.2/maps/maps.css' />
+    <script src='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.37.2/maps/maps-web.min.js'></script>
+    <style>
+        #map {
+           height: 200px;
+           width: 200px;
+      
+        }
+    </style>
+
+
+    <div class="col col-lg-12"  id='map'></div>
+    <script>
+
+        var Lat = @Model.Latitude;
+        var Lon = @Model.Longitude;
+
+        var MyPosition = [Lon, Lat];
+
+        var map = tt.map({
+            container: 'map',
+            key: 'YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O',
+            style: 'tomtom://vector/1/basic-main',
+            center: MyPosition,
+            zoom: 15
+        });
+
+
+        var marker = new tt.Marker().setLngLat(MyPosition).addTo(map);
+        var popupOffsets = {
+            top: [0, 0],
+            bottom: [0, -70],
+            'bottom-right': [0, -70],
+            'bottom-left': [0, -70],
+            left: [25, -35],
+            right: [-25, -35]
+        }
+
+        var popup = new tt.Popup({ offset: popupOffsets }).setHTML("Twoje Położenie");
+        marker.setPopup(popup).togglePopup();
+
+    </script>
+

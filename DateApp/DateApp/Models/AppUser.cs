@@ -427,6 +427,12 @@ namespace DateApp.Models
     }
 
 
+    public class CoordinatesString
+    {
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+    }
+
 
     //public class PairOptions
     //{

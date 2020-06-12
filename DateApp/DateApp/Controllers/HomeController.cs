@@ -148,13 +148,21 @@ namespace DateApp.Controllers
         }
 
 
+        public IActionResult TomTom()
+        {
+            return View();
+        }
+
+
+
+
         public IActionResult Panel()
         {
 
             string Id = userManager.GetUserId(HttpContext.User);
 
             SearchDetails details = repository.GetUserDetails(Id);
-            
+            Coordinates coordinates = repository.GetCoordinates(Id);
 
             if(details==null)
             {
@@ -163,7 +171,9 @@ namespace DateApp.Controllers
 
             UserDetailsModel detailsmodel = new UserDetailsModel() { DetailsId = details.Id, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = Id };
 
-            UserSettingsModel settingsmodel = new UserSettingsModel() { MainPhotoPath = details.MainPhotoPath, Name = details.User.UserName, Surname = details.User.Surname, Likes = details.Likes, SuperLikes = details.SuperLikes, Email = details.User.Email, PhoneNumber = details.User.PhoneNumber ?? "Update", Localization = details.CityOfResidence, SearchAge = details.SearchAge, Distance = details.SearchDistance, SearchSex = details.SearchSex ?? "Male", ShowProfile = details.ShowProfile };
+            UserSettingsModel settingsmodel = new UserSettingsModel() { MainPhotoPath = details.MainPhotoPath, Name = details.User.UserName, Surname = details.User.Surname, Likes = details.Likes, SuperLikes = details.SuperLikes, Email = details.User.Email, PhoneNumber = details.User.PhoneNumber ?? "Update", Localization = details.CityOfResidence, SearchAge = details.SearchAge, Distance = details.SearchDistance, SearchSex = details.SearchSex ?? "Male", ShowProfile = details.ShowProfile};
+            settingsmodel.Coordinates.Latitude = coordinates.Latitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+            settingsmodel.Coordinates.Longitude = coordinates.Longitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
             settingsmodel.SetSex(details.User);
 
             PanelViewModel model = new PanelViewModel(detailsmodel, settingsmodel);
