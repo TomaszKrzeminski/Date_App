@@ -25,7 +25,7 @@ namespace DateApp.Models
 
 
     }
-    
+
     public class LoginModel
     {
         [Required]
@@ -35,7 +35,7 @@ namespace DateApp.Models
         [UIHint("password")]
         public string Password { get; set; }
     }
-    
+
     public class PanelViewModel
     {
         public UserDetailsModel detailsmodel;
@@ -55,7 +55,7 @@ namespace DateApp.Models
 
 
     }
-          
+
     public class UserDetailsModel
     {
         public int DetailsId { get; set; }
@@ -71,7 +71,7 @@ namespace DateApp.Models
         public string UserId { get; set; }
 
 
-        
+
 
         /// Settings
         /// 
@@ -102,7 +102,7 @@ namespace DateApp.Models
         public string Surname { get; set; }
         public string Sex { get; set; }
         public DateTime Dateofbirth { get; set; }
-        public string City { get; set; }    
+        public string City { get; set; }
 
 
 
@@ -146,7 +146,7 @@ namespace DateApp.Models
         public int SearchAge { get; set; }
         public bool ShowProfile { get; set; }
     }
-    
+
     public class ChangePhoneNumberView
     {
         [Required]
@@ -172,7 +172,7 @@ namespace DateApp.Models
         }
 
 
-        public PairViewModel( MessageViewModel messageview,MessageOptionsViewModel messageOptionsview  )        
+        public PairViewModel(MessageViewModel messageview, MessageOptionsViewModel messageOptionsview)
         {
             this.messageview = messageview;
             this.messageOptionsview = messageOptionsview;
@@ -180,7 +180,7 @@ namespace DateApp.Models
             this.pairoptions = new PairOptionsViewModel();
         }
 
-        public PairViewModel( PairPartialViewModel pairpartial, PairOptionsViewModel pairoptions)
+        public PairViewModel(PairPartialViewModel pairpartial, PairOptionsViewModel pairoptions)
         {
             this.messageview = new MessageViewModel();
             this.messageOptionsview = new MessageOptionsViewModel();
@@ -207,10 +207,14 @@ namespace DateApp.Models
 
         public PairPartialViewModel()
         {
+            UserCoordinates = new CoordinatesString();
+            MatchCoordinates = new CoordinatesString();
             match = new MatchView();
         }
+        public CoordinatesString UserCoordinates { get; set; }
+        public CoordinatesString MatchCoordinates { get; set; }
 
-      public  MatchView match { get; set; }
+        public MatchView match { get; set; }
     }
     public class PairOptionsViewModel
     {
@@ -241,7 +245,7 @@ namespace DateApp.Models
         public string PairMainPhotoPath { get; set; }
         public string PairMail { get; set; }
         public string PairId { get; set; }
-        public MatchAction action { get; set; }      
+        public MatchAction action { get; set; }
 
 
     }

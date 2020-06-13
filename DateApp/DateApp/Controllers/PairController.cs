@@ -130,6 +130,22 @@ namespace DateApp.Controllers
 
             if (match != null && match.PairId != "")
             {
+                Coordinates coordinatesUser = repository.GetCoordinates(UserId);
+                Coordinates coordinatesMatch = repository.GetCoordinates(match.PairId);
+
+                model.UserCoordinates.Latitude = coordinatesUser.Latitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+                model.UserCoordinates.Longitude = coordinatesUser.Longitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+
+                model.MatchCoordinates.Latitude = coordinatesMatch.Latitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+                model.MatchCoordinates.Longitude = coordinatesMatch.Longitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+
+
+            }
+
+
+
+            if (match != null && match.PairId != "")
+            {
                 model.match = match;
                 match.UserId = UserId;
                 match.action = action;
@@ -204,6 +220,21 @@ namespace DateApp.Controllers
                 options.UserName = user.UserName + " " + user.Surname;
                 PairPartialViewModel pair = new PairPartialViewModel();
                 pair.match = repository.GetMatchViews(Id, "", true).FirstOrDefault();
+
+                if (pair.match != null && pair.match.PairId != "")
+                {
+                    Coordinates coordinatesUser = repository.GetCoordinates(Id);
+                    Coordinates coordinatesMatch = repository.GetCoordinates(pair.match.PairId);
+
+                    pair.UserCoordinates.Latitude = coordinatesUser.Latitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+                    pair.UserCoordinates.Longitude = coordinatesUser.Longitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+
+                    pair.MatchCoordinates.Latitude = coordinatesMatch.Latitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+                    pair.MatchCoordinates.Longitude = coordinatesMatch.Longitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+
+
+                }
+
 
                 if (pair.match != null)
                 {
