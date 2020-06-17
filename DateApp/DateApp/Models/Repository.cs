@@ -35,6 +35,9 @@ namespace DateApp.Models
         bool PairCancel(string UserId, string PairId);
         MatchAction MatchAction2(string PairId, string UserId, string Decision);
         Coordinates GetCoordinates(string UserId);
+        bool StartChat(string UserId, string ReceiverId);
+        List<Message> GetAllMessages(string UserId);
+
 
     }
 
@@ -1052,7 +1055,7 @@ namespace DateApp.Models
 
 
             List<MatchView> list = new List<MatchView>();
-           
+
             try
             {
                 List<MatchUser> listmatchuser = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
@@ -1277,13 +1280,61 @@ namespace DateApp.Models
 
             try
             {
-                AppUser user = context.Users.Include(x => x.coordinates).Where(y=>y.Id==UserId).First();
+                AppUser user = context.Users.Include(x => x.coordinates).Where(y => y.Id == UserId).First();
                 coordinates = user.coordinates;
                 return coordinates;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return coordinates;
+            }
+        }
+
+        public bool StartChat(string UserId, string ReceiverId)
+        {
+            try
+            {
+                AppUser user = context.Users.Where(u => u.Id == UserId).First();
+
+                Message message = new Message();
+                message.Checked = false;
+                message.Time = DateTime.Now;
+                message.SenderId = UserId;
+                message.ReceiverId = ReceiverId;
+                message.MessageText = "";
+
+                MessageUser mu = new MessageUser();
+                mu.AppUser = user;
+                mu.Message = message;
+
+                user.MessageUser.Add(mu);
+                context.SaveChanges();                
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public List<Message> GetAllMessages(string UserId)
+        {
+            List<Message> list = new List<Message>();
+            try
+            {
+                List<MessageUser> listMessage = context.Users.Include(m => m.MessageUser).ThenInclude(me=>me.Message).Where(u => u.Id == UserId).First().MessageUser.ToList();
+
+                if(listMessage != null&& listMessage.Count()>0)
+                {
+                    list = listMessage.Select(x => x.Message).ToList();
+                }
+
+                return list;
+            }
+            catch(Exception ex)
+            {
+                return list;
             }
         }
     }

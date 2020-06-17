@@ -195,12 +195,24 @@ namespace DateApp.Models
 
     public class MessageOptionsViewModel
     {
+        public MessageOptionsViewModel()
+        {
+            list = new List<Message>();
+        }
 
+        public List<Message> list;
+        public string UserName { get; set; }
+        public string UserMainPhotoPath { get; set; }
     }
 
     public class MessageViewModel
     {
+        public MessageViewModel()
+        {
+            message = new Message();
+        }
 
+        public Message message { get; set; }
     }
     public class PairPartialViewModel
     {

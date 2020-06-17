@@ -323,7 +323,7 @@ namespace DateApp.Models
         public string ReceiverId { get; set; }
         public string MessageText { get; set; }
         public DateTime Time { get; set; }
-        public bool Checked { get; set; }
+        public bool Checked { get; set; }    
 
         public IList<MessageUser> MessageUser { get; set; }
 
@@ -434,26 +434,7 @@ namespace DateApp.Models
     }
 
 
-    //public class PairOptions
-    //{
-
-    //    public int  GetDistance(double Latitude,double Longitude)
-    //    {
-    //        return 0;
-    //    }
-
-
-    //    public PairOptionsViewModel GetPairs()
-    //    {
-    //        return new PairOptionsViewModel();
-    //    }
-
-
-
-
-
-    //}
-
+    
 
 
 
