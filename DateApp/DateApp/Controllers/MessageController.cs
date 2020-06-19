@@ -27,7 +27,10 @@ namespace DateApp.Controllers
 
 
 
-
+        public PartialViewResult GoToChat(string ReceiverId)
+        {
+            return PartialView();
+        }
 
 
 

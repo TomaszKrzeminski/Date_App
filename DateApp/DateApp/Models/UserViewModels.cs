@@ -70,14 +70,6 @@ namespace DateApp.Models
         public string School { get; set; }
         public string UserId { get; set; }
 
-
-
-
-        /// Settings
-        /// 
-
-
-
     }
 
 
@@ -103,9 +95,6 @@ namespace DateApp.Models
         public string Sex { get; set; }
         public DateTime Dateofbirth { get; set; }
         public string City { get; set; }
-
-
-
     }
 
     public class UserSettingsModel
@@ -187,20 +176,17 @@ namespace DateApp.Models
             this.pairpartial = pairpartial;
             this.pairoptions = pairoptions;
         }
-
-
-
-
+                     
     }
 
     public class MessageOptionsViewModel
     {
         public MessageOptionsViewModel()
         {
-            list = new List<Message>();
+            list = new List<MessageShort>();
         }
 
-        public List<Message> list;
+        public List<MessageShort> list;
         public string UserName { get; set; }
         public string UserMainPhotoPath { get; set; }
     }
@@ -214,6 +200,25 @@ namespace DateApp.Models
 
         public Message message { get; set; }
     }
+
+    public class MessageShort
+    {
+
+        public MessageShort(string ReceiverMainPhotoPath, string MessageBeggining,string Name, string ReceiverId)
+        {
+            this.ReceiverMainPhotoPath = ReceiverMainPhotoPath;
+            this.MessageBeggining = MessageBeggining;
+            this.Name = Name;
+            this.ReceiverId = ReceiverId;
+        }
+
+        public string ReceiverMainPhotoPath { get; set; }
+        public string MessageBeggining { get; set; }
+        public string Name { get; set; }
+        public string ReceiverId { get; set; }
+    }
+          
+
     public class PairPartialViewModel
     {
 

@@ -37,6 +37,7 @@ namespace DateApp.Models
         Coordinates GetCoordinates(string UserId);
         bool StartChat(string UserId, string ReceiverId);
         List<Message> GetAllMessages(string UserId);
+        bool SendMessage(string SenderId, string ReceiverId, string Text);
 
 
     }
@@ -1301,7 +1302,7 @@ namespace DateApp.Models
                 message.Time = DateTime.Now;
                 message.SenderId = UserId;
                 message.ReceiverId = ReceiverId;
-                message.MessageText = "";
+                message.MessageText = "To jest tekst startowy";
 
                 MessageUser mu = new MessageUser();
                 mu.AppUser = user;
@@ -1335,6 +1336,40 @@ namespace DateApp.Models
             catch(Exception ex)
             {
                 return list;
+            }
+        }
+
+        public bool SendMessage(string SenderId, string ReceiverId, string Text)
+        {            
+            try
+            {
+                Message message = new Message();
+                message.Checked = false;
+                message.MessageText = Text;
+                message.ReceiverId = ReceiverId;
+                message.SenderId = SenderId;
+                message.Time = DateTime.Now;
+
+                AppUser sender = context.Users.Find(SenderId);
+                AppUser receiver = context.Users.Find(ReceiverId);
+
+                MessageUser S = new MessageUser();
+                S.AppUser = sender;
+                S.Message = message;
+
+                MessageUser R = new MessageUser();
+                R.AppUser = receiver;
+                R.Message = message;
+
+                sender.MessageUser.Add(S);
+                receiver.MessageUser.Add(R);
+                context.SaveChanges();
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
             }
         }
     }

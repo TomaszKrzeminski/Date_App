@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DateApp.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -188,7 +189,7 @@ namespace DateApp.Controllers
 
             if (select == "Pair")
             {
-                List<Match> list = repository.GetMatches(Id);
+                List<DateApp.Models.Match> list = repository.GetMatches(Id);
                 bool check = repository.SearchForMatches(Id);
                 PairOptionsViewModel options = new PairOptionsViewModel();
                 List<MatchView> listMatch = repository.GetMatchViews(Id, "Yes", false);
@@ -227,13 +228,34 @@ namespace DateApp.Controllers
             }
             else
             {
-                MessageOptionsViewModel pair = new MessageOptionsViewModel();
+                MessageOptionsViewModel messagesOptionsView = new MessageOptionsViewModel();
                 List<Message> listOfMessages = repository.GetAllMessages(Id);
-                pair.list = listOfMessages;
-                pair.UserMainPhotoPath = details.MainPhotoPath;
-                pair.UserName = user.UserName + " " + user.Surname;
+
+                List<MessageShort> shortList = new List<MessageShort>();
+
+                foreach (var m in listOfMessages)
+                {
+                  SearchDetails Details = repository.GetUserDetails(m.ReceiverId);                 
+                    string PhotoPath = Details.MainPhotoPath;
+                    string Name = Details.User.UserName;
+                    string Text = m.MessageText;
+                    string ShortText="";
+                    if(Text!=null&&Text.Count()>0)
+                    {
+                      ShortText= Regex.Replace(Text.Split()[0], @"[^0-9a-zA-Z\ ]+", "");
+                        ShortText += "...";
+                    }
+
+
+                    shortList.Add(new MessageShort(PhotoPath,ShortText,Name,Details.User.Id));
+                }
+
+                messagesOptionsView.list = shortList;
+                messagesOptionsView.UserMainPhotoPath = details.MainPhotoPath;
+                messagesOptionsView.UserName = user.UserName + " " + user.Surname;
+
                 MessageViewModel message = new MessageViewModel();
-                model = new PairViewModel(message, pair);
+                model = new PairViewModel(message, messagesOptionsView);
                 model.select = select;
             }
 
