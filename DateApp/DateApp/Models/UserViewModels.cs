@@ -196,8 +196,11 @@ namespace DateApp.Models
         public MessageViewModel()
         {
             message = new Message();
+            conversation = new List<Message>();
         }
-
+        public string ReceiverName { get; set; }
+        public string ReceiverPhotoPath { get; set; }
+        public List<Message> conversation { get; set; }
         public Message message { get; set; }
     }
 

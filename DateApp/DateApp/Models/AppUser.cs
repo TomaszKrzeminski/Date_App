@@ -313,6 +313,14 @@ namespace DateApp.Models
     public class Message
     {
 
+        public Message(string ReceiverId,string SenderId)
+        {
+            this.ReceiverId = ReceiverId;
+            this.SenderId = SenderId;
+            MessageText = "";
+            MessageUser = new List<MessageUser>();
+        }
+
         public Message()
         {
             MessageUser = new List<MessageUser>();

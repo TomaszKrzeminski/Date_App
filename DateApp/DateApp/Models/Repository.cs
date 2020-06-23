@@ -37,6 +37,7 @@ namespace DateApp.Models
         Coordinates GetCoordinates(string UserId);
         bool StartChat(string UserId, string ReceiverId);
         List<Message> GetAllMessages(string UserId);
+        List<Message> GetChat(string SenderId, string ReceiverId);
         bool SendMessage(string SenderId, string ReceiverId, string Text);
 
 
@@ -1309,7 +1310,7 @@ namespace DateApp.Models
                 mu.Message = message;
 
                 user.MessageUser.Add(mu);
-                context.SaveChanges();                
+                context.SaveChanges();
 
                 return true;
             }
@@ -1324,23 +1325,23 @@ namespace DateApp.Models
             List<Message> list = new List<Message>();
             try
             {
-                List<MessageUser> listMessage = context.Users.Include(m => m.MessageUser).ThenInclude(me=>me.Message).Where(u => u.Id == UserId).First().MessageUser.ToList();
+                List<MessageUser> listMessage = context.Users.Include(m => m.MessageUser).ThenInclude(me => me.Message).Where(u => u.Id == UserId).First().MessageUser.ToList();
 
-                if(listMessage != null&& listMessage.Count()>0)
+                if (listMessage != null && listMessage.Count() > 0)
                 {
                     list = listMessage.Select(x => x.Message).ToList();
                 }
 
                 return list;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return list;
             }
         }
 
         public bool SendMessage(string SenderId, string ReceiverId, string Text)
-        {            
+        {
             try
             {
                 Message message = new Message();
@@ -1367,9 +1368,42 @@ namespace DateApp.Models
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public List<Message> GetChat(string SenderId, string ReceiverId)
+        {
+            List<Message> list = new List<Message>();
+            try
+            {
+                List<MessageUser> MessagesSender = context.Users.Include(m => m.MessageUser).ThenInclude(me => me.Message).Where(u => u.Id == SenderId).First().MessageUser.ToList();
+                List<MessageUser> MessagesReceiver = context.Users.Include(m => m.MessageUser).ThenInclude(me => me.Message).Where(u => u.Id == ReceiverId).First().MessageUser.ToList();
+
+                List<Message> listS = MessagesSender.Select(m => m.Message).Where(x => x.ReceiverId == ReceiverId || x.SenderId == ReceiverId).ToList();
+                List<Message> listR = MessagesReceiver.Select(m => m.Message).Where(x => x.ReceiverId == SenderId || x.SenderId == SenderId).ToList();
+
+
+                if (listS != null && listS.Count > 0)
+                {
+                    list.AddRange(listS);
+                }
+
+                if (listR != null && listR.Count > 0)
+                {
+                    list.AddRange(listR);
+                }
+
+
+
+
+                return list.GroupBy(m => m.MessageId).Select(g => g.First()).ToList();
+            }
+            catch (Exception ex)
+            {
+                return list;
             }
         }
     }

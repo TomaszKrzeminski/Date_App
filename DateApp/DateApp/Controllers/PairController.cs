@@ -253,9 +253,13 @@ namespace DateApp.Controllers
                 messagesOptionsView.list = shortList;
                 messagesOptionsView.UserMainPhotoPath = details.MainPhotoPath;
                 messagesOptionsView.UserName = user.UserName + " " + user.Surname;
+                
+                ////////
 
-                MessageViewModel message = new MessageViewModel();
-                model = new PairViewModel(message, messagesOptionsView);
+                MessageViewModel messageView = new MessageViewModel();      
+                
+
+                model = new PairViewModel(messageView, messagesOptionsView);
                 model.select = select;
             }
 
