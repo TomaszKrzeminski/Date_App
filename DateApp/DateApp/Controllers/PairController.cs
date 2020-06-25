@@ -230,6 +230,13 @@ namespace DateApp.Controllers
             {
                 MessageOptionsViewModel messagesOptionsView = new MessageOptionsViewModel();
                 List<Message> listOfMessages = repository.GetAllMessages(Id);
+                listOfMessages = listOfMessages.OrderByDescending(x => x.Time).ToList();
+                ///// Remove Repetings
+
+                listOfMessages = listOfMessages.GroupBy(x =>new { x.SenderId, x.ReceiverId }).Select(y => y.First()).ToList();
+               
+
+                /////
 
                 List<MessageShort> shortList = new List<MessageShort>();
 

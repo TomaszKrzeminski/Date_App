@@ -139,6 +139,45 @@
 
     });
     ////
+    //// Change Page
+
+    $(document).on('click', '.page-link', function () {        
+
+
+        var element = document.querySelector(" li.active a");
+       
+        var Data = {};
+        var ReceiverId = $('#ReceiverIdChangePage').val();
+        var MakeAction = $(this).text();
+      
+        Data['ReceiverId'] = ReceiverId;
+        Data['MakeAction'] = MakeAction;
+        Data['ActiveNumber'] = element.textContent;
+
+
+        $.ajax({
+     url: '@Url.Action("ChangePage", "Message")',
+     type: "get",
+     contentType: 'application/x-www-form-urlencoded',
+     data: Data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+                
+         $("#MessageWritePage").html(result);
+        
+
+     }
+ });
+                     
+
+    });
+
+
+
+    ////
           
 
 </script>

@@ -176,7 +176,7 @@ namespace DateApp.Models
             this.pairpartial = pairpartial;
             this.pairoptions = pairoptions;
         }
-                     
+
     }
 
     public class MessageOptionsViewModel
@@ -197,17 +197,21 @@ namespace DateApp.Models
         {
             message = new Message();
             conversation = new List<Message>();
+            info = new PagingInfo();
         }
+        public string UserId { get; set; }
+        public string UserName { get; set; }
         public string ReceiverName { get; set; }
         public string ReceiverPhotoPath { get; set; }
         public List<Message> conversation { get; set; }
         public Message message { get; set; }
+        public PagingInfo info { get; set; }
     }
 
     public class MessageShort
     {
 
-        public MessageShort(string ReceiverMainPhotoPath, string MessageBeggining,string Name, string ReceiverId)
+        public MessageShort(string ReceiverMainPhotoPath, string MessageBeggining, string Name, string ReceiverId)
         {
             this.ReceiverMainPhotoPath = ReceiverMainPhotoPath;
             this.MessageBeggining = MessageBeggining;
@@ -220,7 +224,7 @@ namespace DateApp.Models
         public string Name { get; set; }
         public string ReceiverId { get; set; }
     }
-          
+
 
     public class PairPartialViewModel
     {
@@ -268,6 +272,90 @@ namespace DateApp.Models
         public MatchAction action { get; set; }
 
 
+    }
+    public class PagingInfo
+    {
+        public int TotalMessages { get; set; }
+        public int MessagesPerPage { get; set; } //5
+        public int CurrentPage { get; set; }
+        public string ReceiverId { get; set; }
+        public int ActiveNumber { get; set; }
+        public string Action { get; set; }
+
+        public PagingInfo()
+        {
+
+        }
+
+        public PagingInfo(int TotalMessages, string ReceiverId, string Action, string ActiveNumber, int MessagesPerPage = 5)
+        {
+            this.TotalMessages = TotalMessages;
+            this.MessagesPerPage = MessagesPerPage;
+            SetActiveNumber(ActiveNumber);
+            SetCurrentPage(Action);
+            this.ReceiverId = ReceiverId;
+
+        }
+
+
+
+        public void SetActiveNumber(string ActiveNumber)
+        {
+            int number;
+            bool result = Int32.TryParse(ActiveNumber, out number);
+            this.ActiveNumber = number;
+        }
+
+
+        public void SetCurrentPage(string Action)
+        {
+            int number;
+            bool result = Int32.TryParse(Action, out number);
+
+            if (result)
+            {
+                this.CurrentPage = number;
+            }
+            else
+            {
+                int check = ActiveNumber;
+
+                if (Action == "Previous")
+                {
+
+                    check -= 1;
+
+                }
+                else if (Action == "Next")
+                {
+                    check += 1;
+
+                }
+                else
+                {
+
+                    CurrentPage = ActiveNumber;
+                }
+
+                if (check < 1 || check > TotalPages)
+                {
+                    CurrentPage = ActiveNumber;
+                }
+                else
+                {
+                    CurrentPage = check;
+                }
+
+            }
+
+        }
+
+
+
+        public int TotalPages
+        {
+            get { return (int)Math.Ceiling((decimal)TotalMessages / MessagesPerPage); }
+        }
     }
 
 }

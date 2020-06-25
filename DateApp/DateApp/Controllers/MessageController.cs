@@ -25,6 +25,27 @@ namespace DateApp.Controllers
 
 
 
+        public PartialViewResult ChangePage(string MakeAction,string ActiveNumber,string ReceiverId)
+        {
+            SearchDetails Details = repository.GetUserDetails(ReceiverId);
+            string SenderId = userManager.GetUserId(HttpContext.User);
+
+            MessageViewModel messageView = new MessageViewModel();
+
+
+            messageView.conversation = repository.GetChat(SenderId, ReceiverId).OrderBy(x => x.Time).ToList();
+            messageView.message = new Message(ReceiverId, SenderId);
+            messageView.ReceiverName = Details.User.UserName;
+            messageView.ReceiverPhotoPath = Details.MainPhotoPath;
+            messageView.UserId = SenderId;
+
+            messageView.info = new PagingInfo(messageView.conversation.Count, ReceiverId, MakeAction, ActiveNumber, 5);
+
+
+            return PartialView("WriteMessage", messageView);
+        }
+
+
 
         [HttpPost]
         public PartialViewResult WriteMessage(string ReceiverId)
@@ -35,10 +56,13 @@ namespace DateApp.Controllers
             MessageViewModel messageView = new MessageViewModel();
 
 
-            messageView.conversation = repository.GetChat(SenderId, ReceiverId);
+            messageView.conversation = repository.GetChat(SenderId, ReceiverId).OrderBy(x=>x.Time).ToList();
             messageView.message = new Message(ReceiverId, SenderId);
             messageView.ReceiverName = Details.User.UserName;
             messageView.ReceiverPhotoPath = Details.MainPhotoPath;
+            messageView.UserId = SenderId;
+
+            messageView.info = new  PagingInfo(messageView.conversation.Count, ReceiverId, "None", "1", 5);
 
 
             return PartialView("WriteMessage",messageView);
@@ -54,10 +78,13 @@ namespace DateApp.Controllers
 
             MessageViewModel messageView = new MessageViewModel();
 
-            messageView.conversation = repository.GetChat(SenderId, message.ReceiverId);
+            messageView.conversation = repository.GetChat(SenderId, message.ReceiverId).OrderBy(x => x.Time).ToList();
             messageView.message = new Message(message.ReceiverId, SenderId);
             messageView.ReceiverName = Details.User.UserName;
             messageView.ReceiverPhotoPath = Details.MainPhotoPath;
+            messageView.UserId = SenderId;
+
+            messageView.info = new PagingInfo(messageView.conversation.Count,message.ReceiverId,"None","1", 5);
 
             return PartialView("WriteMessage",messageView);
         }

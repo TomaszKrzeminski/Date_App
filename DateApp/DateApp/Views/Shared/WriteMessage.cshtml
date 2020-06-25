@@ -1,5 +1,5 @@
 ﻿@model MessageViewModel
-<div >
+<div>
     @if (Model.ReceiverName != null)
     {
 
@@ -9,17 +9,40 @@
             foreach (var message in Model.conversation)
             {
 
-                <div class="row">
-                    <div class="col-lg-3">
-                        <img border="0" style="border-style:outset" @*alt=@item.Name*@ class="" src=@Model.ReceiverPhotoPath width="100" height="100">
+                if (message.SenderId == Model.UserId)
+                {
+                    <div class="row" style="border:solid">
+                        <div class="col-lg-12 text-left">
+                            <h5>Ja</h5>
+                        </div>
+                        <div class="col-lg-9">
+                            <textarea name="MessageText" class="md-textarea form-control" rows="3">@message.MessageText</textarea>
+                        </div>
+                        <div class="col-lg-12 text-lg-right">
+                            <p>@message.Time.ToShortDateString()</p>
+                        </div>
                     </div>
-                    <div class="col-lg-9">
-                        <textarea name="MessageText" class="md-textarea form-control" rows="3">@message.MessageText</textarea>
+                }
+                else
+                {
+                    <div class="row" style="border:solid">
+                        <div class="col-lg-12 text-left">
+                            <h5>@Model.ReceiverName</h5>
+                        </div>
+                        <div class="col-lg-3">
+
+                            <img border="0" style="border-style:outset" @*alt=@item.Name*@ class="" src=@Model.ReceiverPhotoPath width="100" height="100">
+                        </div>
+                        <div class="col-lg-9">
+                            <textarea name="MessageText" class="md-textarea form-control" rows="3">@message.MessageText</textarea>
+                        </div>
+                        <div class="col-lg-12 text-lg-right">
+                            <p>@message.Time.ToShortDateString()</p>
+                        </div>
                     </div>
-                    <div class="col-lg-12 text-lg-right">
-                        <p>@message.Time.ToShortDateString()</p>
-                    </div>
-                </div>
+                }
+
+                <br />
 
 
             }
@@ -30,37 +53,83 @@
 
 
         <br />
-        <form class="SendMessage" asp-action="SendMessage" asp-controller="Message" method="post">
-            <div>
-                <input id="RId" name="ReceiverId" type="hidden" value="@Model.message.ReceiverId" />
-                <input id="SId" name="SenderId" type="hidden" value="@Model.message.SenderId" />
+        <div class="col col-lg-12">
+            <form class="SendMessage" asp-action="SendMessage" asp-controller="Message" method="post">
+                <div>
+                    <input id="RId" name="ReceiverId" type="hidden" value="@Model.message.ReceiverId" />
+                    <input id="SId" name="SenderId" type="hidden" value="@Model.message.SenderId" />
 
-            </div>
-            <div class="md-form">
-                <div class="row">
-                    <div class="col-lg-1">
+                </div>
+                <div class="md-form">
+                    <div class="row">
+                        <div class="col-lg-1">
 
+                        </div>
+                        <div class="col-lg-9">
+                            <textarea id="MText" name="MessageText" class="md-textarea form-control" rows="3"></textarea>
+                        </div>
+                        <div class="col-lg-2">
+                            <input type="button" id="SendMessage" class="btn btn-success" value="Wyślij" />
+                        </div>
                     </div>
-                    <div class="col-lg-9">
-                        <textarea id="MText" name="MessageText" class="md-textarea form-control" rows="3"></textarea>
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="button"  id="SendMessage" class="btn btn-success" value="Wyślij"/>
-                    </div>
+
+                </div>
+                <div>
+
                 </div>
 
-            </div>
-            <div>
+            </form>
+        </div>
+        <br />
 
-            </div>
+        //Pagination
+      
 
-        </form>
+        <div class="row">
+          
+                <div class="col-lg-4">
+                    <input type="hidden" value="@Model.info.ReceiverId"  id="ReceiverIdChangePage" />
+                </div>
+                <div class="col-lg-4">
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                            <li class="page-item ">
+                                <a class="page-link " href="#" tabindex="-1">Previous</a>
+                            </li>
+                            @for (int i = 1; i <= Model.info.TotalPages; i++)
+                            {
+                                if (i == Model.info.CurrentPage)
+                                {
+                                    <li  class="page-item active">
+                                        <a  class="page-link" href="#">@i <span class="sr-only"></span></a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li  class="page-item ">
+                                        <a  class="page-link" href="#">@i <span class="sr-only"></span></a>
+                                    </li>
+                                }
 
+                            }
 
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-4"></div>
+          
+           
+
+        </div>
+        ///////
 
     }
 </div>
 
 <script>
-    
+
 </script>
