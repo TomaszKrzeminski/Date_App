@@ -281,6 +281,7 @@ namespace DateApp.Models
         public string ReceiverId { get; set; }
         public int ActiveNumber { get; set; }
         public string Action { get; set; }
+       
 
         public PagingInfo()
         {
@@ -297,6 +298,7 @@ namespace DateApp.Models
 
         }
 
+        
 
 
         public void SetActiveNumber(string ActiveNumber)
