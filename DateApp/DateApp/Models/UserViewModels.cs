@@ -197,7 +197,7 @@ namespace DateApp.Models
         {
             message = new Message();
             conversation = new List<Message>();
-            info = new PagingInfo();
+            info = new PageInfo();
         }
         public string UserId { get; set; }
         public string UserName { get; set; }
@@ -205,7 +205,7 @@ namespace DateApp.Models
         public string ReceiverPhotoPath { get; set; }
         public List<Message> conversation { get; set; }
         public Message message { get; set; }
-        public PagingInfo info { get; set; }
+        public PageInfo info { get; set; }
     }
 
     public class MessageShort
@@ -273,91 +273,111 @@ namespace DateApp.Models
 
 
     }
-    public class PagingInfo
+
+
+    public class PageInfo
     {
         public int TotalMessages { get; set; }
         public int MessagesPerPage { get; set; } //5
         public int CurrentPage { get; set; }
         public string ReceiverId { get; set; }
-        public int ActiveNumber { get; set; }
+        public int ActivePage { get; set; }
         public string Action { get; set; }
-       
+        public int TotalPages
+        {
+            get { return (int)Math.Ceiling((decimal)TotalMessages / MessagesPerPage); }
+        }
 
-        public PagingInfo()
+        public PageInfo()
         {
 
         }
 
-        public PagingInfo(int TotalMessages, string ReceiverId, string Action, string ActiveNumber, int MessagesPerPage = 5)
+        public PageInfo(int TotalMessages, string ReceiverId, string Action, string ActivePage, int MessagesPerPage = 5)
+        {
+            this.TotalMessages = TotalMessages;
+            this.MessagesPerPage = MessagesPerPage;           
+            this.ReceiverId = ReceiverId;
+            SetActivePage(ActivePage);
+            SetCurrentPage(Action);
+        }
+
+        public PageInfo(int TotalMessages, string ReceiverId, int MessagesPerPage = 5)
         {
             this.TotalMessages = TotalMessages;
             this.MessagesPerPage = MessagesPerPage;
-            SetActiveNumber(ActiveNumber);
-            SetCurrentPage(Action);
             this.ReceiverId = ReceiverId;
-
+            int number = this.TotalPages;
+            SetCurrentPage(number.ToString());
         }
 
-        
 
 
-        public void SetActiveNumber(string ActiveNumber)
+        public void SetActivePage(string ActivePage)
         {
             int number;
-            bool result = Int32.TryParse(ActiveNumber, out number);
-            this.ActiveNumber = number;
+            bool result = Int32.TryParse(ActivePage, out number);
+            this.ActivePage = number;
         }
 
 
         public void SetCurrentPage(string Action)
         {
-            int number;
-            bool result = Int32.TryParse(Action, out number);
-
-            if (result)
+            
+            if(Action=="Next")
             {
+
+                int number = ActivePage + 1;
+
+                if(number<=TotalPages)
+                {
+                    CurrentPage = number;
+                }
+                else
+                {
+                    CurrentPage = ActivePage;
+                }
+
+            }
+           else if(Action=="Previous")
+            {
+                int number = ActivePage - 1;
+
+                if (number >= 1)
+                {
+                    CurrentPage = number;
+                }
+                else
+                {
+                    CurrentPage = ActivePage;
+                }
+            }
+            else 
+            {
+                int number;
+                bool result = Int32.TryParse(Action, out number);
                 this.CurrentPage = number;
+                   
             }
-            else
-            {
-                int check = ActiveNumber;
-
-                if (Action == "Previous")
-                {
-
-                    check -= 1;
-
-                }
-                else if (Action == "Next")
-                {
-                    check += 1;
-
-                }
-                else
-                {
-
-                    CurrentPage = ActiveNumber;
-                }
-
-                if (check < 1 || check > TotalPages)
-                {
-                    CurrentPage = ActiveNumber;
-                }
-                else
-                {
-                    CurrentPage = check;
-                }
-
-            }
-
         }
 
 
 
-        public int TotalPages
-        {
-            get { return (int)Math.Ceiling((decimal)TotalMessages / MessagesPerPage); }
-        }
+        
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
 
 }

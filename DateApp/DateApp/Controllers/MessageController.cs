@@ -24,15 +24,26 @@ namespace DateApp.Controllers
             _environment = env;
             this.MessagePerPage = 5;
         }
+                
 
-        public MessageViewModel  SetMessageView(string MakeAction,string ActiveNumber,string ReceiverId,string SenderId,SearchDetails Details,bool setLastPage)
+
+        public MessageViewModel SettingMessageView(string ActionMade, string ActivePage, string ReceiverId, string SenderId, SearchDetails Details, bool setLastPage)
         {
             MessageViewModel messageView = new MessageViewModel();
 
             List<Message> MessagesList = repository.GetChat(SenderId, ReceiverId).OrderBy(x => x.Time).ToList();
             int MessagesCount = MessagesList.Count;
 
-            messageView.info = new PagingInfo(MessagesCount, ReceiverId, MakeAction, ActiveNumber, MessagePerPage);
+
+            if (setLastPage)
+            {
+                messageView.info = new PageInfo(MessagesCount, ReceiverId, 5);
+            }
+            else
+            {
+                messageView.info = new PageInfo(MessagesCount, ReceiverId, ActionMade, ActivePage, MessagePerPage);
+            }
+
             int Page = messageView.info.CurrentPage;
             messageView.conversation = MessagesList.Skip((Page - 1) * MessagePerPage).Take(MessagePerPage).ToList();
 
@@ -41,7 +52,7 @@ namespace DateApp.Controllers
             messageView.ReceiverPhotoPath = Details.MainPhotoPath;
             messageView.UserId = SenderId;
 
-            if(setLastPage)
+            if (setLastPage)
             {
                 messageView.info.CurrentPage = messageView.info.TotalPages;
             }
@@ -49,15 +60,15 @@ namespace DateApp.Controllers
 
             return messageView;
         }
+                      
 
 
-        public PartialViewResult ChangePage(string MakeAction, string ActiveNumber, string ReceiverId)
+        public PartialViewResult SelectPage(string ActionMade, string ActivePage, string ReceiverId)
         {
-
             SearchDetails Details = repository.GetUserDetails(ReceiverId);
             string SenderId = userManager.GetUserId(HttpContext.User);
-            MessageViewModel messageView = SetMessageView(MakeAction, ActiveNumber, ReceiverId, SenderId, Details,false);       
-                       
+            MessageViewModel messageView = SettingMessageView(ActionMade, ActivePage, ReceiverId, SenderId, Details, false);
+
             return PartialView("WriteMessage", messageView);
         }
 
@@ -69,8 +80,8 @@ namespace DateApp.Controllers
             SearchDetails Details = repository.GetUserDetails(ReceiverId);
             string SenderId = userManager.GetUserId(HttpContext.User);
 
-            MessageViewModel messageView = SetMessageView("1", "1", ReceiverId, SenderId, Details,true);          
-            
+            MessageViewModel messageView = SettingMessageView("None","None", ReceiverId, SenderId, Details, true);
+
             return PartialView("WriteMessage", messageView);
         }
 
@@ -81,7 +92,7 @@ namespace DateApp.Controllers
             SearchDetails Details = repository.GetUserDetails(message.ReceiverId);
             string SenderId = userManager.GetUserId(HttpContext.User);
 
-            MessageViewModel messageView = SetMessageView("1", "1", message.ReceiverId, SenderId, Details,true);           
+            MessageViewModel messageView = SettingMessageView("None", "None", message.ReceiverId, SenderId, Details, true);
 
             return PartialView("WriteMessage", messageView);
         }

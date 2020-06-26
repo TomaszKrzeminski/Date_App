@@ -49,7 +49,7 @@
                         </div>
                         <img border="0" style="border-style:outset" alt=@item.Name class="" src=@item.ReceiverMainPhotoPath width="100" height="100">
                         <p>@item.MessageBeggining</p>
-                        <input  type="hidden" value="@item.ReceiverId" name="ReceiverId" />
+                        <input type="hidden" value="@item.ReceiverId" name="ReceiverId" />
                     </form>
                     <hr />
                 </div>
@@ -83,7 +83,7 @@
         var data = {};
         var Id = $(this).find('input[name="ReceiverId"]').val();
         data["ReceiverId"] = Id;
-       
+
 
         $.ajax({
      url: '@Url.Action("WriteMessage", "Message")',
@@ -95,20 +95,20 @@
              $('input:hidden[name="__RequestVerificationToken"]').val()
      },
             success: function (result) {
-               
+
          $("#MessageWritePage").html(result);
-        
+
 
      }
  });
-       
+
 
     });
-       
+
     ///
-   
+
     /////Send Message
-    $(document).on('click', '#SendMessage', function () {        
+    $(document).on('click', '#SendMessage', function () {
 
         var message = {};
         var ReceiverId = $('#RId').val();
@@ -129,27 +129,27 @@
              $('input:hidden[name="__RequestVerificationToken"]').val()
      },
             success: function (result) {
-                
+
          $("#MessageWritePage").html(result);
-        
+
 
      }
  });
-                     
+
 
     });
     ////
     //// Change Page
 
-    $(document).on('click', '.page-link', function () {        
+    @*$(document).on('click', '.page-link', function () {
 
 
         var element = document.querySelector(" li.active a");
-       
+
         var Data = {};
         var ReceiverId = $('#ReceiverIdChangePage').val();
         var MakeAction = $(this).text();
-      
+
         Data['ReceiverId'] = ReceiverId;
         Data['MakeAction'] = MakeAction;
         Data['ActiveNumber'] = element.textContent;
@@ -165,19 +165,70 @@
              $('input:hidden[name="__RequestVerificationToken"]').val()
      },
             success: function (result) {
-                
+
          $("#MessageWritePage").html(result);
-        
+
 
      }
  });
-                     
 
-    });
+
+    });*@
 
 
 
     ////
-          
+    /////Select Page
+
+     $(document).on('click', '.page-link', function () {
+
+        
+         var element = $(this).text();
+         var ActionMade;
+         var ReceiverId = $('#ReceiverIdChangePage').val();
+         if (element == "Next")
+         {
+             ActionMade = "Next";
+         }
+         else if (element == "Previous")
+         {
+             ActionMade = "Previous";
+         }
+         else
+         {
+             ActionMade = element;
+         }
+
+
+         var ActivePage = $("li.active a").text();
+
+        var Data = {};
+        Data['ReceiverId'] = ReceiverId;
+         Data['ActionMade'] = ActionMade;
+         Data['ActivePage'] = ActivePage;
+
+
+        $.ajax({
+     url: '@Url.Action("SelectPage", "Message")',
+     type: "get",
+     contentType: 'application/x-www-form-urlencoded',
+     data: Data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+               
+
+         $("#MessageWritePage").html(result);
+
+
+     }
+ });
+
+
+    });
+   ////
+
 
 </script>
