@@ -7,6 +7,7 @@ using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using DateApp.Models;
+using System.Security.Claims;
 
 namespace UndergroundSound.Models
 
@@ -61,6 +62,11 @@ namespace UndergroundSound.Models
                         userStore = new UserStore<AppUser>(context);
 
                         userStore.CreateAsync(User).Wait();
+                         ////////
+                        Claim claim = new Claim(ClaimTypes.Email, User.Email);
+                        List<Claim> claims = new List<Claim>();
+                        claims.Add(claim);
+                        userStore.AddClaimsAsync(User, claims);
 
 
                     }

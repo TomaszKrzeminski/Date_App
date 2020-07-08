@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DateApp.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -59,8 +61,20 @@ namespace DateApp.Controllers
                 };
 
                 IdentityResult result = await userManager.CreateAsync(user, model.Password);
+                ///// SignalR
+                //await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, user.Email));
 
-                if(result.Succeeded)
+
+                Claim claim = new Claim(ClaimTypes.NameIdentifier, user.Id);
+                await userManager.AddClaimAsync(user,claim);
+               
+
+
+
+
+
+
+                if (result.Succeeded)
                 {
                     return RedirectToRoute(new { controller = "Account", action = "Login", Id = "MyId" });
                 }

@@ -1,0 +1,51 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "HubExample";
+}
+<script src="~/lib/SignalR/dist/browser/signalr.js"></script>
+<h2>HubExample</h2>
+
+
+<script>
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/messages").build();
+
+    connection.on("Announce", function ( message) {
+        alert(message);
+
+       
+    });
+    connection.on("ChatReceive", function (message) {
+        alert(message);
+    });
+    var UserId = connection.connectionId;
+    var UserName="";
+
+
+
+    connection.start().then( /*alert("Works")*/
+
+    ).catch(function (err) {
+        alert("Błąd");
+
+        }).then(() => {
+
+            //connection.invoke("Announce", "Wiadomość od klienta").catch(function (err) {
+              
+            //});
+            //connection.invoke("SendMessage", UserId, UserName, "Wiadomość Testowa").catch(function (err) { });
+        });
+
+    
+   
+</script>
+
+
+@section scripts{
+
+
+
+
+
+}

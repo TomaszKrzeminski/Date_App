@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using DateApp.Hubs;
 using DateApp.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DateApp.Controllers
 {
@@ -16,13 +19,15 @@ namespace DateApp.Controllers
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
         private int MessagePerPage { get; set; }
+        private IHubContext<MessageHub> messageContext;
 
-        public MessageController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env)
+        public MessageController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,IHubContext<MessageHub> messageContext)
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
             this.MessagePerPage = 5;
+            this.messageContext = messageContext;
         }
                 
 
@@ -104,5 +109,24 @@ namespace DateApp.Controllers
             bool check = repository.StartChat(Id, UserId);
             return RedirectToRoute(new { controller = "Pair", action = "PairPanel", select = "Pair" });
         }
+
+
+        public IActionResult HubExample(int Number=6)
+        {
+            string Name = User.Identity.Name;
+           
+            //messageContext.Clients.All.SendAsync("Announce", "Działa z kontrolera");
+
+            if(Number==6)
+            {
+                string AdaId = "366c9d15-8b8d-4af9-9885-d14c4e361eaa";
+                messageContext.Clients.User(AdaId).SendAsync("ChatReceive", "Wiadomość od Tomek xxxx");
+                messageContext.Clients.All.SendAsync("Announce", "Wiadomość od Wszystkich");
+            }
+
+           
+            return View();
+        }
+
     }
 }

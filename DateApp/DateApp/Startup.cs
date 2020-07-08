@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using UndergroundSound.Models;
+using DateApp.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DateApp
 {
@@ -23,7 +25,7 @@ namespace DateApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-           //
+            //
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             //
 
@@ -37,7 +39,9 @@ namespace DateApp
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             //
 
-            services.AddMvc();
+            //services.AddMvc();
+            services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +51,22 @@ namespace DateApp
             app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseSignalR(config => { config.MapHub<MessageHub>("/messages"); });
+
+
+
+            app.Use(async (ext, next) =>
+            {
+                var hubContext = ext.RequestServices
+                                        .GetRequiredService<IHubContext<MessageHub>>();
+                //...
+
+                if (next != null)
+                {
+                    await next.Invoke();
+                }
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -57,6 +77,7 @@ namespace DateApp
                     name: "default2",
                     template: "{controller}/{action}/{PairId?}");
             });
+
 
             SeedData.EnsurePopulated(context);
 
