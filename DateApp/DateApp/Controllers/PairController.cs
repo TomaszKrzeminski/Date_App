@@ -233,7 +233,7 @@ namespace DateApp.Controllers
                 listOfMessages = listOfMessages.OrderByDescending(x => x.Time).ToList();
                 ///// Remove Repetings
 
-                listOfMessages = listOfMessages.GroupBy(x =>new { x.SenderId, x.ReceiverId }).Select(y => y.First()).ToList();
+                listOfMessages = listOfMessages.Where(y=>y.SenderId!=Id).GroupBy(x =>new { x.SenderId, x.ReceiverId }).Select(y => y.First()).ToList();
                
 
                 /////
@@ -244,9 +244,14 @@ namespace DateApp.Controllers
                 {
                   SearchDetails Details = repository.GetUserDetails(m.ReceiverId);                 
                     string PhotoPath = Details.MainPhotoPath;
+                    // check sender/receiver of message and then set name
+
                     string Name = Details.User.UserName;
+
+                    ////
                     string Text = m.MessageText;
                     string ShortText="";
+                    bool Checked = m.Checked;
                     if(Text!=null&&Text.Count()>0)
                     {
                       ShortText= Regex.Replace(Text.Split()[0], @"[^0-9a-zA-Z\ ]+", "");
@@ -254,7 +259,7 @@ namespace DateApp.Controllers
                     }
 
 
-                    shortList.Add(new MessageShort(PhotoPath,ShortText,Name,Details.User.Id));
+                    shortList.Add(new MessageShort(PhotoPath,ShortText,Name,Details.User.Id,Checked));
                 }
 
                 messagesOptionsView.list = shortList;

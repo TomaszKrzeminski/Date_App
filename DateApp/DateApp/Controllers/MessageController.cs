@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DateApp.Hubs;
 using DateApp.Models;
@@ -80,12 +81,71 @@ namespace DateApp.Controllers
 
 
         [HttpPost]
+        public PartialViewResult RefreshReceivers(string ReceiverId)
+        {
+            string Id = userManager.GetUserId(HttpContext.User);
+            SearchDetails details = repository.GetUserDetails(Id);
+            AppUser user = repository.GetUser(Id);
+            //MessageOptionsViewModel messagesOptionsView = new MessageOptionsViewModel();
+            List<Message> listOfMessages = repository.GetAllMessages(Id);
+            listOfMessages = listOfMessages.OrderByDescending(x => x.Time).ToList();
+            ///// Remove Repetings
+
+            listOfMessages = listOfMessages.GroupBy(x => new { x.SenderId, x.ReceiverId }).Select(y => y.First()).ToList();
+
+
+            /////
+
+            List<MessageShort> shortList = new List<MessageShort>();
+
+            foreach (var m in listOfMessages)
+            {
+                SearchDetails Details = repository.GetUserDetails(m.ReceiverId);
+                string PhotoPath = Details.MainPhotoPath;
+                string Name = Details.User.UserName;
+                string Text = m.MessageText;
+                string ShortText = "";
+                bool Checked = m.Checked;
+                if (Text != null && Text.Count() > 0)
+                {
+                    ShortText = Regex.Replace(Text.Split()[0], @"[^0-9a-zA-Z\ ]+", "");
+                    ShortText += "...";
+                }
+
+
+                shortList.Add(new MessageShort(PhotoPath, ShortText, Name, Details.User.Id, Checked));
+            }
+
+            //messagesOptionsView.list = shortList;
+            //messagesOptionsView.UserMainPhotoPath = details.MainPhotoPath;
+            //messagesOptionsView.UserName = user.UserName + " " + user.Surname;
+
+            ////////
+
+            //MessageViewModel messageView = new MessageViewModel();
+
+
+            return PartialView("RefreshReceivers", shortList);
+            
+
+
+        }
+
+
+
+
+        [HttpPost]
         public PartialViewResult WriteMessage(string ReceiverId)
         {
             SearchDetails Details = repository.GetUserDetails(ReceiverId);
             string SenderId = userManager.GetUserId(HttpContext.User);
 
             MessageViewModel messageView = SettingMessageView("None","None", ReceiverId, SenderId, Details, true);
+
+            //change message to checked
+
+            bool check = repository.ChangeMessagesToRead(SenderId, ReceiverId);
+
 
             return PartialView("WriteMessage", messageView);
         }
@@ -94,6 +154,16 @@ namespace DateApp.Controllers
         public PartialViewResult SendMessage(Message message)
         {
             bool check = repository.SendMessage(message.SenderId, message.ReceiverId, message.MessageText);
+            if(check)
+            {
+
+                string ReceiverId= message.ReceiverId;
+                messageContext.Clients.User(ReceiverId).SendAsync("UpdateChat_Users");
+                string Id = userManager.GetUserName(HttpContext.User);
+                messageContext.Clients.User(ReceiverId).SendAsync("UpdateChat_WriteMessage",Id);
+
+
+            }
             SearchDetails Details = repository.GetUserDetails(message.ReceiverId);
             string SenderId = userManager.GetUserId(HttpContext.User);
 

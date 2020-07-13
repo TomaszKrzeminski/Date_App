@@ -37,24 +37,59 @@
             </form>
         </div>
 
-        @foreach (var item in Model.list)
-        {
-            <div class="row">
 
-                <div class="col-lg-12">
+        <div id="ChatUsers">
+            @foreach (var item in Model.list)
+            {
 
-                    <form class="ChooseReceiver" asp-action="WriteMessage" asp-controller="Message" method="post">
-                        <div>
-                            <label>@item.Name</label>
+                if (item.IsRead == false)
+                {
+                    <div class="row">
+
+                        <div class="col-lg-12">
+
+                            <form class="ChooseReceiver" asp-action="WriteMessage" asp-controller="Message" method="post">
+                                <div>
+                                    <label class="font-weight-bold">@item.Name</label>
+                                </div>
+                                <img style="border: 3px solid #000; padding:0;" alt=@item.Name class="" src=@item.ReceiverMainPhotoPath width="100" height="100">
+                                <p class="font-weight-bold">@item.MessageBeggining</p>
+                                <input type="hidden" value="@item.ReceiverId" name="ReceiverId" />
+                            </form>
+                            <hr />
                         </div>
-                        <img border="0" style="border-style:outset" alt=@item.Name class="" src=@item.ReceiverMainPhotoPath width="100" height="100">
-                        <p>@item.MessageBeggining</p>
-                        <input type="hidden" value="@item.ReceiverId" name="ReceiverId" />
-                    </form>
-                    <hr />
-                </div>
-            </div>
-        }
+                    </div>
+
+
+                }
+                else
+                {
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+
+                            <form class="ChooseReceiver" asp-action="WriteMessage" asp-controller="Message" method="post">
+                                <div>
+                                    <label>@item.Name</label>
+                                </div>
+                                <img border="0" style="border-style:outset" alt=@item.Name class="" src=@item.ReceiverMainPhotoPath width="100" height="100">
+                                <p>@item.MessageBeggining</p>
+                                <input type="hidden" value="@item.ReceiverId" name="ReceiverId" />
+                            </form>
+                            <hr />
+                        </div>
+                    </div>
+
+
+                }
+
+
+
+            }
+        </div>
+
+
 
 
     </div>
@@ -77,37 +112,14 @@
 
     /////
 
-    ///Write Message
-    $('form.ChooseReceiver').click(function ()
-    {
-        var data = {};
-        var Id = $(this).find('input[name="ReceiverId"]').val();
-        data["ReceiverId"] = Id;
 
 
-        $.ajax({
-     url: '@Url.Action("WriteMessage", "Message")',
-     type: "post",
-     contentType: 'application/x-www-form-urlencoded',
-     data: data,
-     headers: {
-         RequestVerificationToken:
-             $('input:hidden[name="__RequestVerificationToken"]').val()
-     },
-            success: function (result) {
-
-         $("#MessageWritePage").html(result);
 
 
-     }
- });
 
-
-    });
-
-    ///
 
     /////Send Message
+
     $(document).on('click', '#SendMessage', function () {
 
         var message = {};
@@ -138,51 +150,18 @@
 
 
     });
-    ////
-    //// Change Page
-
-    @*$(document).on('click', '.page-link', function () {
-
-
-        var element = document.querySelector(" li.active a");
-
-        var Data = {};
-        var ReceiverId = $('#ReceiverIdChangePage').val();
-        var MakeAction = $(this).text();
-
-        Data['ReceiverId'] = ReceiverId;
-        Data['MakeAction'] = MakeAction;
-        Data['ActiveNumber'] = element.textContent;
-
-
-        $.ajax({
-     url: '@Url.Action("ChangePage", "Message")',
-     type: "get",
-     contentType: 'application/x-www-form-urlencoded',
-     data: Data,
-     headers: {
-         RequestVerificationToken:
-             $('input:hidden[name="__RequestVerificationToken"]').val()
-     },
-            success: function (result) {
-
-         $("#MessageWritePage").html(result);
-
-
-     }
- });
-
-
-    });*@
-
-
 
     ////
+
+
+
+
+
     /////Select Page
 
      $(document).on('click', '.page-link', function () {
 
-        
+
          var element = $(this).text();
          var ActionMade;
          var ReceiverId = $('#ReceiverIdChangePage').val();
@@ -218,7 +197,7 @@
              $('input:hidden[name="__RequestVerificationToken"]').val()
      },
             success: function (result) {
-               
+
 
          $("#MessageWritePage").html(result);
 
@@ -229,6 +208,250 @@
 
     });
    ////
+
+    ///// //////
+
+    ///Write Message
+    $(document).on('click', 'form.ChooseReceiver', function () {
+
+        var data = {};
+        var Id = $(this).find('input[name="ReceiverId"]').val();
+        data["ReceiverId"] = Id;
+
+
+        $.ajax({
+     url: '@Url.Action("WriteMessage", "Message")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+                
+
+         $("#MessageWritePage").html(result);
+
+
+     }
+ });
+
+
+    });
+
+    ///
+
+
+    //// refresh receivers
+    $(document).on('click', 'form.ChooseReceiver', function () {
+
+
+        //// fire after few seconds wait for db to update
+        window.setTimeout(function () {
+
+var data = {};
+        var Id = $(this).find('input[name="ReceiverId"]').val();
+        data["ReceiverId"] = Id;
+
+
+        $.ajax({
+     url: '@Url.Action("RefreshReceivers", "Message")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+
+                
+
+
+                $("#ChatUsers").html(result);
+
+
+     }
+ });
+
+        }, 3000);
+
+
+
+
+
+    });
+
+    ///
+
+    ////Signal R
+
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/messages").build();
+
+
+
+   
+
+
+    connection.on("UpdateChat_Users", function (message) {   
+
+        
+               
+var data = {};
+        var Id = $(this).find('input[name="ReceiverId"]').val();
+        data["ReceiverId"] = Id;
+
+
+        $.ajax({
+     url: '@Url.Action("RefreshReceivers", "Message")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+
+               
+
+
+                $("#ChatUsers").html(result);
+
+
+     }
+ });
+
+
+
+    });
+
+   
+
+   
+
+
+
+    connection.start().then( 
+
+    ).catch(function (err) {
+        alert("Błąd  w Refresh Users"+ err);
+
+    }).then(() => {
+
+       
+    });
+
+
+
+
+
+
+
+
+
+
+    //////
+
+
+    ////Signal R refresch writeMessage
+
+
+
+
+     var connection2 = new signalR.HubConnectionBuilder().withUrl("/messages").build();
+
+
+   
+
+
+    connection2.on("UpdateChat_WriteMessage", function (Id) {   
+
+        alert("Signal R  with Id" + Id);
+
+        var ReceiverName = $("#ReceiverName").val();
+
+        if (ReceiverName != null && ReceiverName == Id)
+        {
+
+
+            alert("Signal R  Refresh Write Message");
+               
+ var data = {};
+
+            data["ReceiverId"] = ReceiverName;
+
+
+        $.ajax({
+     url: '@Url.Action("WriteMessage", "Message")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+                alert("Write Message from Signal R refresh Users");
+
+         $("#MessageWritePage").html(result);
+
+
+     }
+ });
+
+
+        }
+
+
+        
+
+
+
+    });
+
+   
+
+   
+
+
+
+    connection2.start().then( 
+
+    ).catch(function (err) {
+        alert("Błąd w Chat");
+
+    }).then(() => {
+
+       
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /////
 
 
 </script>

@@ -1,5 +1,6 @@
 ﻿@model MessageViewModel
 <div>
+    <input id="ReceiverName"  type="hidden" value="@Model.ReceiverName" />
     @if (Model.ReceiverName != null)
     {
 
@@ -83,46 +84,46 @@
         <br />
 
         //Pagination
-      
+
 
         <div class="row">
-          
-                <div class="col-lg-3">
-                    <input type="hidden" value="@Model.info.ReceiverId"  id="ReceiverIdChangePage" />
-                </div>
-                <div class="col-lg-6">
-                    <nav aria-label="...">
-                        <ul class="pagination">
-                            <li class="page-item ">
-                                <a class="page-link "  tabindex="-1">Previous</a>
-                            </li>
-                            @for (int i = Model.info.TotalPages; i >0 ; i--)
-                            {
-                                if (i == Model.info.CurrentPage)
-                                {
-                                    <li  class="page-item active">
-                                        <a  class="page-link" href="#">@i <span class="sr-only"></span></a>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li  class="page-item ">
-                                        <a  class="page-link" href="#">@i <span class="sr-only"></span></a>
-                                    </li>
-                                }
 
+            <div class="col-lg-3">
+                <input type="hidden" value="@Model.info.ReceiverId" id="ReceiverIdChangePage" />
+            </div>
+            <div class="col-lg-6">
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item ">
+                            <a class="page-link " tabindex="-1">Previous</a>
+                        </li>
+                        @for (int i = Model.info.TotalPages; i > 0; i--)
+                        {
+                            if (i == Model.info.CurrentPage)
+                            {
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">@i <span class="sr-only"></span></a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item ">
+                                    <a class="page-link" href="#">@i <span class="sr-only"></span></a>
+                                </li>
                             }
 
-                            <li class="page-item">
-                                <a class="page-link " >Next</a>
-                            </li>
+                        }
 
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3"></div>
-          
-           
+                        <li class="page-item">
+                            <a class="page-link ">Next</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-lg-3"></div>
+
+
 
         </div>
         ///////
@@ -131,5 +132,92 @@
 </div>
 
 <script>
+
+
+     
+    @*var connection2 = new signalR.HubConnectionBuilder().withUrl("/messages").build();
+
+
+   
+
+
+    connection2.on("UpdateChat_WriteMessage", function (Id) {   
+
+        alert("Signal R  with Id" + Id);
+
+        var ReceiverId = $("#RId").val();
+
+        if (ReceiverId != null && ReceiverId == Id)
+        {
+
+
+            alert("Signal R  Refresh Write Message");
+               
+ var data = {};
+
+        data["ReceiverId"] =ReceiverId;
+
+
+        $.ajax({
+     url: '@Url.Action("WriteMessage", "Message")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+                alert("Write Message from Signal R refresh Users");
+
+         $("#MessageWritePage").html(result);
+
+
+     }
+ });
+
+
+        }
+
+
+        
+
+
+
+    });
+
+   
+
+   
+
+
+
+    connection2.start().then( 
+
+    ).catch(function (err) {
+        alert("Błąd w Chat");
+
+    }).then(() => {
+
+       
+    });*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>

@@ -39,6 +39,7 @@ namespace DateApp.Models
         List<Message> GetAllMessages(string UserId);
         List<Message> GetChat(string SenderId, string ReceiverId);
         bool SendMessage(string SenderId, string ReceiverId, string Text);
+        bool ChangeMessagesToRead(string User, string SecondUser);
 
 
     }
@@ -1292,24 +1293,72 @@ namespace DateApp.Models
             }
         }
 
+        //public bool StartChat(string UserId, string ReceiverId)
+        //{
+        //    try
+        //    {
+        //        AppUser user = context.Users.Where(u => u.Id == UserId).First();
+
+        //        Message message = new Message();
+        //        message.Checked = false;
+        //        message.Time = DateTime.Now;
+        //        message.SenderId = UserId;
+        //        message.ReceiverId = ReceiverId;
+        //        message.MessageText = "To jest tekst startowy";
+
+        //        MessageUser mu = new MessageUser();
+        //        mu.AppUser = user;
+        //        mu.Message = message;
+
+        //        user.MessageUser.Add(mu);
+        //        context.SaveChanges();
+
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return false;
+        //    }
+        //}
+
+
         public bool StartChat(string UserId, string ReceiverId)
         {
             try
             {
                 AppUser user = context.Users.Where(u => u.Id == UserId).First();
 
+                AppUser userReceiver = context.Users.Where(u => u.Id == ReceiverId).First();
+
                 Message message = new Message();
                 message.Checked = false;
                 message.Time = DateTime.Now;
-                message.SenderId = UserId;
-                message.ReceiverId = ReceiverId;
-                message.MessageText = "To jest tekst startowy";
+                message.SenderId = ReceiverId;
+                message.ReceiverId = UserId;
+                message.MessageText = "Zacznij Rozmowę "+user.UserName;
 
                 MessageUser mu = new MessageUser();
                 mu.AppUser = user;
                 mu.Message = message;
 
                 user.MessageUser.Add(mu);
+
+                Message message2 = new Message();
+                message2.Checked = false;
+                message2.Time = DateTime.Now;
+
+                message2.SenderId = UserId;
+                message2.ReceiverId = ReceiverId;
+                message2.MessageText = "Zacznij Rozmowę "+userReceiver.UserName;
+
+                MessageUser mu2 = new MessageUser();
+                mu2.AppUser = userReceiver;
+                mu2.Message = message2;
+
+                userReceiver.MessageUser.Add(mu2);
+
+
+
                 context.SaveChanges();
 
                 return true;
@@ -1319,6 +1368,9 @@ namespace DateApp.Models
                 return false;
             }
         }
+
+
+
 
         public List<Message> GetAllMessages(string UserId)
         {
@@ -1404,6 +1456,54 @@ namespace DateApp.Models
             catch (Exception ex)
             {
                 return list;
+            }
+        }
+
+        public bool ChangeMessagesToRead(string User, string SecondUser)
+        {
+            try
+            {
+
+                List<MessageUser> MessagesSender = context.Users.Include(m => m.MessageUser).ThenInclude(me => me.Message).Where(u => u.Id == User).First().MessageUser.ToList();
+                List<Message> listS = MessagesSender.Select(m => m.Message).Where(x => x.ReceiverId == SecondUser || x.SenderId == SecondUser).ToList();
+
+                listS = listS.OrderByDescending(l => l.Time).ToList();
+
+                if(listS!=null&&listS.Count()>0)
+                {
+
+                    foreach (var message in listS)
+                    {
+                        
+                        //if(message.Checked==false)
+                        //{
+                        //    message.Checked = true;
+                        //}
+                        //else
+                        //{
+                        //    break;
+                        //}
+
+
+                        if (message.Checked == false)
+                        {
+                            message.Checked = true;
+                        }
+
+
+                    }
+
+                    context.SaveChanges();
+
+                }
+
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+
+                return false;
             }
         }
     }

@@ -219,10 +219,20 @@ namespace DateApp.Models
             this.ReceiverId = ReceiverId;
         }
 
+        public MessageShort(string ReceiverMainPhotoPath, string MessageBeggining, string Name, string ReceiverId,bool IsRead)
+        {
+            this.ReceiverMainPhotoPath = ReceiverMainPhotoPath;
+            this.MessageBeggining = MessageBeggining;
+            this.Name = Name;
+            this.ReceiverId = ReceiverId;
+            this.IsRead = IsRead;
+        }
+
         public string ReceiverMainPhotoPath { get; set; }
         public string MessageBeggining { get; set; }
         public string Name { get; set; }
         public string ReceiverId { get; set; }
+        public bool IsRead { get; set; }
     }
 
 
