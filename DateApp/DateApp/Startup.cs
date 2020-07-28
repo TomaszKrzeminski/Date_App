@@ -52,7 +52,7 @@ namespace DateApp
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseSignalR(config => { config.MapHub<MessageHub>("/messages"); });
-
+            app.UseSignalR(config => { config.MapHub<CheckConnectionHub>("/messages2"); });
 
 
             app.Use(async (ext, next) =>
@@ -66,6 +66,22 @@ namespace DateApp
                     await next.Invoke();
                 }
             });
+
+            app.Use(async (ext, next) =>
+            {
+                var connectionContext = ext.RequestServices
+                                        .GetRequiredService<IHubContext<CheckConnectionHub>>();
+                //...
+
+                if (next != null)
+                {
+                    await next.Invoke();
+                }
+            });
+
+
+
+
 
             app.UseMvc(routes =>
             {

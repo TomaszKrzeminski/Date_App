@@ -184,9 +184,23 @@ namespace DateApp.Models
         public MessageOptionsViewModel()
         {
             list = new List<MessageShort>();
+            Receivers = new List<string>();
         }
 
+        public void MakeList()
+        {
+            if(list.Count>0)
+            {
+                foreach (var item in list)
+                {
+                    Receivers.Add(item.ReceiverId);
+                }
+            }
+        }
+
+        public string ChatUserId { get; set; }
         public List<MessageShort> list;
+        public List<string> Receivers;
         public string UserName { get; set; }
         public string UserMainPhotoPath { get; set; }
     }

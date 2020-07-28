@@ -127,16 +127,11 @@ namespace DateApp.Controllers
                 model.match = match;
                 match.UserId = UserId;
                 match.action = action;
-
-
             }
             else
             {
                 model.match = new MatchView() { UserId = UserId, PairMail = "", PairId = "", PairMainPhotoPath = "" };
-
             }
-
-
 
             return PartialView("PairPartial", model);
         }
@@ -219,12 +214,9 @@ namespace DateApp.Controllers
                     pair.match.UserId = Id;
                     pair.match.action = new MatchAction("", true, true, false);
                 }
-
-
+                
                 model = new PairViewModel(pair, options);
                 model.select = select;
-
-
             }
             else
             {
@@ -232,9 +224,7 @@ namespace DateApp.Controllers
                 List<Message> listOfMessages = repository.GetAllMessages(Id);
                 listOfMessages = listOfMessages.OrderByDescending(x => x.Time).ToList();
                 ///// Remove Repetings
-
-                listOfMessages = listOfMessages.Where(y=>y.SenderId!=Id).GroupBy(x =>new { x.SenderId, x.ReceiverId }).Select(y => y.First()).ToList();
-               
+                listOfMessages = listOfMessages.Where(y=>y.SenderId!=Id).GroupBy(x =>new { x.SenderId, x.ReceiverId }).Select(y => y.First()).ToList();            
 
                 /////
 
@@ -242,7 +232,7 @@ namespace DateApp.Controllers
 
                 foreach (var m in listOfMessages)
                 {
-                  SearchDetails Details = repository.GetUserDetails(m.ReceiverId);                 
+                  SearchDetails Details = repository.GetUserDetails(m.SenderId);                 
                     string PhotoPath = Details.MainPhotoPath;
                     // check sender/receiver of message and then set name
 
@@ -261,10 +251,11 @@ namespace DateApp.Controllers
 
                     shortList.Add(new MessageShort(PhotoPath,ShortText,Name,Details.User.Id,Checked));
                 }
-
+                messagesOptionsView.ChatUserId = Id;
                 messagesOptionsView.list = shortList;
                 messagesOptionsView.UserMainPhotoPath = details.MainPhotoPath;
                 messagesOptionsView.UserName = user.UserName + " " + user.Surname;
+                ///////
                 
                 ////////
 

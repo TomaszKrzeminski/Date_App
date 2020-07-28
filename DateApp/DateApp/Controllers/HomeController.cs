@@ -21,10 +21,7 @@ namespace DateApp.Controllers
             int number = Convert.ToInt32(PictureNumber);
             PictureType type = (PictureType)number;
             return type;
-        }
-
-
-        
+        }        
 
         [HttpPost]
         public IActionResult SetShowProfile(bool Show)
@@ -42,9 +39,6 @@ namespace DateApp.Controllers
             }
 
         }
-
-
-
 
         [HttpPost]
         public IActionResult SetAge(int Age)
@@ -85,7 +79,6 @@ namespace DateApp.Controllers
         [HttpPost]
         public IActionResult SetSearchSex(string SearchSex)
         {
-
             string Id = userManager.GetUserId(HttpContext.User);
             bool succes = repository.ChangeSearchSex(SearchSex, Id);
 
@@ -98,9 +91,6 @@ namespace DateApp.Controllers
                 string Message = "Zmiana poszukiwanej płci nie powiodła się";
                 return View("Error", Message);
             }
-
-
-
         }
 
 
