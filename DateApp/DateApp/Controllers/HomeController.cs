@@ -15,6 +15,26 @@ namespace DateApp.Controllers
         private IRepository repository;
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
+        private Func<Task<AppUser>> GetUser;
+
+
+       
+
+        public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, Func<Task<AppUser>>  GetUser=null)
+        {
+            repository = repo;
+            userManager = userMgr;
+            _environment = env;
+            if (GetUser == null)
+            {
+                this.GetUser = () => userManager.GetUserAsync(HttpContext.User);
+            }
+            else
+            {
+                this.GetUser = GetUser;
+            }
+        }
+
 
         public PictureType GetPictureType(string PictureNumber)
         {
@@ -26,7 +46,8 @@ namespace DateApp.Controllers
         [HttpPost]
         public IActionResult SetShowProfile(bool Show)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            //string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             bool succes = repository.SetShowProfile(Id, Show);
             if (succes)
             {
@@ -43,7 +64,7 @@ namespace DateApp.Controllers
         [HttpPost]
         public IActionResult SetAge(int Age)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             bool succes = repository.SetSearchAge(Id, Age);
             if (succes)
             {
@@ -60,7 +81,7 @@ namespace DateApp.Controllers
         [HttpPost]
         public IActionResult SetDistance(int Distance)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             bool succes = repository.SetDistance(Id, Distance);
 
             if (succes)
@@ -79,7 +100,7 @@ namespace DateApp.Controllers
         [HttpPost]
         public IActionResult SetSearchSex(string SearchSex)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             bool succes = repository.ChangeSearchSex(SearchSex, Id);
 
             if (succes)
@@ -91,29 +112,19 @@ namespace DateApp.Controllers
                 string Message = "Zmiana poszukiwanej płci nie powiodła się";
                 return View("Error", Message);
             }
-        }
+        }      
 
-
-
-
-        public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env)
-        {
-            repository = repo;
-            userManager = userMgr;
-            _environment = env;
-        }
+       
 
         public IActionResult StartPage()
         {
             return View();
         }
 
-
-
         public IActionResult ChangePhoneNumber()
         {
             ChangePhoneNumberView model = new ChangePhoneNumberView();
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             model.PhoneNumber = repository.GetPhoneNumber(Id);
             model.UserId = Id;
             return View(model);
