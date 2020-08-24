@@ -18,12 +18,25 @@ namespace DateApp.Controllers
         private IRepository repository;
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
+        private Func<Task<AppUser>> GetUser;
 
-        public PairController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env)
+        public PairController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
+
+
+            if (GetUser == null)
+            {
+                this.GetUser = () => userManager.GetUserAsync(HttpContext.User);
+            }
+            else
+            {
+                this.GetUser = GetUser;
+            }
+
+
         }
 
 
@@ -43,7 +56,7 @@ namespace DateApp.Controllers
         [HttpPost]
         public IActionResult PairReport(string Reason, string UserId)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             bool check = repository.ReportUser(Id, UserId, Reason);
 
             if (check)
@@ -59,7 +72,7 @@ namespace DateApp.Controllers
 
         public IActionResult PairCancel(string UserId)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             bool check = repository.PairCancel(Id, UserId);
 
             if (check)
@@ -76,7 +89,7 @@ namespace DateApp.Controllers
         [Authorize]
         public IActionResult Coordinates(string Longitude, string Latitude)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
 
             double La = getValue(Latitude);
             double Lon = getValue(Longitude);
@@ -100,7 +113,7 @@ namespace DateApp.Controllers
 
         public PartialViewResult ShowNextMatch(string Id, string Decision)
         {
-            string UserId = userManager.GetUserId(HttpContext.User);
+            string UserId = GetUser().Result.Id; ;
             PairPartialViewModel model = new PairPartialViewModel();
 
             MatchAction action = repository.MatchAction2(Id, UserId, Decision);
@@ -141,7 +154,7 @@ namespace DateApp.Controllers
 
         public PartialViewResult UpdateMatches()
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             SearchDetails details = repository.GetUserDetails(Id);
             PairOptionsViewModel options = new PairOptionsViewModel();
             AppUser user = repository.GetUser(Id);
@@ -178,7 +191,7 @@ namespace DateApp.Controllers
         public IActionResult PairPanel(string select = "Pair")
         {
             PairViewModel model;
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             SearchDetails details = repository.GetUserDetails(Id);
             AppUser user = repository.GetUser(Id);
 
