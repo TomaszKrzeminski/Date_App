@@ -22,8 +22,9 @@ namespace DateApp.Controllers
         private int MessagePerPage { get; set; }
         private IHubContext<MessageHub> messageContext;
         private IHubContext<CheckConnectionHub> connectionContext;
+        private Func<Task<AppUser>> GetUser;
 
-        public MessageController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,IHubContext<MessageHub> messageContext,IHubContext<CheckConnectionHub>connectionContext)
+        public MessageController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,IHubContext<MessageHub> messageContext,IHubContext<CheckConnectionHub>connectionContext, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
@@ -31,6 +32,18 @@ namespace DateApp.Controllers
             this.MessagePerPage = 5;
             this.messageContext = messageContext;
             this.connectionContext = connectionContext;
+
+            if (GetUser == null)
+            {
+                this.GetUser = () => userManager.GetUserAsync(HttpContext.User);
+            }
+            else
+            {
+                this.GetUser = GetUser;
+            }
+
+
+
         }
                 
 
@@ -68,7 +81,7 @@ namespace DateApp.Controllers
         public PartialViewResult SelectPage(string ActionMade, string ActivePage, string ReceiverId)
         {
             SearchDetails Details = repository.GetUserDetails(ReceiverId);
-            string SenderId = userManager.GetUserId(HttpContext.User);
+            string SenderId = GetUser().Result.Id;
             MessageViewModel messageView = SettingMessageView(ActionMade, ActivePage, ReceiverId, SenderId, Details, false);
 
             return PartialView("WriteMessage", messageView);
@@ -78,7 +91,7 @@ namespace DateApp.Controllers
         [HttpPost]
         public PartialViewResult RefreshReceivers(string ReceiverId)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             SearchDetails details = repository.GetUserDetails(Id);
             AppUser user = repository.GetUser(Id);           
             List<Message> listOfMessages = repository.GetAllMessages(Id);
@@ -122,24 +135,16 @@ namespace DateApp.Controllers
         public void CheckOffline()
         {
 
-            string SenderId = userManager.GetUserId(HttpContext.User);
+            string SenderId = GetUser().Result.Id;
             connectionContext.Clients.All.SendAsync("UpdateChatList_Remove", SenderId);
 
 
-        }
-
-
-        //public  void CheckOnline(string UserId)
-        //{
-        //    string SenderId = userManager.GetUserId(HttpContext.User);
-        //    connectionContext.Clients.User(UserId).SendAsync("UpdateChatList_Add", SenderId);
-
-        //}
+        }       
 
        [HttpPost]
         public void CheckOnline([FromBody]OnlineObject  data)
         {
-            string SenderId = userManager.GetUserId(HttpContext.User);
+            string SenderId = GetUser().Result.Id;
             connectionContext.Clients.User(data.UserId).SendAsync("UpdateChatList_Add", SenderId);
             connectionContext.Clients.User(SenderId).SendAsync("UpdateChatList_Add", data.UserId);
 
@@ -147,12 +152,11 @@ namespace DateApp.Controllers
 
 
 
-
         [HttpPost]
         public PartialViewResult WriteMessage(string ReceiverId)
         {
             SearchDetails Details = repository.GetUserDetails(ReceiverId);
-            string SenderId = userManager.GetUserId(HttpContext.User);
+            string SenderId = GetUser().Result.Id;
 
             MessageViewModel messageView = SettingMessageView("None","None", ReceiverId, SenderId, Details, true);
 
@@ -179,7 +183,7 @@ namespace DateApp.Controllers
 
             }
             SearchDetails Details = repository.GetUserDetails(message.ReceiverId);
-            string SenderId = userManager.GetUserId(HttpContext.User);
+            string SenderId = GetUser().Result.Id;
 
             MessageViewModel messageView = SettingMessageView("None", "None", message.ReceiverId, SenderId, Details, true);
 
@@ -189,7 +193,7 @@ namespace DateApp.Controllers
 
         public IActionResult MessageStart(string UserId)
         {
-            string Id = userManager.GetUserId(HttpContext.User);
+            string Id = GetUser().Result.Id;
             bool check = repository.StartChat(Id, UserId);
             return RedirectToRoute(new { controller = "Pair", action = "PairPanel", select = "Pair" });
         }

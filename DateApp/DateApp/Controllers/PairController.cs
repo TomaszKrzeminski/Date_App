@@ -70,6 +70,7 @@ namespace DateApp.Controllers
 
         }
 
+
         public IActionResult PairCancel(string UserId)
         {
             string Id = GetUser().Result.Id;
@@ -108,7 +109,6 @@ namespace DateApp.Controllers
             }
 
         }
-
 
 
         public PartialViewResult ShowNextMatch(string Id, string Decision)
@@ -150,8 +150,6 @@ namespace DateApp.Controllers
         }
 
 
-
-
         public PartialViewResult UpdateMatches()
         {
             string Id = GetUser().Result.Id;
@@ -165,10 +163,6 @@ namespace DateApp.Controllers
 
             return PartialView("PairOptionsPartial", options);
         }
-
-
-
-
 
 
         public IActionResult GoToPair(string PairId)
@@ -187,7 +181,6 @@ namespace DateApp.Controllers
         }
 
 
-
         public IActionResult PairPanel(string select = "Pair")
         {
             PairViewModel model;
@@ -196,7 +189,7 @@ namespace DateApp.Controllers
             AppUser user = repository.GetUser(Id);
 
             if (select == "Pair")
-            {
+             {
                 List<DateApp.Models.Match> list = repository.GetMatches(Id);
                 bool check = repository.SearchForMatches(Id);
                 PairOptionsViewModel options = new PairOptionsViewModel();
