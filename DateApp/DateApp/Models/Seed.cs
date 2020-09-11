@@ -23,7 +23,128 @@ namespace UndergroundSound.Models
             context.Database.EnsureCreated();
 
 
-           
+
+
+            void SeedRoles()
+            {
+
+
+
+
+                try
+                {
+                   
+
+                   
+
+
+
+
+
+
+
+                    var roleStore = new RoleStore<IdentityRole>(context);
+
+                    if (!context.Roles.Any(r => r.Name == "Administrator"))
+                    {
+
+                        roleStore.CreateAsync(new IdentityRole { Name = "Administrator", NormalizedName = "Administrator" });
+                    }
+
+
+
+                    if (!context.Roles.Any(r => r.Name == "UserRole"))
+                    {
+
+                        roleStore.CreateAsync(new IdentityRole { Name = "UserRole", NormalizedName = "UserRole" });
+                    }
+                   
+
+                   
+
+
+
+
+                    context.SaveChanges();
+
+
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
+
+
+            
+
+
+            void SeedAdmin(string Name, string Surname, string Sex, string City, string Email, DateTime Dateofbirth)
+            {
+
+
+                try
+                {
+                    DateTime Now = DateTime.Now;
+                    TimeSpan ts = Now - Dateofbirth;
+                    int age = ts.Days / 365;
+
+                    var User = new AppUser(Sex)
+                    {
+                        Age = age,
+                        UserName = Name,
+                        Surname = Surname,
+                        //Sex = Sex,
+                        City = City,
+                        Dateofbirth = Dateofbirth,
+                        Email = Email,
+                        EmailConfirmed = false,
+                        LockoutEnabled = true,
+                        SecurityStamp = Guid.NewGuid().ToString(),
+                        NormalizedEmail = Email.ToUpper(),
+                        NormalizedUserName = Name.ToUpper(),
+                    };
+
+                    if (!context.Users.Any(u => u.UserName == User.UserName))
+                    {
+                        var password = new PasswordHasher<AppUser>();
+                        var hashed = password.HashPassword(User, "Sekret123@");
+                        User.PasswordHash = hashed;
+                        UserStore<AppUser> userStore;
+
+                        userStore = new UserStore<AppUser>(context);
+
+                        userStore.CreateAsync(User).Wait();
+                        ////////
+                        Claim claim = new Claim(ClaimTypes.Email, User.Email);
+                        List<Claim> claims = new List<Claim>();
+                        claims.Add(claim);
+                        userStore.AddClaimsAsync(User, claims);
+                        userStore.AddToRoleAsync(User, "Administrator").Wait();
+
+                    }
+                    context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+
+
+
+
+
+            }
+
+
+
+
+
+
 
 
             void SeedUser( string Name,string Surname,string Sex,string City,string Email,DateTime Dateofbirth )
@@ -67,7 +188,7 @@ namespace UndergroundSound.Models
                         List<Claim> claims = new List<Claim>();
                         claims.Add(claim);
                         userStore.AddClaimsAsync(User, claims);
-
+                        userStore.AddToRoleAsync(User, "UserRole").Wait();
 
                     }
                     context.SaveChanges();
@@ -132,6 +253,10 @@ namespace UndergroundSound.Models
             if (!context.Users.Any())
             {
 
+                SeedRoles();
+               
+               SeedAdmin("ADMIN", "ADMIN", "Mężczyzna", "Świecie", "ADMIN@gmail.com", new DateTime(1985, 8, 21));
+
                 SeedUser("Tomek", "Kowalski", "Mężczyzna", "Świecie", "U1@gmail.com", new DateTime(1985,8,21));
                 SeedUser("Ada", "Kowalska", "Kobieta", "Świecie", "U2@gmail.com", new DateTime(1985, 8, 21));
                 SeedUser("Janusz", "Świerczyński", "Mężczyzna", "Świecie", "U3@gmail.com", new DateTime(1950, 8, 21));
@@ -144,10 +269,10 @@ namespace UndergroundSound.Models
                 SeedUser("Ania", "Przybylska", "Kobieta", "Bydgoszcz", "U10@gmail.com", new DateTime(2001, 8, 21));
                 SeedUser("Karolina", "Świerczyński", "Kobieta", "Świecie", "U11@gmail.com", new DateTime(1950, 8, 21));
                 SeedUser("Kasia", "Przybylska", "Kobieta", "Bydgoszcz", "U12@gmail.com", new DateTime(1992, 8, 21));
-                            
 
 
 
+                AddCoordinatesToUser("ADMIN@gmail.com", 53.409479, 18.442148);
                 AddCoordinatesToUser("U1@gmail.com", 53.409479, 18.442148);
                 AddCoordinatesToUser("U2@gmail.com", 53.408353, 18.414253);
                 AddCoordinatesToUser("U3@gmail.com", 53.405232, 18.406958);

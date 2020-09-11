@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,12 @@ namespace DateApp.Models
     {
 
         SearchDetails GetUserDetails(string UserId);
+        LoginDetails GetLoginDetails();
         AppUser GetUser(string UserId);
+        List<AppUser> GetUsers(string Text);
+        bool CountLogin(string Id);
+        bool CountLogout(string Id);
+        Task<bool> CountLogout2(string Id);
         bool ChangeUserDetails(UserDetailsModel model);
         bool AddPicture(string UserId, PictureType type, string FilePath);
         bool RemovePicture(string UserId, PictureType type);
@@ -40,6 +46,9 @@ namespace DateApp.Models
         List<Message> GetChat(string SenderId, string ReceiverId);
         bool SendMessage(string SenderId, string ReceiverId, string Text);
         bool ChangeMessagesToRead(string User, string SecondUser);
+        bool RemoveUserByAdmin(string Id);
+        bool AddLikesByAdmin(string Id, int Likes);
+        int GetNumberOfLikes(string Id);
 
 
     }
@@ -278,11 +287,6 @@ namespace DateApp.Models
 
 
         }
-
-
-
-
-
 
         bool CheckIfExist(string UserId)
         {
@@ -702,9 +706,6 @@ namespace DateApp.Models
             return longitude;
         }
 
-
-
-
         public bool SearchForMatches(string UserId)
         {
             try
@@ -845,8 +846,6 @@ namespace DateApp.Models
             }
 
         }
-
-
 
         public bool SearchForMatches2(string UserId)
         {
@@ -1293,35 +1292,6 @@ namespace DateApp.Models
             }
         }
 
-        //public bool StartChat(string UserId, string ReceiverId)
-        //{
-        //    try
-        //    {
-        //        AppUser user = context.Users.Where(u => u.Id == UserId).First();
-
-        //        Message message = new Message();
-        //        message.Checked = false;
-        //        message.Time = DateTime.Now;
-        //        message.SenderId = UserId;
-        //        message.ReceiverId = ReceiverId;
-        //        message.MessageText = "To jest tekst startowy";
-
-        //        MessageUser mu = new MessageUser();
-        //        mu.AppUser = user;
-        //        mu.Message = message;
-
-        //        user.MessageUser.Add(mu);
-        //        context.SaveChanges();
-
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return false;
-        //    }
-        //}
-
-
         public bool StartChat(string UserId, string ReceiverId)
         {
             try
@@ -1335,7 +1305,7 @@ namespace DateApp.Models
                 message.Time = DateTime.Now;
                 message.SenderId = ReceiverId;
                 message.ReceiverId = UserId;
-                message.MessageText = "Zacznij Rozmowę "+user.UserName;
+                message.MessageText = "Zacznij Rozmowę " + user.UserName;
 
                 MessageUser mu = new MessageUser();
                 mu.AppUser = user;
@@ -1349,7 +1319,7 @@ namespace DateApp.Models
 
                 message2.SenderId = UserId;
                 message2.ReceiverId = ReceiverId;
-                message2.MessageText = "Zacznij Rozmowę "+userReceiver.UserName;
+                message2.MessageText = "Zacznij Rozmowę " + userReceiver.UserName;
 
                 MessageUser mu2 = new MessageUser();
                 mu2.AppUser = userReceiver;
@@ -1368,9 +1338,6 @@ namespace DateApp.Models
                 return false;
             }
         }
-
-
-
 
         public List<Message> GetAllMessages(string UserId)
         {
@@ -1469,12 +1436,12 @@ namespace DateApp.Models
 
                 listS = listS.OrderByDescending(l => l.Time).ToList();
 
-                if(listS!=null&&listS.Count()>0)
+                if (listS != null && listS.Count() > 0)
                 {
 
                     foreach (var message in listS)
                     {
-                        
+
                         //if(message.Checked==false)
                         //{
                         //    message.Checked = true;
@@ -1500,10 +1467,485 @@ namespace DateApp.Models
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 return false;
+            }
+        }
+
+        public List<AppUser> GetUsers(string Text)
+        {
+            try
+            {
+
+                List<AppUser> list = new List<AppUser>();
+                list = context.Users.Where(u => u.Email.StartsWith(Text)).ToList();
+                return list;
+
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public bool RemoveUserByAdmin(string Id)
+        {
+            try
+            {
+
+
+
+
+
+
+                Coordinates coordinates = context.Coordinates.Where(c => c.UserId == Id).FirstOrDefault();
+
+                if (coordinates != null)
+                {
+                    context.Coordinates.Remove(coordinates);
+                    context.SaveChanges();
+                }
+
+
+
+
+
+                SearchDetails details = context.SearchDetails.Where(d => d.AppUserId == Id).FirstOrDefault();
+                context.SearchDetails.Remove(details);
+                context.SaveChanges();
+
+
+
+
+
+
+
+
+
+                AppUser user = context.Users.Include(r => r.ReportUsers).Where(i => i.Id == Id).FirstOrDefault();
+
+                if (user.ReportUsers != null && user.ReportUsers.Count > 0)
+                {
+
+                    foreach (var report in user.ReportUsers)
+                    {
+                        context.ReportUsers.Remove(report);
+                    }
+
+                    context.SaveChanges();
+
+                }
+
+                AppUser user3 = context.Users.Include(m => m.MatchUser).Where(i => i.Id == Id).FirstOrDefault();
+                if (user3.MatchUser != null && user3.MatchUser.Count > 0)
+                {
+
+                    foreach (var match in user3.MatchUser)
+                    {
+                        context.MatchUsers.Remove(match);
+                    }
+
+                    context.SaveChanges();
+
+                }
+
+
+                AppUser user2 = context.Users.Include(m => m.MessageUser).Where(i => i.Id == Id).FirstOrDefault();
+
+                if (user2.MessageUser != null && user2.MessageUser.Count > 0)
+                {
+
+                    foreach (var message in user3.MessageUser)
+                    {
+                        context.MessageUser.Remove(message);
+                    }
+
+                    context.SaveChanges();
+
+                }
+
+                AppUser user4 = context.Users.Include(m => m.LoginHistory).Where(i => i.Id == Id).FirstOrDefault();
+
+                if (user4.LoginHistory != null && user4.LoginHistory.Count > 0)
+                {
+
+                    foreach (var history in user4.LoginHistory)
+                    {
+                        context.LoginHistory.Remove(history);
+                    }
+
+                    context.SaveChanges();
+
+                }
+
+
+
+
+
+
+
+
+                context.Users.Remove(user);
+                context.SaveChanges();
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool AddLikesByAdmin(string Id, int Likes)
+        {
+
+            try
+            {
+
+                SearchDetails details = context.SearchDetails.Where(d => d.AppUserId == Id).First();
+                details.LikeDate = DateTime.Now;
+                details.Likes += Likes;
+                context.SaveChanges();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+
+            }
+
+
+
+
+
+
+        }
+
+        public int GetNumberOfLikes(string Id)
+        {
+            try
+            {
+
+                SearchDetails details = context.SearchDetails.Where(d => d.AppUserId == Id).First();
+                return details.Likes;
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+        public bool CountLogin(string Id)
+        {
+            try
+            {
+
+                AppUser user = context.Users.Find(Id);
+                LoginHistory history = new LoginHistory();
+                history.LoggedIn = DateTime.Now;
+
+                user.LoginHistory.Add(history);
+                context.SaveChanges();
+                return true;
+
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public  bool CountLogout(string Id)
+        {
+            try
+            {
+                AppUser user = context.Users.Include(l => l.LoginHistory).Where(u => u.Id == Id).First();
+                LoginHistory history = user.LoginHistory.Last();
+                history.LoggedOut = DateTime.Now;
+
+
+                context.SaveChanges();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
+
+        public async Task<bool> CountLogout2(string Id)
+        {
+            try
+            {
+                AppUser user = context.Users.Include(l => l.LoginHistory).Where(u => u.Id == Id).First();
+                LoginHistory history = user.LoginHistory.Last();
+                history.LoggedOut = DateTime.Now;
+
+
+              await  context.SaveChangesAsync();
+              return  true;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
+
+
+
+
+
+        public int GetOnline()
+        {
+            int number = 0;
+            DateTime now = DateTime.Now;
+            try
+            {
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((x) => new { list = x.LoginHistory.Where(z =>z.LoggedOut.Year==1&& z.LoggedIn.DayOfYear == now.DayOfYear && z.LoggedIn.Year == now.Year) }).ToList().Where(c => c.list.Count() > 0).Count();
+
+                return number;
+            }
+            catch (Exception ex)
+            {
+                return number;
+            }
+
+
+        }
+
+        public int GetOnlineToday()
+        {
+            int number = 0;
+            DateTime n = new DateTime();
+            DateTime now = DateTime.Now;
+            try
+            {
+
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((x) => new { list = x.LoginHistory.Where(z => z.LoggedIn.DayOfYear == now.DayOfYear && z.LoggedIn.Year == now.Year) }).ToList().Where(c => c.list.Count() > 0).Count();
+                return number;
+            }
+            catch (Exception ex)
+            {
+                return number;
+            }
+
+
+        }
+
+
+        private bool DatesAreInTheSameWeek(DateTime date1, DateTime date2)
+        {
+            var cal = System.Globalization.DateTimeFormatInfo.CurrentInfo.Calendar;
+            var d1 = date1.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date1));
+            var d2 = date2.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date2));
+
+            return d1 == d2;
+        }
+
+
+
+        
+
+
+
+
+        public static class Predicate
+        {
+
+
+            public static  bool DatesWeek(LoginHistory history)
+        {
+
+            DateTime date1 = DateTime.Now;
+            DateTime date2 = history.LoggedIn;
+
+            var cal = System.Globalization.DateTimeFormatInfo.CurrentInfo.Calendar;
+            var d1 = date1.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date1));
+            var d2 = date2.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date2));
+
+            return d1 == d2;
+        }
+
+
+            public static bool CreatedWeek(DateTime d)
+            {
+
+                DateTime date1 = DateTime.Now;
+                DateTime date2 = d;
+
+                var cal = System.Globalization.DateTimeFormatInfo.CurrentInfo.Calendar;
+                var d1 = date1.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date1));
+                var d2 = date2.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date2));
+
+                return d1 == d2;
+            }
+
+
+
+
+
+
+        }
+
+
+
+
+        Func<LoginHistory, bool> checkWeek = Predicate.DatesWeek;
+        Func<DateTime, bool> checkCreated = Predicate.CreatedWeek;
+
+
+
+
+
+        public int GetOnlineThisWeek()
+        {
+            int number = 0;
+            DateTime now = DateTime.Now;
+            try
+            {
+
+
+
+              ///// nie dotykać gotowe
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((x) => new { list = x.LoginHistory.Where(z=>checkWeek(z)) }).ToList().Where(c => c.list.Count() > 0).Count();
+
+                return number;
+            }
+            catch (Exception ex)
+            {
+                return number;
+            }
+
+
+        }
+        public int GetOnlineThisMonth()
+        {
+            int number = 0;
+            DateTime now = DateTime.Now;
+            try
+            {
+
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((x) => new { list = x.LoginHistory.Where(z => z.LoggedIn.Month == now.Month && z.LoggedIn.Year == now.Year) }).ToList().Where(c => c.list.Count() > 0).Count();
+                return number;
+            }
+            catch (Exception ex)
+            {
+                return number;
+            }
+
+
+        }
+        public int GetCreatedThisMonth()
+        {
+            int number = 0;
+            DateTime now = DateTime.Now;
+
+            try
+            {
+
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Where(x => x.LoginHistory.Count() > 0).Select((u) => new { FirstLogin = u.LoginHistory.FirstOrDefault().LoggedIn }).Where(x => ( ((DateTime)x.FirstLogin).Month == now.Month )&& (((DateTime)x.FirstLogin).Year == now.Year)).Count();
+                return number;
+            }
+            catch (Exception ex)
+            {
+                return number;
+            }
+
+
+        }
+        public int GetCreatedThisWeek()
+        {
+            int number = 0;
+
+            try
+            {
+
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((u) => new DateTime(u.LoginHistory.FirstOrDefault().LoggedIn.Year, u.LoginHistory.FirstOrDefault().LoggedIn.Month, u.LoginHistory.FirstOrDefault().LoggedIn.Day)).Where(x=>checkCreated(x)).ToList().Count();
+
+                return number;
+            }
+            catch (Exception ex)
+            {
+                return number;
+            }
+
+
+        }
+        public int GetCreatedToday()
+        {
+            int number = 0;
+            DateTime now = DateTime.Now;
+
+            try
+            {
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((u) => new { FirstLogin = u.LoginHistory.FirstOrDefault().LoggedIn }).Where(x => (((DateTime)x.FirstLogin).DayOfYear == now.DayOfYear) && (((DateTime)x.FirstLogin).Year == now.Year)).Count();
+
+                return number;
+            }
+            catch (Exception ex)
+            {
+                return number;
+            }
+
+
+        }
+        public int GetAllUsers()
+        {
+            int number = 0;
+
+            try
+            {
+                number = context.Users.Count();
+
+                return number;
+            }
+            catch (Exception ex)
+            {
+                return number;
+            }
+
+
+        }
+
+
+
+        public LoginDetails GetLoginDetails()
+        {      
+                                 
+            LoginDetails details = new LoginDetails();
+
+            try
+            {
+
+                details.Online = GetOnline();
+                details.Online_Today = GetOnlineToday();
+                details.Online_ThisWeek = GetOnlineThisWeek();
+                details.Online_ThisMonth = GetOnlineThisMonth();
+                details.Users = GetAllUsers();
+                details.Users_Created_Today = GetCreatedToday();
+                details.Users_Created_ThisWeek = GetCreatedThisWeek();
+                details.Users_Created_ThisMonth = GetCreatedThisMonth();
+                                                                      
+
+                return details;
+            }
+            catch (Exception ex)
+            {
+                return details;
             }
         }
     }

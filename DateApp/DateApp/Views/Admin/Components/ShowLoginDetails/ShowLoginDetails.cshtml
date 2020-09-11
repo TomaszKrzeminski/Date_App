@@ -1,0 +1,55 @@
+﻿@model LoginDetails
+
+ <table class="table table-bordered">
+              
+                <tbody>
+                    <tr>
+
+                        <td>Online </td>
+                        <td>@Model.Online</td>
+
+                    </tr>
+                    <tr>
+
+                        <td>Online dziś</td>
+                        <td>@Model.Online_Today</td>
+
+                    </tr>
+                    <tr>
+
+                        <td>Online w tym tygodniu</td>
+                        <td>@Model.Online_ThisWeek</td>
+
+                    </tr>
+                    <tr>
+
+                        <td>Online w tym miesiącu</td>
+                        <td>@Model.Online_ThisMonth</td>
+
+                    </tr>
+                    <tr>
+
+                        <td>Użytkowników portalu </td>
+                        <td>@Model.Users</td>
+
+                    </tr>
+                    <tr>
+
+                        <td>Użytkownicy założyli konto dziś</td>
+                        <td>@Model.Users_Created_Today</td>
+
+                    </tr>
+                    <tr>
+
+                        <td>Użytkownicy założyli konto w tym tygodniu</td>
+                        <td>@Model.Users_Created_ThisWeek</td>
+
+                    </tr>
+                    <tr>
+
+                        <td>Użytkownicy założyli konto w tym miesiącu</td>
+                        <td>@Model.Users_Created_ThisMonth</td>
+
+                    </tr>
+                </tbody>
+            </table>

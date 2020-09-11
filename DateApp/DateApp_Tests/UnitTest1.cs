@@ -15,6 +15,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1637,14 +1638,14 @@ namespace Tests
             list.Add(message);
 
             repo.Setup(r => r.StartChat(It.IsAny<string>(), "Id")).Returns(true);
-           
+
 
             MessageController controller = new MessageController(repo.Object, userManager.Object, mockEnvironment.Object, hub.Object, hub2.Object, GetUserX);
 
             RedirectToRouteResult result = controller.MessageStart("Id") as RedirectToRouteResult;
 
 
-           
+
 
             Assert.AreEqual(result.RouteValues["action"], "PairPanel");
 
@@ -1700,19 +1701,19 @@ namespace Tests
             Message message5 = new Message();
 
 
-            List<Message> list = new List<Message>() {message,message1,message2,message3,message4,message5 };
-           
+            List<Message> list = new List<Message>() { message, message1, message2, message3, message4, message5 };
 
-            
+
+
 
             repo.Setup(r => r.StartChat(It.IsAny<string>(), "Id")).Returns(true);
             repo.Setup(r => r.GetChat(It.IsAny<string>(), It.IsAny<string>())).Returns(list);
 
 
             MessageController controller = new MessageController(repo.Object, userManager.Object, mockEnvironment.Object, hub.Object, hub2.Object, GetUserX);
-            MessageViewModel result = controller.SettingMessageView("x", "x", "x", "x",new SearchDetails() {User=new AppUser() {UserName="Username",Email="Email" },MainPhotoPath="Path" },true ) as MessageViewModel;
+            MessageViewModel result = controller.SettingMessageView("x", "x", "x", "x", new SearchDetails() { User = new AppUser() { UserName = "Username", Email = "Email" }, MainPhotoPath = "Path" }, true) as MessageViewModel;
 
-            Assert.AreEqual(result.info.TotalPages,2);
+            Assert.AreEqual(result.info.TotalPages, 2);
 
 
 
@@ -1776,7 +1777,7 @@ namespace Tests
             int totalPages = result.info.TotalPages;
             int currentPage = result.info.CurrentPage;
 
-            Assert.AreEqual(totalPages,currentPage);
+            Assert.AreEqual(totalPages, currentPage);
 
 
 
@@ -1838,15 +1839,15 @@ namespace Tests
 
 
 
-        public class FakeSignInResult: Microsoft.AspNetCore.Identity.SignInResult
+        public class FakeSignInResult : Microsoft.AspNetCore.Identity.SignInResult
         {
 
-           
+
 
             public FakeSignInResult()
             {
                 Succeeded = true;
-               
+
             }
 
 
@@ -1872,8 +1873,9 @@ namespace Tests
 
             Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
             Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
 
-            AccountController controller = new AccountController(manager.Object, sign.Object);
+            AccountController controller = new AccountController(manager.Object, sign.Object, repo.Object);
 
             ViewResult result = controller.Login("ReturnUrl") as ViewResult;
 
@@ -1887,12 +1889,14 @@ namespace Tests
         public void LogOut_Redirects_To_Login_Action()
         {
             Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
-            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();           
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(x => x.CountLogout2(It.IsAny<string>())).Returns(Task.FromResult(true));
 
-            AccountController controller = new AccountController(manager.Object, sign.Object);          
+            AccountController controller = new AccountController(manager.Object, sign.Object, repo.Object, GetUserX);
 
 
-            var Result = controller.Logout().Result as RedirectToActionResult ;
+            var Result = controller.Logout().Result as RedirectToActionResult;
 
             Assert.AreEqual(Result.ActionName, "Login");
             Assert.AreEqual(Result.ControllerName, "Account");
@@ -1906,20 +1910,20 @@ namespace Tests
             LoginModel model = new LoginModel() { Email = "Email", Password = "password" };
             Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
             Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
-
+            Mock<IRepository> repo = new Mock<IRepository>();
             AppUser user = new AppUser() { UserName = "Name", Email = "Email" };
 
             FakeSignInResult result = new FakeSignInResult();
-                      
+
 
             manager.Setup(m => m.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
             sign.Setup(s => s.PasswordSignInAsync(It.IsAny<AppUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(Task.FromResult((Microsoft.AspNetCore.Identity.SignInResult)result));
 
 
-            AccountController controller = new AccountController(manager.Object, sign.Object);
+            AccountController controller = new AccountController(manager.Object, sign.Object, repo.Object);
 
 
-            var Result = controller.Login(model).Result as RedirectToRouteResult ;
+            var Result = controller.Login(model).Result as RedirectToRouteResult;
 
 
             Assert.AreEqual(Result.RouteValues["action"], "Panel");
@@ -1937,24 +1941,612 @@ namespace Tests
             LoginModel model = new LoginModel() { Email = "Email", Password = "password" };
             Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
             Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
-            AppUser user = null;          
-            
-            manager.Setup(m => m.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult(user));         
+            Mock<IRepository> repo = new Mock<IRepository>();
+            AppUser user = null;
+
+            manager.Setup(m => m.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
 
 
-            AccountController controller = new AccountController(manager.Object, sign.Object);
+            AccountController controller = new AccountController(manager.Object, sign.Object, repo.Object);
 
 
             var Result = controller.Login(model).Result as ViewResult;
 
             LoginModel login = (LoginModel)Result.Model;
-           
 
-            Assert.AreEqual(login.Email,model.Email);
+
+            Assert.AreEqual(login.Email, model.Email);
             Assert.AreEqual(login.Password, model.Password);
         }
 
 
+
+
+
+    }
+
+    public class AdminControllerTests
+    {
+
+        public class FakeUserManager : UserManager<AppUser>
+        {
+            public FakeUserManager()
+                : base(new Mock<IUserStore<AppUser>>().Object,
+                  new Mock<IOptions<IdentityOptions>>().Object,
+                  new Mock<IPasswordHasher<AppUser>>().Object,
+                  new IUserValidator<AppUser>[0],
+                  new IPasswordValidator<AppUser>[0],
+                  new Mock<ILookupNormalizer>().Object,
+                  new Mock<IdentityErrorDescriber>().Object,
+                  new Mock<IServiceProvider>().Object,
+                  new Mock<ILogger<UserManager<AppUser>>>().Object)
+            { }
+
+            public override Task<IdentityResult> CreateAsync(AppUser user, string password)
+            {
+                return Task.FromResult(IdentityResult.Success);
+            }
+
+            public override Task<IdentityResult> AddToRoleAsync(AppUser user, string role)
+            {
+                return Task.FromResult(IdentityResult.Success);
+            }
+
+            public override Task<string> GenerateEmailConfirmationTokenAsync(AppUser user)
+            {
+                return Task.FromResult(Guid.NewGuid().ToString());
+            }
+
+        }
+
+        public class FakeSignInManager : SignInManager<AppUser>
+        {
+            public FakeSignInManager()
+                    : base(new FakeUserManager(),
+                         new Mock<IHttpContextAccessor>().Object,
+                         new Mock<IUserClaimsPrincipalFactory<AppUser>>().Object,
+                         new Mock<IOptions<IdentityOptions>>().Object,
+                         new Mock<ILogger<SignInManager<AppUser>>>().Object,
+                         new Mock<IAuthenticationSchemeProvider>().Object)
+            { }
+        }
+
+        public class FakeSignInResult : Microsoft.AspNetCore.Identity.SignInResult
+        {
+
+
+
+            public FakeSignInResult()
+            {
+                Succeeded = true;
+
+            }
+
+
+        }
+
+        async Task<AppUser> GetUserX()
+        {
+            return new AppUser() { Id = "Id1", UserName = "Test User" };
+        }
+
+        private List<AppUser> _users = new List<AppUser>()
+         {
+      new AppUser(){UserName="User1",Id="Id1" } ,
+      new AppUser(){UserName="User2",Id="Id2" }
+         };
+
+        [Test]
+        public void AdministrationPanel_Returns_Model()
+        {
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+
+            var Result = controller.AdministrationPanel() as ViewResult;
+
+            SelectUserViewModel model = (SelectUserViewModel)Result.Model;
+
+            SelectUserViewModel check = new SelectUserViewModel();
+
+
+            Assert.AreEqual(model.term, check.term);
+
+
+        }
+
+
+        [Test]
+        public void When_RemoveUserByAdmin_Returns_True_Then_RemoveUser_Redirects()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(r => r.RemoveUserByAdmin(It.IsAny<string>())).Returns(true);
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            string Id = "UserId";
+
+            var Result = controller.RemoveUser(Id) as RedirectToRouteResult;
+
+            Assert.AreEqual(Result.RouteValues["action"], "AdministrationPanel");
+            Assert.AreEqual(Result.RouteValues["controller"], "Admin");
+
+
+        }
+
+        [Test]
+        public void When_RemoveUserByAdmin_Returns_False_Then_RemoveUser_Shows_View_With_Error()
+        {
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(r => r.RemoveUserByAdmin(It.IsAny<string>())).Returns(false);
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            string Id = "UserId";
+
+            var Result = controller.RemoveUser(Id) as ViewResult;
+
+            Assert.AreEqual(Result.ViewName, "Error");
+            Assert.AreEqual(Result.Model, "Błąd przy usuwaniu użytkownika");
+
+        }
+
+
+        [Test]
+        public void When_LikesToAdd_Are_Less_Or_Equal_To_Zero_Then_AddLikes_Returns_Model()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(r => r.AddLikesByAdmin(It.IsAny<string>(), It.IsAny<int>())).Returns(true);
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            AddLikesViewModel model = new AddLikesViewModel();
+            model.LikesToAdd = 0;
+            model.UserId = "UserId";
+
+            var Result = controller.AddLikes(model) as ViewResult;
+
+            AddLikesViewModel modelR = Result.Model as AddLikesViewModel;
+
+            Assert.AreEqual(modelR.LikesToAdd, 0);
+            Assert.AreEqual(modelR.UserId, "UserId");
+            Assert.IsTrue(controller.ViewData.ModelState.Count == 1,
+                 "Podaj liczbę lików");
+
+
+
+        }
+
+        [Test]
+        public void When_AddLikesByAdmin_Returns_True_Then_AddLikes_Redirects()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(r => r.AddLikesByAdmin(It.IsAny<string>(), It.IsAny<int>())).Returns(true);
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            AddLikesViewModel model = new AddLikesViewModel();
+            model.LikesToAdd = 10;
+            model.UserId = "UserId";
+
+            var Result = controller.AddLikes(model) as RedirectToRouteResult;
+
+            Assert.AreEqual(Result.RouteValues["controller"], "Admin");
+            Assert.AreEqual(Result.RouteValues["action"], "AddLikes");
+
+
+
+
+
+
+        }
+
+
+        [Test]
+        public void When_AddLikesByAdmin_Returns_False_Then_AddLikes_Returns_View_With_Error_Message()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(r => r.AddLikesByAdmin(It.IsAny<string>(), It.IsAny<int>())).Returns(false);
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            AddLikesViewModel model = new AddLikesViewModel();
+            model.LikesToAdd = 10;
+            model.UserId = "UserId";
+
+            var Result = controller.AddLikes(model) as ViewResult;
+
+            Assert.AreEqual(Result.ViewName, "Error");
+            Assert.AreEqual(Result.Model, "Błąd przy dodawaniu polubień");
+        }
+
+
+        [Test]
+        public void RemovePhoto_Returns_Model_With_User_Email()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+
+            repo.Setup(r => r.GetUser("UserId")).Returns(new AppUser() { Email = "TestEmail.com" });
+            repo.Setup(r => r.GetUserDetails("UserId")).Returns(new SearchDetails() { MainPhotoPath = "MP", PhotoPath1 = "1", PhotoPath2 = "2", PhotoPath3 = "3" });
+
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            string Id = "UserId";
+
+            var Result = controller.RemovePhoto(Id) as ViewResult;
+
+            RemovePictureViewModel model = Result.Model as RemovePictureViewModel;
+
+
+            Assert.AreEqual(model.Email, "TestEmail.com");
+
+
+        }
+
+
+
+        [Test]
+        public void When_RemovePicture_Is_True_RemovePicture_Redirects()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+            PictureType type = 0;
+
+            repo.Setup(r => r.RemovePicture("UserId", It.IsAny<PictureType>())).Returns(true);
+
+
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            RemovePictureViewModel model = new RemovePictureViewModel();
+            model.Number = "0";
+            model.UserId = "UserId";
+
+            var Result = controller.RemovePicture(model) as RedirectToRouteResult;
+
+
+            Assert.AreEqual(Result.RouteValues["action"], "RemovePhoto");
+            Assert.AreEqual(Result.RouteValues["controller"], "Admin");
+
+        }
+
+
+        [Test]
+        public void When_RemovePicture_Is_False_RemovePicture_Returns_ErrorView()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+            PictureType type = 0;
+
+            repo.Setup(r => r.RemovePicture("UserId", It.IsAny<PictureType>())).Returns(false);
+
+
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            RemovePictureViewModel model = new RemovePictureViewModel();
+            model.Number = "0";
+
+            var Result = controller.RemovePicture(model) as ViewResult;
+
+
+            Assert.AreEqual(Result.Model, "Nie udało się usunąć zdjęcia ");
+            Assert.AreEqual(Result.ViewName, "Error");
+
+
+
+        }
+
+
+        [Test]
+        public void SearchUser_Returns_List_When_There_Are_Users()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            List<AppUser> list = new List<AppUser>();
+            list.Add(new AppUser() { Email = "1" });
+            list.Add(new AppUser() { Email = "2" });
+            list.Add(new AppUser() { Email = "3" });
+            list.Add(new AppUser() { Email = "4" });
+            list.Add(new AppUser() { Email = "5" });
+
+
+            repo.Setup(r => r.GetUsers(It.IsAny<string>())).Returns(list);
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            string term = "UserId";
+
+            var Result = controller.SearchUser(term) as OkObjectResult;
+
+            List<string> listOk = (List<string>)Result.Value;
+
+            Assert.AreEqual(listOk[0], "1");
+            Assert.AreEqual(listOk[1], "2");
+
+        }
+
+        [Test]
+        public void SearchUser_Returns_Empty_List_When_There_Arent_Users()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            List<AppUser> list = null;
+
+
+
+            repo.Setup(r => r.GetUsers(It.IsAny<string>())).Returns(list);
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            string term = "UserId";
+
+            var Result = controller.SearchUser(term) as OkObjectResult;
+
+            List<string> listOk = (List<string>)Result.Value;
+
+            Assert.AreEqual(listOk[0], "");
+
+
+        }
+
+        [Test]
+        public void SelectUser_Returns_View_And_ModelError_When_term_Is_Null()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+            List<AppUser> list = null;
+
+
+
+            repo.Setup(r => r.GetUsers(It.IsAny<string>())).Returns(list);
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            string term = null;
+
+            var Result = controller.SelectUser(term) as ViewResult;
+
+            SelectUserViewModel model = Result.Model as SelectUserViewModel;
+
+            Assert.AreEqual(model.term, null);
+            Assert.IsTrue(controller.ViewData.ModelState.Count == 1,
+                 "Musisz wybrać użytkownika");
+
+        }
+
+
+        [Test]
+        public void SelectUser_Returns_View_When_term_Isnt_Null()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+            AppUser user = new AppUser();
+            user.Email = "Email";
+
+            manager.Setup(m => m.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+            string term = "UserId";
+
+            var Result = controller.SelectUser(term) as ViewResult;
+
+            SelectUserViewModel model = Result.Model as SelectUserViewModel;
+
+            Assert.AreEqual(model.user.Email, "Email");
+
+
+
+        }
+
+
+
+        [Test]
+        public void When_Age_Of_User_Is_Under_18_Then_Create_Adds_Model_Error()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+            CreateModel model = new CreateModel();
+            model.Dateofbirth = new DateTime(2010, 8, 21);
+
+
+            var Result = controller.Create(model).Result as ViewResult;
+
+            Assert.IsTrue(controller.ViewData.ModelState.Count == 1, "Musisz mieć co najmniej 18 lat");
+
+        }
+
+
+
+        public class FakeIdentityResult : IdentityResult
+        {
+
+
+
+            public FakeIdentityResult()
+            {
+                Succeeded = true;
+
+            }
+
+
+        }
+
+
+
+
+        [Test]
+        public void When_Age_Of_User_Is_Over_18_Then_Create_Redirects_To_Login()
+        {
+
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+            FakeIdentityResult result = new FakeIdentityResult();
+            
+            manager.Setup(m => m.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).Returns(Task.FromResult((IdentityResult)result));
+
+            IdentityResult result2 = new IdentityResult();
+            manager.Setup(m => m.AddClaimAsync(It.IsAny<AppUser>(), It.IsAny<Claim>())).Returns(Task.FromResult(result2));
+
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+            CreateModel model = new CreateModel();
+            model.Dateofbirth = new DateTime(1985, 8, 21);
+            model.Name = "User";
+            model.Surname = "Surname";
+            model.Sex = "Mężczyzna";
+            model.City = "Świecie";
+            model.Email = "email@gmail.com";
+
+
+            RedirectToRouteResult Result = controller.Create(model).Result as RedirectToRouteResult;
+
+            Assert.AreEqual(Result.RouteValues["action"], "Login");
+
+        }
+
+
+        [Test]
+        public void When_User_Is_Null_Delete_Returns_View_With_Error()
+        {
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+            AppUser user = null;
+
+            manager.Setup(r => r.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns("UserId");
+            manager.Setup(m => m.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
+
+           
+
+            IdentityResult result = new IdentityResult();
+
+            manager.Setup(m => m.DeleteAsync(It.IsAny<AppUser>())).Returns(Task.FromResult(result));
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+
+
+            ViewResult Result = controller.Delete().Result as ViewResult;
+
+            Assert.AreEqual(Result.ViewName, "Error");
+
+
+
+
+        }
+
+        [Test]
+        public void When_User_Isnt_Null_And_Delete_Succeded_Is_False_Delete_Returns_View_With_Error()
+        {
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+            AppUser user = new AppUser();
+
+            manager.Setup(r => r.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns("UserId");
+            manager.Setup(m => m.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
+
+            repo.Setup(r => r.RemoveSearchDetails(It.IsAny<string>())).Returns(true);
+            repo.Setup(r => r.RemoveCoordinates(It.IsAny<string>())).Returns(true);
+            repo.Setup(r => r.RemoveMatchesAll(It.IsAny<string>())).Returns(true);
+
+            IdentityResult result = new IdentityResult();
+
+            manager.Setup(m => m.DeleteAsync(It.IsAny<AppUser>())).Returns(Task.FromResult(result));
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+
+
+            ViewResult Result = controller.Delete().Result as ViewResult;
+
+            Assert.AreEqual(Result.ViewName, "Error");
+
+
+
+
+
+        }
+
+        [Test]
+        public void When_User_Isnt_Null_And_Delete_Succeded_Delete_Redirects_To_Login()
+        {
+            Mock<FakeSignInManager> sign = new Mock<FakeSignInManager>();
+            Mock<FakeUserManager> manager = new Mock<FakeUserManager>();
+            Mock<IRepository> repo = new Mock<IRepository>();
+
+            AppUser user = new AppUser();
+
+            manager.Setup(r => r.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns("UserId");
+            manager.Setup(m => m.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
+
+            repo.Setup(r => r.RemoveSearchDetails(It.IsAny<string>())).Returns(true);
+            repo.Setup(r => r.RemoveCoordinates(It.IsAny<string>())).Returns(true);
+            repo.Setup(r => r.RemoveMatchesAll(It.IsAny<string>())).Returns(true);
+
+            FakeIdentityResult result = new FakeIdentityResult();
+
+            manager.Setup(m => m.DeleteAsync(It.IsAny<AppUser>())).Returns(Task.FromResult((IdentityResult)result));
+
+            AdminController controller = new AdminController(repo.Object, manager.Object, GetUserX);
+
+
+
+            RedirectToActionResult Result = controller.Delete().Result as RedirectToActionResult;
+
+            Assert.AreEqual(Result.ActionName, "Login");
+
+
+        }
 
 
 
@@ -1966,4 +2558,10 @@ namespace Tests
 
 
 
+
 }
+
+
+
+
+

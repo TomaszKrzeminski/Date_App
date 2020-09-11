@@ -14,17 +14,34 @@ namespace DateApp.Controllers
 
         private UserManager<AppUser> userManager;
         private SignInManager<AppUser> signInManager;
+        private IRepository repository;
+        private Func<Task<AppUser>> GetUser;
 
-        public AccountController(UserManager<AppUser> userMgr,SignInManager<AppUser> signinMgr)
+        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr,IRepository repo, Func<Task<AppUser>> GetUser = null)
         {
             userManager = userMgr;
             signInManager = signinMgr;
+            repository = repo;
+
+            if (GetUser == null)
+            {
+                this.GetUser = () => userManager.GetUserAsync(HttpContext.User);
+            }
+            else
+            {
+                this.GetUser = GetUser;
+            }
+
         }
 
         [Authorize]
         public async Task<IActionResult> Logout()
         {
+            string Id = GetUser().Result.Id;
+            await repository.CountLogout2(Id);
             await signInManager.SignOutAsync();
+
+          
             return RedirectToAction("Login", "Account");
         }
 
@@ -40,15 +57,23 @@ namespace DateApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel details)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 AppUser user = await userManager.FindByEmailAsync(details.Email);
-                if(user!=null)
+                if (user != null)
                 {
                     await signInManager.SignOutAsync();
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, details.Password, false, false);
-                    if(result.Succeeded)
+                    if (result.Succeeded)
                     {
+
+                        if (userManager.IsInRoleAsync(user, "Administrator").Result)
+                        {
+                            return RedirectToRoute(new { controller = "Admin", action = "AdministrationPanel" });
+                        }
+
+                        repository.CountLogin(user.Id);
+
                         return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
                     }
                 }

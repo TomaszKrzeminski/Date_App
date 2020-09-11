@@ -1,0 +1,98 @@
+﻿@model SelectUserViewModel
+
+@{
+    ViewData["Title"] = "RemovePhoto";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="container float-left ">
+
+
+
+
+    <div class="row float-left">
+
+        <div class="col-lg-12 text-right">
+
+            <form asp-action="SelectUser" asp-controller="Admin" method="post">
+                <div>
+                    <label>
+                        Znajdz użytkownika
+                    </label>
+                </div>
+
+                <div>
+                    <div><span asp-validation-for="term" class="text-danger"></span></div>
+                    <input asp-for="user.Email" id="UserDate" type="search" name="term" />
+                </div>
+                <div>
+                    <button type="submit">Wybierz</button>
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+
+        @if (Model.user.Email != null && Model.user.Email != "")
+        {
+
+            <div class="col-lg-12">
+
+
+
+                <a class="btn btn-danger" asp-action="RemoveUser" asp-controller="Admin" asp-route-id="@Model.user.Id">Usuń Użytkownika </a>
+
+
+            </div>
+            <div class="col-lg-12">
+
+
+                <a class="btn btn-primary" asp-action="AddLikes" asp-controller="Admin" asp-route-id="@Model.user.Id">Dodaj Polubienia </a>
+
+
+
+            </div>
+            <div class="col-lg-12">
+
+
+                <a class="btn btn-warning" asp-action="RemovePhoto" asp-controller="Admin" asp-route-id="@Model.user.Id">Usuń Zdjęcie</a>
+
+
+            </div>
+
+
+        }
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+</div>
+
+<script>
+
+
+    $(document).ready(function () {
+        $("#UserDate").autocomplete({
+            source: "/Admin/SearchUser"
+        });
+    });
+
+
+
+
+
+
+</script>

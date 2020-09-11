@@ -36,28 +36,7 @@ namespace DateApp.Hubs
         {
             return Clients.User(UserId).SendAsync("UpdateChatOptions");
         }
-
-
-
-        //public void Announce(string message)
-        //{
-        //    Clients.All.SendAsync("Announce",message);
-        //}
-
-
-
-        //public Task SendMessage(string UserId,string UserName,string Message)
-        //{
-
-        //    return Clients.User(UserId).SendAsync("ChatReceive",Message);
-        //}
-
-
-
-        //public string GetConnectionId()
-        //{
-        //    return Context.ConnectionId;
-        //}
+                          
 
 
     }

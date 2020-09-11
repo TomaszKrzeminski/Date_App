@@ -53,7 +53,8 @@ namespace DateApp
             app.UseAuthentication();
             app.UseSignalR(config => { config.MapHub<MessageHub>("/messages"); });
             app.UseSignalR(config => { config.MapHub<CheckConnectionHub>("/messages2"); });
-
+            ////
+           app.UseSignalR(config => { config.MapHub<NotificationHub>("/messages3"); });
 
             app.Use(async (ext, next) =>
             {
@@ -79,6 +80,19 @@ namespace DateApp
                 }
             });
 
+
+            //////
+            app.Use(async (ext, next) =>
+            {
+                var connectionContext = ext.RequestServices
+                                        .GetRequiredService<IHubContext<NotificationHub>>();
+                //...
+
+                if (next != null)
+                {
+                    await next.Invoke();
+                }
+            });
 
 
 

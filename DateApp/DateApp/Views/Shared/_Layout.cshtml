@@ -41,3 +41,21 @@
    </div>
 </body>
 </html>
+
+
+<script>
+    var connectionN = new signalR.HubConnectionBuilder().withUrl("/messages3").build();
+    @*var ChatUserId =@Html.Raw( Json.Serialize(@Model.ChatUserId));
+    var names =  @Html.Raw(Json.Serialize(Model.list.Select(x=>x.ReceiverId)));*@
+
+    connectionN.on("NotifyNewPair", function (SenderId) {
+
+
+        alert("Notify Works");
+
+    });
+
+
+
+
+</script>

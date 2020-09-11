@@ -30,6 +30,7 @@ namespace DateApp.Models
             ReportUsers = new List<ReportUser>();
             coordinates = new Coordinates();
             MatchUser = new List<MatchUser>();
+            LoginHistory = new List<LoginHistory>();
         }
 
 
@@ -56,6 +57,7 @@ namespace DateApp.Models
             ReportUsers = new List<ReportUser>();
             coordinates = new Coordinates();
             MatchUser = new List<MatchUser>();
+            LoginHistory = new List<LoginHistory>();
         }
 
         public int Age { get; set; }
@@ -74,7 +76,7 @@ namespace DateApp.Models
 
         public IList<MessageUser> MessageUser { get; set; }
         public IList<ReportUser> ReportUsers { get; set; }
-
+        public IList<LoginHistory> LoginHistory { get; set; }
 
     }
 
@@ -442,6 +444,22 @@ namespace DateApp.Models
     }
 
 
+    public class LoginHistory
+    {
+
+        public LoginHistory()
+        {
+            LoggedIn = new DateTime();
+            LoggedOut = new DateTime();
+        }
+
+        public int LoginHistoryId {get;set;}
+        public DateTime  LoggedIn { get; set; }
+        public DateTime  LoggedOut { get; set; }
+
+        public string ApplicationUserID { get; set; }
+        public AppUser User { get; set; }
+    }
     
 
 

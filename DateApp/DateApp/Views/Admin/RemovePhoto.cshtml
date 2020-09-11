@@ -1,0 +1,186 @@
+﻿@model RemovePictureViewModel
+
+
+@{
+    ViewData["Title"] = "RemovePhoto";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-6 ">
+            <h1>Usuń zdjęcie użytkownika @Model.Email</h1>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-lg-12 col-md-6 ">
+
+            <img class="imageR  img-thumbnail" src=@Model.MainPhotoPath alt="">
+            @if (Model.MainPhotoPath == "/AppPictures/photo.png")
+            {
+                <Form id="Numb0" asp-action="RemovePicture" asp-controller="Admin" method="post">
+                    <input asp-for=Number value="0" type="hidden" />
+                    <input asp-for=UserId value="@Model.UserId" type="hidden" />
+                    <input asp-for=Email value="@Model.Email" type="hidden" />
+                    <input asp-for=MainPhotoPath value="@Model.MainPhotoPath" type="hidden" />
+                    <input asp-for=PhotoPath1 value="@Model.PhotoPath1" type="hidden" />
+                    <input asp-for=PhotoPath2 value="@Model.PhotoPath2" type="hidden" />
+                    <input asp-for=PhotoPath3 value="@Model.PhotoPath3" type="hidden" />
+
+                    <input class="btn btn-danger " value="Usuń" name="Numb0">
+                </Form>
+            }
+            else
+            {
+                <div class="col-lg-12">
+                    <button class="btn btn-danger" disabled>Usuń</button>
+                </div>
+
+            }
+
+
+
+        </div>
+
+        <div class="col-lg-12 col-md-6 ">
+
+            <img class="imageR  img-thumbnail" src=@Model.PhotoPath1 alt="">
+            @if (Model.PhotoPath1 != "/AppPictures/photo.png")
+            {
+                <Form id="Numb1" asp-action="RemovePicture" asp-controller="Admin" method="post">
+                    <input asp-for=Number value="1" type="hidden" />
+                    <input asp-for=UserId value="@Model.UserId" type="hidden" />
+                    <input asp-for=Email value="@Model.Email" type="hidden" />
+                    <input asp-for=MainPhotoPath value="@Model.MainPhotoPath" type="hidden" />
+                    <input asp-for=PhotoPath1 value="@Model.PhotoPath1" type="hidden" />
+                    <input asp-for=PhotoPath2 value="@Model.PhotoPath2" type="hidden" />
+                    <input asp-for=PhotoPath3 value="@Model.PhotoPath3" type="hidden" />
+
+                    <input class="btn btn-danger " value="Usuń" name="Numb1">
+                </Form>
+            }
+            else
+            {
+                <div class="col-lg-12">
+                    <button class="btn btn-danger" disabled>Usuń</button>
+                </div>
+
+            }
+
+        </div>
+        <div class="col-lg-12 col-md-6 ">
+
+            <img class="imageR  img-thumbnail" src=@Model.PhotoPath2 alt="">
+            @if (Model.PhotoPath2 != "/AppPictures/photo.png")
+            {
+                <Form id="Numb2" asp-action="RemovePicture" asp-controller="Admin" method="post">
+                    <input asp-for=Number value="2" type="hidden" />
+                    <input asp-for=UserId value="@Model.UserId" type="hidden" />
+                    <input asp-for=Email value="@Model.Email" type="hidden" />
+                    <input asp-for=MainPhotoPath value="@Model.MainPhotoPath" type="hidden" />
+                    <input asp-for=PhotoPath1 value="@Model.PhotoPath1" type="hidden" />
+                    <input asp-for=PhotoPath2 value="@Model.PhotoPath2" type="hidden" />
+                    <input asp-for=PhotoPath3 value="@Model.PhotoPath3" type="hidden" />
+
+                    <input class="btn btn-danger " value="Usuń" name="Numb2">
+                </Form>
+            }
+            else
+            {
+                <div class="col-lg-12">
+                    <button class="btn btn-danger" disabled>Usuń</button>
+                </div>
+            }
+
+        </div>
+        <div class="col-lg-12 col-md-6 ">
+
+            <img class="imageR  img-thumbnail" src=@Model.PhotoPath3 alt="">
+            @if (Model.PhotoPath3 != "/AppPictures/photo.png")
+            {
+                <Form id="Numb3" asp-action="RemovePicture" asp-controller="Admin" method="post">
+                    <input asp-for=Number value="3" type="hidden" />
+                    <input asp-for=UserId value="@Model.UserId" type="hidden" />
+                    <input asp-for=Email value="@Model.Email" type="hidden" />
+                    <input asp-for=MainPhotoPath value="@Model.MainPhotoPath" type="hidden" />
+                    <input asp-for=PhotoPath1 value="@Model.PhotoPath1" type="hidden" />
+                    <input asp-for=PhotoPath2 value="@Model.PhotoPath2" type="hidden" />
+                    <input asp-for=PhotoPath3 value="@Model.PhotoPath3" type="hidden" />
+
+                    <input class="btn btn-danger " value="Usuń" name="Numb3">
+                </Form>
+            }
+            else
+            {
+                <div class="col-lg-12">
+                    <button class="btn btn-danger" disabled>Usuń</button>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
+<div id="dialog">
+    <label>Potwierdź usunięcie zdjęcia</label>
+</div>
+<div>
+    <input type="hidden" id="Type" />
+</div>
+
+<script>
+    $("#dialog").dialog({
+        autoOpen: false,
+        draggable: false,
+        resizable: false,
+        width: 500,
+        height: 400,
+        modal: true,
+        show: 'slideDown',
+        hide: 'slideUp',
+        dialogClass: "no-close",
+        buttons: [
+            {
+
+                text: "Anuluj",
+                click: function () {
+                    $(this).dialog("close");
+                }
+
+
+            },
+            {
+
+                text: "Potwierdź",
+                click: function () {
+
+                    var form = $("#Type").val();
+                    form = "#" + form;
+                    $(form).submit();
+                }
+            }
+        ]
+    });
+
+    $("input").click(function () {
+
+
+        var x = $(this).attr("name");
+        $("#Type").val(x);
+
+        $('#dialog').dialog('open');
+
+
+
+
+
+
+
+    });
+
+
+
+</script>

@@ -42,10 +42,16 @@ namespace DateApp.Models
         public DbSet<Match> Matches { get; set; }
 
         public DbSet<Coordinates> Coordinates { get; set; }
-
-        ///
+        
         public DbSet<MatchUser> MatchUsers { get; set; }
 
+        //Added 
+
+        public DbSet<ReportUser> ReportUsers { get; set; }
+
+        public DbSet<MessageUser> MessageUser { get; set; }
+
+        public DbSet<LoginHistory> LoginHistory { get; set; }
 
 
     }
