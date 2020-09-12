@@ -55,7 +55,15 @@
 
     });
 
+     var interval = 10000; 
+ setInterval(function() { Update() }, interval);
 
+ function Update(){
+     $.get("/Notification/CheckNotifty", function(){
+         alert( "Load was performed.")}
+     );
+ } 
+        
 
 
 </script>
