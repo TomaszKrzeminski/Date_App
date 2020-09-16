@@ -1,0 +1,49 @@
+﻿@model NotificationViewModel
+
+
+
+   
+       
+            <div class="row">
+                
+                <div class="col-lg-3 help"   > @Model.NewMessages    <span>Nowe wiadomości</span>      </div>
+                <div class="col-lg-3 help">  @Model.NewPairs           <span>Nowe Pary</span></div>
+                <div class="col-lg-3 help">  <span>Nowe polubienia za @Model.NewLikes.Days Dni @Model.NewLikes.Hours Godzin @Model.NewLikes.Minutes Minut</span>       </div>
+                <div class="col-lg-3 help" >   <span>Nowe super polubienia za @Model.NewSuperLikes.Days Dni @Model.NewSuperLikes.Hours Godzin @Model.NewSuperLikes.Minutes Minut</span>      </div>
+            </div>
+       <div class="row">
+           <div id="Text" class="col-lg-12">
+
+           </div>
+       </div>
+
+
+
+            @*<script>
+
+                $(".help").click(
+
+                    function () {
+
+                        var text = $(this).find('span').text()
+
+                        var compare = $("#Text").text();
+
+                        if (text == compare) {
+
+                        }
+                        else
+                        {
+                            $('<p>' + text + '</p>').appendTo('#Text');
+                        }
+                       
+                       
+
+                       
+
+                    }
+                );
+
+
+
+            </script>*@

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using UndergroundSound.Models;
 using DateApp.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace DateApp
 {
@@ -42,6 +43,8 @@ namespace DateApp
             //services.AddMvc();
             services.AddSignalR();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

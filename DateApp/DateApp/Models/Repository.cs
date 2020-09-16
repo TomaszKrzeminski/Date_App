@@ -11,7 +11,7 @@ namespace DateApp.Models
 
     public interface IRepository
     {
-
+        NotificationViewModel GetNotifications(string Id);
         SearchDetails GetUserDetails(string UserId);
         LoginDetails GetLoginDetails();
         AppUser GetUser(string UserId);
@@ -1300,6 +1300,24 @@ namespace DateApp.Models
 
                 AppUser userReceiver = context.Users.Where(u => u.Id == ReceiverId).First();
 
+
+                List<MatchUser> list = context.Users.Include(m => m.MatchUser).ThenInclude(me => me.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
+                Match match = list.Where(u => u.Match.SecondUserId == ReceiverId || u.Match.FirstUserId == ReceiverId).First().Match;
+
+                if (match.FirstUserId == UserId)
+                {
+                    match.NewForFirstUser = false;
+                    context.SaveChanges();
+                }
+                else
+                {
+                    match.NewForSecondUser = false;
+                    context.SaveChanges();
+                }
+
+
+
+
                 Message message = new Message();
                 message.Checked = false;
                 message.Time = DateTime.Now;
@@ -1663,7 +1681,7 @@ namespace DateApp.Models
             }
         }
 
-        public  bool CountLogout(string Id)
+        public bool CountLogout(string Id)
         {
             try
             {
@@ -1693,8 +1711,8 @@ namespace DateApp.Models
                 history.LoggedOut = DateTime.Now;
 
 
-              await  context.SaveChangesAsync();
-              return  true;
+                await context.SaveChangesAsync();
+                return true;
 
             }
             catch (Exception ex)
@@ -1715,7 +1733,7 @@ namespace DateApp.Models
             DateTime now = DateTime.Now;
             try
             {
-                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((x) => new { list = x.LoginHistory.Where(z =>z.LoggedOut.Year==1&& z.LoggedIn.DayOfYear == now.DayOfYear && z.LoggedIn.Year == now.Year) }).ToList().Where(c => c.list.Count() > 0).Count();
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((x) => new { list = x.LoginHistory.Where(z => z.LoggedOut.Year == 1 && z.LoggedIn.DayOfYear == now.DayOfYear && z.LoggedIn.Year == now.Year) }).ToList().Where(c => c.list.Count() > 0).Count();
 
                 return number;
             }
@@ -1758,7 +1776,7 @@ namespace DateApp.Models
 
 
 
-        
+
 
 
 
@@ -1767,18 +1785,18 @@ namespace DateApp.Models
         {
 
 
-            public static  bool DatesWeek(LoginHistory history)
-        {
+            public static bool DatesWeek(LoginHistory history)
+            {
 
-            DateTime date1 = DateTime.Now;
-            DateTime date2 = history.LoggedIn;
+                DateTime date1 = DateTime.Now;
+                DateTime date2 = history.LoggedIn;
 
-            var cal = System.Globalization.DateTimeFormatInfo.CurrentInfo.Calendar;
-            var d1 = date1.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date1));
-            var d2 = date2.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date2));
+                var cal = System.Globalization.DateTimeFormatInfo.CurrentInfo.Calendar;
+                var d1 = date1.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date1));
+                var d2 = date2.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date2));
 
-            return d1 == d2;
-        }
+                return d1 == d2;
+            }
 
 
             public static bool CreatedWeek(DateTime d)
@@ -1820,8 +1838,8 @@ namespace DateApp.Models
 
 
 
-              ///// nie dotykać gotowe
-                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((x) => new { list = x.LoginHistory.Where(z=>checkWeek(z)) }).ToList().Where(c => c.list.Count() > 0).Count();
+                ///// nie dotykać gotowe
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((x) => new { list = x.LoginHistory.Where(z => checkWeek(z)) }).ToList().Where(c => c.list.Count() > 0).Count();
 
                 return number;
             }
@@ -1857,7 +1875,7 @@ namespace DateApp.Models
             try
             {
 
-                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Where(x => x.LoginHistory.Count() > 0).Select((u) => new { FirstLogin = u.LoginHistory.FirstOrDefault().LoggedIn }).Where(x => ( ((DateTime)x.FirstLogin).Month == now.Month )&& (((DateTime)x.FirstLogin).Year == now.Year)).Count();
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Where(x => x.LoginHistory.Count() > 0).Select((u) => new { FirstLogin = u.LoginHistory.FirstOrDefault().LoggedIn }).Where(x => (((DateTime)x.FirstLogin).Month == now.Month) && (((DateTime)x.FirstLogin).Year == now.Year)).Count();
                 return number;
             }
             catch (Exception ex)
@@ -1874,7 +1892,7 @@ namespace DateApp.Models
             try
             {
 
-                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((u) => new DateTime(u.LoginHistory.FirstOrDefault().LoggedIn.Year, u.LoginHistory.FirstOrDefault().LoggedIn.Month, u.LoginHistory.FirstOrDefault().LoggedIn.Day)).Where(x=>checkCreated(x)).ToList().Count();
+                number = context.Users.Include(l => l.LoginHistory).Where(x => x.LoginHistory.Count() > 0).Select((u) => new DateTime(u.LoginHistory.FirstOrDefault().LoggedIn.Year, u.LoginHistory.FirstOrDefault().LoggedIn.Month, u.LoginHistory.FirstOrDefault().LoggedIn.Day)).Where(x => checkCreated(x)).ToList().Count();
 
                 return number;
             }
@@ -1924,8 +1942,8 @@ namespace DateApp.Models
 
 
         public LoginDetails GetLoginDetails()
-        {      
-                                 
+        {
+
             LoginDetails details = new LoginDetails();
 
             try
@@ -1939,7 +1957,7 @@ namespace DateApp.Models
                 details.Users_Created_Today = GetCreatedToday();
                 details.Users_Created_ThisWeek = GetCreatedThisWeek();
                 details.Users_Created_ThisMonth = GetCreatedThisMonth();
-                                                                      
+
 
                 return details;
             }
@@ -1947,6 +1965,90 @@ namespace DateApp.Models
             {
                 return details;
             }
+        }
+
+        public NotificationViewModel GetNotifications(string Id)
+        {
+
+            NotificationViewModel model = new NotificationViewModel();
+
+
+            try
+            {
+
+
+
+
+
+
+                List<MatchUser> ListMatchUser = context.Users.Include(m => m.MatchUser).ThenInclude(me => me.Match).Where(u => u.Id == Id).FirstOrDefault().MatchUser.ToList();
+                List<Match> list = ListMatchUser.Select(m => m.Match).Where(x => x.NewForFirstUser == true || x.NewForSecondUser == true).ToList();
+
+
+                List<MessageUser> ListMessageUser = context.Users.Include(m => m.MessageUser).ThenInclude(me => me.Message).Where(u => u.Id == Id).FirstOrDefault().MessageUser.ToList();
+                model.NewMessages = ListMessageUser.Select(m => m.Message).Where(x => x.Checked == false).Count();
+
+
+                foreach (var match in list)
+                {
+
+
+                    if (match.Pair=="Yes")
+                    {
+                        if (match.FirstUserId == Id && match.NewForFirstUser)
+                        {
+                            model.NewPairs++;
+                        }
+                        else if (match.SecondUserId == Id && match.NewForSecondUser)
+                        {
+                            model.NewPairs++;
+                        }
+                    }
+
+
+
+
+
+
+                }
+
+
+                AppUser user = context.Users.Include(s => s.Details).Where(u => u.Id == Id).FirstOrDefault();
+                if (user.Details.LikeDate != new DateTime())
+                {
+                    DateTime date = user.Details.LikeDate;
+                    DateTime now = DateTime.Now;
+                    TimeSpan check = date - now;
+
+                    model.NewLikes = new TimeToWait(check.Days, check.Hours, check.Minutes);
+                }
+
+
+
+                if (user.Details.SuperLikeDate != new DateTime())
+                {
+                    DateTime date = user.Details.SuperLikeDate;
+                    DateTime now = DateTime.Now;
+                    TimeSpan check = date - now;
+
+                    model.NewSuperLikes = new TimeToWait(check.Days, check.Hours, check.Minutes);
+
+                }
+
+
+
+
+
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+
+                return new NotificationViewModel();
+
+            }
+
         }
     }
 }

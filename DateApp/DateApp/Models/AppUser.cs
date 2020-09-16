@@ -127,14 +127,14 @@ namespace DateApp.Models
 
 
         }
-                
+
         public void SetSuperLikeDate()
         {
-            SuperLikeDate = DateTime.Now.AddDays(1);           
+            SuperLikeDate = DateTime.Now.AddDays(1);
         }
 
         public void SetLikeDate()
-        {            
+        {
             LikeDate = DateTime.Now.AddDays(1);
         }
 
@@ -160,7 +160,7 @@ namespace DateApp.Models
             Likes = 2;
             SuperLikes = 2;
 
-            
+
         }
 
 
@@ -180,11 +180,11 @@ namespace DateApp.Models
 
             bool check = CheckIfLikeIsAvailable();
 
-            if(check)
+            if (check)
             {
                 Likes--;
 
-                if(Likes==0)
+                if (Likes == 0)
                 {
                     SetLikeDate();
                 }
@@ -214,7 +214,7 @@ namespace DateApp.Models
 
         public bool CheckDateLike()
         {
-            if(LikeDate<=DateTime.Now&&Likes==0)
+            if (LikeDate <= DateTime.Now && Likes == 0)
             {
                 ResetLike();
                 return true;
@@ -227,7 +227,7 @@ namespace DateApp.Models
 
         public bool CheckDateSuperLike()
         {
-            if (SuperLikeDate <= DateTime.Now&&SuperLikes==0)
+            if (SuperLikeDate <= DateTime.Now && SuperLikes == 0)
             {
                 ResetSuperLike();
                 return true;
@@ -315,7 +315,7 @@ namespace DateApp.Models
     public class Message
     {
 
-        public Message(string ReceiverId,string SenderId)
+        public Message(string ReceiverId, string SenderId)
         {
             this.ReceiverId = ReceiverId;
             this.SenderId = SenderId;
@@ -333,7 +333,7 @@ namespace DateApp.Models
         public string ReceiverId { get; set; }
         public string MessageText { get; set; }
         public DateTime Time { get; set; }
-        public bool Checked { get; set; }    
+        public bool Checked { get; set; }
 
         public IList<MessageUser> MessageUser { get; set; }
 
@@ -368,6 +368,8 @@ namespace DateApp.Models
             RejectSecond = "";
             SuperLikeSecond = "";
             Pair = "";
+            NewForFirstUser = true;
+            NewForSecondUser = true;
         }
 
 
@@ -384,10 +386,16 @@ namespace DateApp.Models
             RejectSecond = "";
             SuperLikeSecond = "";
             Pair = "";
+            //Addend for notifications
+            NewForFirstUser = true;
+            NewForSecondUser = true;
+
         }
 
 
         public int MatchId { get; set; }
+        public bool NewForFirstUser { get; set; }
+        public bool NewForSecondUser { get; set; }
         public string FirstUserId { get; set; }
         public string SecondUserId { get; set; }
         public string MainPhotoUser1 { get; set; }
@@ -404,6 +412,9 @@ namespace DateApp.Models
         public DateTime Time { get; set; }
         public bool DontShow { get; set; }
         public bool Reject { get; set; }
+        /// <summary>
+        /// Added for notifications
+        /// </summary>
 
 
 
@@ -453,14 +464,14 @@ namespace DateApp.Models
             LoggedOut = new DateTime();
         }
 
-        public int LoginHistoryId {get;set;}
-        public DateTime  LoggedIn { get; set; }
-        public DateTime  LoggedOut { get; set; }
+        public int LoginHistoryId { get; set; }
+        public DateTime LoggedIn { get; set; }
+        public DateTime LoggedOut { get; set; }
 
         public string ApplicationUserID { get; set; }
         public AppUser User { get; set; }
     }
-    
+
 
 
 
