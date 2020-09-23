@@ -49,6 +49,10 @@ namespace DateApp.Models
         bool RemoveUserByAdmin(string Id);
         bool AddLikesByAdmin(string Id, int Likes);
         int GetNumberOfLikes(string Id);
+        //PairNotificationEmail CheckPairsForNofification();
+        //MessageNotificationEmail CheckMessagesForNofification();
+        //LikeNotificationEmail CheckLikesForNotification();
+        //SuperLikeNotificationEmail CheckSuperLikesForNofification();
 
 
     }

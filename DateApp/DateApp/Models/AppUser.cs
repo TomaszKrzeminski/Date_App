@@ -80,6 +80,15 @@ namespace DateApp.Models
 
     }
 
+    public class NotificationCheck
+    {
+        public int NotificationCheckId { get; set; }
+        public bool Check { get; set; }
+        public DateTime LastCheck { get; set; }
+    }
+
+
+
     public class ReportUser
     {
         public int ReportUserId { get; set; }
