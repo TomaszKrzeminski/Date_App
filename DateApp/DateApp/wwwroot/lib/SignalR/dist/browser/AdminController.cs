@@ -65,10 +65,7 @@ namespace DateApp.Controllers
 
 
 
-        //public ViewResult Create()
-        //{
-        //    return View();
-        //}
+        
 
 
 

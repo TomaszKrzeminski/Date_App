@@ -31,6 +31,7 @@ namespace DateApp.Models
             coordinates = new Coordinates();
             MatchUser = new List<MatchUser>();
             LoginHistory = new List<LoginHistory>();
+            Notification = new NotificationCheck(false,DateTime.Now);
         }
 
 
@@ -58,6 +59,7 @@ namespace DateApp.Models
             coordinates = new Coordinates();
             MatchUser = new List<MatchUser>();
             LoginHistory = new List<LoginHistory>();
+            Notification = new NotificationCheck(false, DateTime.Now);
         }
 
         public int Age { get; set; }
@@ -69,11 +71,13 @@ namespace DateApp.Models
         public int SearchDetailsId { get; set; }
         public SearchDetails Details { get; set; }
 
+        public int NotificationCheckId { get; set; }
+        public NotificationCheck Notification { get; set; }
+
         public int CoordinatesId { get; set; }
-
         public Coordinates coordinates { get; set; }
-        public IList<MatchUser> MatchUser { get; set; }
 
+        public IList<MatchUser> MatchUser { get; set; }
         public IList<MessageUser> MessageUser { get; set; }
         public IList<ReportUser> ReportUsers { get; set; }
         public IList<LoginHistory> LoginHistory { get; set; }
@@ -82,9 +86,26 @@ namespace DateApp.Models
 
     public class NotificationCheck
     {
+
+        public NotificationCheck()
+        {
+            Check = false;
+            LastCheck = new DateTime();
+        }
+
+        public NotificationCheck(bool Check,DateTime LastCheck)
+        {
+            this.Check = Check;
+            this.LastCheck = LastCheck;
+        }
+
+
         public int NotificationCheckId { get; set; }
         public bool Check { get; set; }
         public DateTime LastCheck { get; set; }
+
+        public string AppUserId { get; set; }
+        public AppUser User { get; set; }
     }
 
 

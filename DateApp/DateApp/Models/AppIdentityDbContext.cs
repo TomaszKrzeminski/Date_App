@@ -29,6 +29,13 @@ namespace DateApp.Models
        .HasOne(a => a.coordinates)
        .WithOne(b => b.User)
        .HasForeignKey<Coordinates>(b => b.AppUserId);
+
+            modelBuilder.Entity<AppUser>()
+       .HasOne(a => a.Notification)
+       .WithOne(b => b.User)
+       .HasForeignKey<NotificationCheck>(b => b.AppUserId);
+
+
         }
 
 
@@ -46,6 +53,7 @@ namespace DateApp.Models
         public DbSet<MatchUser> MatchUsers { get; set; }
 
         //Added 
+        public DbSet<NotificationCheck> NotificationCheck { get; set; }
 
         public DbSet<ReportUser> ReportUsers { get; set; }
 

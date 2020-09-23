@@ -206,7 +206,7 @@ namespace UndergroundSound.Models
 
             }
 
-                                                                              
+
 
             //void AddSearchDetailsToUser(string UserEmail,string Sex="Kobieta")
             //{
@@ -228,7 +228,32 @@ namespace UndergroundSound.Models
 
             //}
 
-          
+
+
+            void AddNotificationCheckToUser(string UserEmail)
+            {
+
+                try
+                {
+                    AppUser user = context.Users.Include(s => s.Notification).Where(u => u.Email == UserEmail).First();
+                    NotificationCheck notification = new NotificationCheck(false, DateTime.Now);
+                    user.Notification = notification;
+                    context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+
+
+            }
+
+
+
+
+
 
             void AddCoordinatesToUser(string UserEmail,double Latitude,double Longitude)
             {
@@ -285,6 +310,25 @@ namespace UndergroundSound.Models
                 AddCoordinatesToUser("U10@gmail.com", 53.125177, 18.067801);
                 AddCoordinatesToUser("U11@gmail.com", 53.416999, 18.458456);
                 AddCoordinatesToUser("U12@gmail.com", 53.140677, 18.028920);
+
+
+               
+
+                AddNotificationCheckToUser("U1@gmail.com");
+                AddNotificationCheckToUser("U2@gmail.com");
+                AddNotificationCheckToUser("U3@gmail.com");
+                AddNotificationCheckToUser("U4@gmail.com");
+                AddNotificationCheckToUser("U5@gmail.com");
+                AddNotificationCheckToUser("U6@gmail.com");
+                AddNotificationCheckToUser("U7@gmail.com");
+                AddNotificationCheckToUser("U8@gmail.com");
+                AddNotificationCheckToUser("U9@gmail.com");
+                AddNotificationCheckToUser("U10@gmail.com");
+                AddNotificationCheckToUser("U11@gmail.com");
+                AddNotificationCheckToUser("U12@gmail.com");
+
+
+
 
 
             }
