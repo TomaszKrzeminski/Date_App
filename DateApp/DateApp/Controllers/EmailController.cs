@@ -16,10 +16,12 @@ namespace DateApp.Controllers
     public class EmailController : Controller
     {
         private IHostingEnvironment _env;
+        private IRepository repository;
 
-        public EmailController(IHostingEnvironment env)
+        public EmailController(IHostingEnvironment env,IRepository repo)
         {
             _env = env;
+            repository = repo;
         }
 
 
@@ -79,10 +81,35 @@ namespace DateApp.Controllers
         public IActionResult Test()
         {
 
-            Send2();
-            Send3();
-            Send4();
-            Send5();
+            
+
+            while (repository.GetUserToNotify()!=null)
+            {
+
+                string UserId = repository.GetUserToNotify();
+
+                INotificationEmail pair=repository.CheckPairsForNofification( UserId);
+                INotificationEmail message= repository.CheckMessagesForNofification( UserId);
+                INotificationEmail like= repository.CheckLikesForNotification( UserId);
+                INotificationEmail superlike= repository.CheckSuperLikesForNofification( UserId);
+
+                List<INotificationEmail> list = new List<INotificationEmail>() { pair, message, like, superlike };
+
+                foreach (var email in list)
+                {
+
+                    if(email!=null)
+                    {
+                        email.SendEmail();
+                    }
+
+                }
+
+                repository.SetNotify(UserId);
+
+
+            }
+
 
 
 

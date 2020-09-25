@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 
 
 namespace DateApp.Models
@@ -49,10 +50,12 @@ namespace DateApp.Models
         bool RemoveUserByAdmin(string Id);
         bool AddLikesByAdmin(string Id, int Likes);
         int GetNumberOfLikes(string Id);
-        //PairNotificationEmail CheckPairsForNofification();
-        //MessageNotificationEmail CheckMessagesForNofification();
-        //LikeNotificationEmail CheckLikesForNotification();
-        //SuperLikeNotificationEmail CheckSuperLikesForNofification();
+        INotificationEmail CheckPairsForNofification(string UserId);
+        INotificationEmail CheckMessagesForNofification(string UserId);
+        INotificationEmail CheckLikesForNotification(string UserId);
+        INotificationEmail CheckSuperLikesForNofification(string UserId);
+        string GetUserToNotify();
+        bool SetNotify(string UserId);
 
 
     }
@@ -61,10 +64,17 @@ namespace DateApp.Models
     public class Repository : IRepository
     {
         AppIdentityDbContext context;
+        IHostingEnvironment Environment;
 
         public Repository(AppIdentityDbContext ctx)
         {
             context = ctx;
+        }
+
+        public Repository(AppIdentityDbContext ctx, IHostingEnvironment env)
+        {
+            context = ctx;
+            Environment = env;
         }
 
         public bool MatchAction(string PairId, string UserId, string Decision)
@@ -1997,7 +2007,7 @@ namespace DateApp.Models
                 {
 
 
-                    if (match.Pair=="Yes")
+                    if (match.Pair == "Yes")
                     {
                         if (match.FirstUserId == Id && match.NewForFirstUser)
                         {
@@ -2053,6 +2063,238 @@ namespace DateApp.Models
 
             }
 
+        }
+
+
+
+        public bool SetNotify(string UserId)
+        {
+            try
+            {
+
+                AppUser user = context.Users.Include(x => x.Notification).Where(x => x.Id == UserId).First();
+                NotificationCheck check = user.Notification;
+                check.Check = true;
+                check.LastCheck = DateTime.Now;
+                context.SaveChanges();
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+
+
+        public string GetUserToNotify()
+        {
+            string Id = null;
+
+            try
+            {
+                Id = context.NotificationCheck.Where(x => x.Check == false || (x.Check == true && x.LastCheck.DayOfYear < DateTime.Now.DayOfYear)).FirstOrDefault(s=>!string.IsNullOrEmpty(s.AppUserId)).AppUserId;
+                return Id;
+            }
+            catch (Exception ex)
+            {
+                return Id;
+            }
+        }
+
+        public string CheckPhotoPath(string Path,string ReturnIfDoesNotExist= "NoUserPhoto.jpg")
+        {
+
+
+            if(Path== "/AppPictures/photo.png")
+            {
+                return ReturnIfDoesNotExist;
+            }
+            else
+            {
+
+                string text = Path.Replace("/AppPictures/","");
+                return text;
+
+            }
+
+
+        }
+
+
+        public INotificationEmail CheckPairsForNofification(string UserId)
+        {
+            PairNotificationEmail data = null;
+
+            try
+            {
+                List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
+                List<Match> pairs = list.Select(m => m.Match).Where(x => x.Pair == "Yes").OrderByDescending(x => x.Time).ToList();
+                List<Match> Pairs = new List<Match>();
+
+                foreach (var match in pairs)
+                {
+
+                    if (match.FirstUserId == UserId && match.NewForFirstUser == true)
+                    {
+                        Pairs.Add(match);
+                    }
+                    else if (match.SecondUserId == UserId && match.NewForSecondUser == true)
+                    {
+                        Pairs.Add(match);
+                    }
+
+
+                }
+
+
+
+                string UserEmail = context.Users.Find(UserId).Email;
+                int count = Pairs.Count();
+                Match Pair = Pairs.FirstOrDefault();
+                string EmailPair = "";
+                string PairPhotoPath = "";
+
+                if (Pair != null)
+                {
+
+                    if (Pair.FirstUserId == UserId)
+                    {
+                        string PairId = Pair.SecondUserId;
+                        AppUser PairUser = context.Users.Include(s => s.Details).Where(u => u.Id == PairId).FirstOrDefault();
+                        EmailPair = PairUser.Email;
+                        PairPhotoPath = CheckPhotoPath( PairUser.Details.MainPhotoPath);
+
+                    }
+                    else
+                    {
+                        string PairId = Pair.FirstUserId;
+                        AppUser PairUser = context.Users.Include(s => s.Details).Where(u => u.Id == PairId).FirstOrDefault();
+                        EmailPair = PairUser.Email;
+                        PairPhotoPath = CheckPhotoPath(PairUser.Details.MainPhotoPath);
+                    }
+
+
+                }
+                else
+                {
+                    Pair = new Match();
+                    Pair.Time = new DateTime();
+                }
+
+                data = new PairNotificationEmail(Environment, UserEmail, EmailPair, Pair.Time, count, PairPhotoPath, "PairImage.jpg");
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return data;
+            }
+        }
+
+        public INotificationEmail CheckMessagesForNofification(string UserId)
+        {
+            MessageNotificationEmail data = null;
+
+            try
+            {
+
+                List<MessageUser> list = context.Users.Include(x => x.MessageUser).ThenInclude(x => x.Message).Where(y => y.Id == UserId).First().MessageUser.ToList();
+
+                List<Message> messageList = list.Select(x => x.Message).Where(x => x.Checked == false && x.ReceiverId == UserId).OrderByDescending(x => x.Time).GroupBy(m => m.SenderId).Select(g => g.First()).ToList();
+
+                Message message = messageList.FirstOrDefault();
+
+                string EmailSender = "";
+
+                string PairPhotoPath = "";
+
+                DateTime Time = new DateTime();
+
+                int Count = 0;
+
+                if (message != null)
+                {
+
+                    string Id = message.SenderId;
+                    AppUser User = context.Users.Include(s => s.Details).Where(u => u.Id == Id).FirstOrDefault();
+                    EmailSender = User.Email;
+                    PairPhotoPath = CheckPhotoPath(User.Details.MainPhotoPath);
+                    Time = message.Time;
+                    Count = messageList.Count();
+                }
+                else
+                {
+                    return null;
+                }
+
+                string UserEmail = context.Users.Find(UserId).Email;
+                int count = messageList.Count();
+
+
+
+                data = new MessageNotificationEmail(Environment, UserEmail, EmailSender, Time, Count, PairPhotoPath, "MessagePage.jpg");
+
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return data;
+            }
+        }
+
+        public INotificationEmail CheckLikesForNotification(string UserId)
+        {
+            LikeNotificationEmail data = null;
+
+            try
+            {
+                AppUser user = context.Users.Include(x => x.Details).Where(x => x.Id == UserId).First();
+                SearchDetails details = user.Details;
+                DateTime time = DateTime.Now;
+
+                string UserEmail = user.Email;
+
+                if (details.LikeDate < time && details.Likes == 2)
+                {
+                    data = new LikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate, 2, "NoUserPhoto.jpg", "LikePage.jpg");
+                }
+               
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return data;
+            }
+        }
+
+        public INotificationEmail CheckSuperLikesForNofification(string UserId)
+        {
+            SuperLikeNotificationEmail data = null;
+
+            try
+            {
+                AppUser user = context.Users.Include(x => x.Details).Where(x => x.Id == UserId).First();
+                SearchDetails details = user.Details;
+                DateTime time = DateTime.Now;
+
+                string UserEmail = user.Email;
+
+                if (details.SuperLikeDate < time && details.SuperLikes == 2)
+                {
+                    data = new SuperLikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate, 2, "NoUserPhoto.jpg", "SuperLikePage.jpg");
+                }
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return data;
+            }
         }
     }
 }

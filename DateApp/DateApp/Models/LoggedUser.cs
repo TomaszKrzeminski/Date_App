@@ -26,7 +26,7 @@ namespace DateApp.Models
             var principal = User as ClaimsPrincipal;
             var check = User.Identity.IsAuthenticated;
 
-            if(check)
+            if (check)
             {
                 return true;
             }
@@ -44,14 +44,24 @@ namespace DateApp.Models
 
             bool check = CheckUserIsAuthenticated();
             string UserId = "";
-            if(check)
+            if (check)
             {
-                UserId = userManager.GetUserAsync(HttpContext.User).Result.Id;
+
+                try
+                {
+                    UserId = userManager.GetUserAsync(HttpContext.User).Result.Id;
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+
             }
 
 
 
-            return View("/Views/Shared/Components/NotificationsChecker/Default.cshtml",UserId);
+            return View("/Views/Shared/Components/NotificationsChecker/Default.cshtml", UserId);
         }
 
 
