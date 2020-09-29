@@ -7,8 +7,10 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using DateApp.Models;
+using DateApp.Models.DateApp.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using MimeKit;
 
 namespace DateApp.Controllers
@@ -18,7 +20,7 @@ namespace DateApp.Controllers
         private IHostingEnvironment _env;
         private IRepository repository;
 
-        public EmailController(IHostingEnvironment env,IRepository repo)
+        public EmailController(IHostingEnvironment env, IRepository repo)
         {
             _env = env;
             repository = repo;
@@ -27,79 +29,53 @@ namespace DateApp.Controllers
 
 
 
-
-
-
-
-
-        public void Send2()
+        public SmtpClient MakeSmtpClient()
         {
 
-            INotificationEmail EmailPair = new PairNotificationEmail(_env, "zdalnerepo1985@gmail.com","Testowy@gmail.com",DateTime.Now,9,"test.jpg" ,"PairImage.jpg");
+            var builder = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json");
+            var config = builder.Build();
 
-            EmailPair.SendEmail();
+            SmtpClient smtpClient = new SmtpClient(config["Data:Smtp:Host"])
+            {
+                Port = int.Parse(config["Data:Smtp:Port"]),
+                Credentials = new NetworkCredential(config["Data:Smtp:Username"], config["Data:Smtp:Password"]),
+                EnableSsl = true,
+            };
 
-           
 
-        }
-
-        public void Send3()
-        {
-
-            INotificationEmail EmailPair = new MessageNotificationEmail(_env, "zdalnerepo1985@gmail.com", "Testowy@gmail.com", DateTime.Now, 111, "test.jpg", "MessagePage.jpg");
-
-            EmailPair.SendEmail();
-
-           
-
-        }
-
-        public void Send4()
-        {
-
-            INotificationEmail EmailPair = new LikeNotificationEmail(_env, "zdalnerepo1985@gmail.com", "Testowy@gmail.com", DateTime.Now, 111, null, "LikePage.jpg");
-
-            EmailPair.SendEmail();
-
-           
+            return smtpClient;
 
         }
 
 
-        public void Send5()
+
+
+
+
+
+
+
+        public void Send()
         {
-
-            INotificationEmail EmailPair = new SuperLikeNotificationEmail(_env, "zdalnerepo1985@gmail.com", "Testowy@gmail.com", DateTime.Now, 111, null, "SuperLikePage.jpg");
-
-            EmailPair.SendEmail();
-
-
-
-        }
-
-
-        public IActionResult Test()
-        {
-
-            
-
-            while (repository.GetUserToNotify()!=null)
+            while (repository.GetUserToNotify() != null)
             {
 
                 string UserId = repository.GetUserToNotify();
 
-                INotificationEmail pair=repository.CheckPairsForNofification( UserId);
-                INotificationEmail message= repository.CheckMessagesForNofification( UserId);
-                INotificationEmail like= repository.CheckLikesForNotification( UserId);
-                INotificationEmail superlike= repository.CheckSuperLikesForNofification( UserId);
+                NotificationEmail pair = repository.CheckPairsForNofification(UserId);
+                NotificationEmail message = repository.CheckMessagesForNofification(UserId);
+                NotificationEmail like = repository.CheckLikesForNotification(UserId);
+                NotificationEmail superLike = repository.CheckSuperLikesForNofification(UserId);
 
-                List<INotificationEmail> list = new List<INotificationEmail>() { pair, message, like, superlike };
+                List<NotificationEmail> list = new List<NotificationEmail>() { pair, message ,like,superLike};
 
                 foreach (var email in list)
                 {
 
-                    if(email!=null)
+                    if (email != null)
                     {
+                        email.MakeEmail();
                         email.SendEmail();
                     }
 
@@ -113,12 +89,50 @@ namespace DateApp.Controllers
 
 
 
-            return View();
         }
 
 
+        //public IActionResult Test()
+        //{
 
-      
+
+
+        //    while (repository.GetUserToNotify() != null)
+        //    {
+
+        //        string UserId = repository.GetUserToNotify();
+
+        //        INotificationEmail pair = repository.CheckPairsForNofification(UserId);
+        //        INotificationEmail message = repository.CheckMessagesForNofification(UserId);
+        //        INotificationEmail like = repository.CheckLikesForNotification(UserId);
+        //        INotificationEmail superlike = repository.CheckSuperLikesForNofification(UserId);
+
+        //        List<INotificationEmail> list = new List<INotificationEmail>() { pair, message, like, superlike };
+
+        //        foreach (var email in list)
+        //        {
+
+        //            if (email != null)
+        //            {
+        //                email.SendEmail();
+        //            }
+
+        //        }
+
+        //        repository.SetNotify(UserId);
+
+
+        //    }
+
+
+
+
+        //    return View();
+        //}
+
+
+
+
 
 
 

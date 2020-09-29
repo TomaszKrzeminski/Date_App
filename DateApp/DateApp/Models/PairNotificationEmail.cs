@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace DateApp.Models
+namespace DateApp.Models.Old
 {
 
     public interface INotificationEmail
@@ -451,7 +451,7 @@ namespace DateApp.Models
 
 
     }
-    
+
     public class LikeNotificationEmail : INotificationEmail
     {
 
@@ -689,7 +689,7 @@ namespace DateApp.Models
 
 
     }
-       
+
     public class SuperLikeNotificationEmail : INotificationEmail
     {
 

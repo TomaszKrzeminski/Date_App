@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
-
+using DateApp.Models.DateApp.Models;
 
 namespace DateApp.Models
 {
@@ -50,10 +50,10 @@ namespace DateApp.Models
         bool RemoveUserByAdmin(string Id);
         bool AddLikesByAdmin(string Id, int Likes);
         int GetNumberOfLikes(string Id);
-        INotificationEmail CheckPairsForNofification(string UserId);
-        INotificationEmail CheckMessagesForNofification(string UserId);
-        INotificationEmail CheckLikesForNotification(string UserId);
-        INotificationEmail CheckSuperLikesForNofification(string UserId);
+        NotificationEmail CheckPairsForNofification(string UserId);
+        NotificationEmail CheckMessagesForNofification(string UserId);
+        NotificationEmail CheckLikesForNotification(string UserId);
+        NotificationEmail CheckSuperLikesForNofification(string UserId);
         string GetUserToNotify();
         bool SetNotify(string UserId);
 
@@ -2125,7 +2125,7 @@ namespace DateApp.Models
         }
 
 
-        public INotificationEmail CheckPairsForNofification(string UserId)
+        public NotificationEmail CheckPairsForNofification(string UserId)
         {
             PairNotificationEmail data = null;
 
@@ -2166,7 +2166,7 @@ namespace DateApp.Models
                         string PairId = Pair.SecondUserId;
                         AppUser PairUser = context.Users.Include(s => s.Details).Where(u => u.Id == PairId).FirstOrDefault();
                         EmailPair = PairUser.Email;
-                        PairPhotoPath = CheckPhotoPath( PairUser.Details.MainPhotoPath);
+                        PairPhotoPath = CheckPhotoPath(PairUser.Details.MainPhotoPath);
 
                     }
                     else
@@ -2181,11 +2181,16 @@ namespace DateApp.Models
                 }
                 else
                 {
-                    Pair = new Match();
-                    Pair.Time = new DateTime();
+                    //Pair = new Match();
+                    //Pair.Time = new DateTime();
+                    return null;
                 }
 
-                data = new PairNotificationEmail(Environment, UserEmail, EmailPair, Pair.Time, count, PairPhotoPath, "PairImage.jpg");
+                List<string> Names = new List<string>();
+                Names.Add(PairPhotoPath);
+                Names.Add("PairImage.jpg");
+
+                data = new PairNotificationEmail(Environment, UserEmail, EmailPair, Pair.Time, count,Names );
 
                 return data;
             }
@@ -2195,7 +2200,7 @@ namespace DateApp.Models
             }
         }
 
-        public INotificationEmail CheckMessagesForNofification(string UserId)
+        public NotificationEmail CheckMessagesForNofification(string UserId)
         {
             MessageNotificationEmail data = null;
 
@@ -2234,9 +2239,11 @@ namespace DateApp.Models
                 string UserEmail = context.Users.Find(UserId).Email;
                 int count = messageList.Count();
 
+                List<string> Names = new List<string>();
+                Names.Add(PairPhotoPath);
+                Names.Add("MessagePage.jpg");
 
-
-                data = new MessageNotificationEmail(Environment, UserEmail, EmailSender, Time, Count, PairPhotoPath, "MessagePage.jpg");
+                data = new MessageNotificationEmail(Environment, UserEmail, EmailSender, Time, Count,Names);
 
 
                 return data;
@@ -2247,7 +2254,7 @@ namespace DateApp.Models
             }
         }
 
-        public INotificationEmail CheckLikesForNotification(string UserId)
+        public NotificationEmail CheckLikesForNotification(string UserId)
         {
             LikeNotificationEmail data = null;
 
@@ -2261,9 +2268,10 @@ namespace DateApp.Models
 
                 if (details.LikeDate < time && details.Likes == 2)
                 {
-                    data = new LikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate, 2, "NoUserPhoto.jpg", "LikePage.jpg");
+                    List<string> list = new List<string>() { "LikePage.jpg" };
+                    data = new LikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate,list);
                 }
-               
+
                 return data;
             }
             catch (Exception ex)
@@ -2272,7 +2280,7 @@ namespace DateApp.Models
             }
         }
 
-        public INotificationEmail CheckSuperLikesForNofification(string UserId)
+        public NotificationEmail CheckSuperLikesForNofification(string UserId)
         {
             SuperLikeNotificationEmail data = null;
 
@@ -2286,7 +2294,8 @@ namespace DateApp.Models
 
                 if (details.SuperLikeDate < time && details.SuperLikes == 2)
                 {
-                    data = new SuperLikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate, 2, "NoUserPhoto.jpg", "SuperLikePage.jpg");
+                    List<string> list = new List<string>() { "SuperLikePage.jpg" };
+                    data = new SuperLikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate,list );
                 }
 
                 return data;
