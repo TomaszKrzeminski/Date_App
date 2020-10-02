@@ -1,6 +1,7 @@
 ﻿using DateApp.Controllers;
 using DateApp.Hubs;
 using DateApp.Models;
+using DateApp.Models.DateApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +16,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
@@ -49,11 +51,6 @@ namespace Tests
 
 
     }
-
-
-
-
-
 
     public class HomeControllerTests
     {
@@ -2428,7 +2425,7 @@ namespace Tests
             Mock<IRepository> repo = new Mock<IRepository>();
 
             FakeIdentityResult result = new FakeIdentityResult();
-            
+
             manager.Setup(m => m.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).Returns(Task.FromResult((IdentityResult)result));
 
             IdentityResult result2 = new IdentityResult();
@@ -2464,7 +2461,7 @@ namespace Tests
             manager.Setup(r => r.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns("UserId");
             manager.Setup(m => m.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
 
-           
+
 
             IdentityResult result = new IdentityResult();
 
@@ -2552,7 +2549,70 @@ namespace Tests
 
     }
 
+    public class EmailSendTests
+    {
 
+        [Test]
+        public void GetPath_Returns_Specified_Path()
+        {
+
+            var MockIHostingEnvironment = new Mock<IHostingEnvironment>();
+            MockIHostingEnvironment.Setup(x => x.WebRootPath).Returns("\\DateApp");
+
+
+            GetPaht getPath = new GetPaht(MockIHostingEnvironment.Object);
+
+            List<string> list = new List<string>() { "PathOfImage1", "PathOfImage2", "PathOfImage3" };
+
+            List<string> Pathes = getPath.GetPathOfImage(list);
+
+            Assert.AreEqual("\\DateApp\\Images\\PathOfImage1", Pathes[0]);
+            Assert.AreEqual("\\DateApp\\Images\\PathOfImage2", Pathes[1]);
+            Assert.AreEqual("\\DateApp\\Images\\PathOfImage3", Pathes[2]);
+
+        }
+
+        [Test]
+        public void Make_In_MakeDate_Returns_Specified_Date_With_Dashes()
+        {
+
+            DateTime time = new DateTime(2000, 8, 6);
+            DateTime time2 = new DateTime(2000, 12, 1);
+            DateTime time3 = new DateTime(2000, 12, 12);
+            MakeDate makeDate1 = new MakeDate(time);
+            MakeDate makeDate2 = new MakeDate(time2);
+            MakeDate makeDate3 = new MakeDate(time3);
+
+            string D1 = makeDate1.Make();
+            string D2 = makeDate2.Make();
+            string D3 = makeDate3.Make();
+
+            Assert.AreEqual("06-08-2000 00:00", D1);
+            Assert.AreEqual("01-12-2000 00:00", D2);
+            Assert.AreEqual("12-12-2000 00:00", D3);
+
+
+        }
+
+        [Test]
+        public void SetClient_From_SmtpClient_Returns_Specified_SmtpClient()
+        {
+            SmtpClient client = new SmtpClient();
+            ISetSmtpClient smtpClient = new SetSmtpClient();
+            SmtpClient data = smtpClient.SetClient();
+            System.Net.NetworkCredential networkCredential = data.Credentials.GetCredential("smtp.gmail.com", 587, "None");
+            Assert.AreEqual("Martyna1985@", networkCredential.Password);
+
+        }
+
+     
+
+
+
+
+
+
+    }
 
 
 

@@ -26,35 +26,24 @@ namespace DateApp.Controllers
             repository = repo;
         }
 
+        //public SmtpClient MakeSmtpClient()
+        //{
+
+        //    var builder = new ConfigurationBuilder()
+        //    .AddJsonFile("appsettings.json");
+        //    var config = builder.Build();
+
+        //    SmtpClient smtpClient = new SmtpClient(config["Data:Smtp:Host"])
+        //    {
+        //        Port = int.Parse(config["Data:Smtp:Port"]),
+        //        Credentials = new NetworkCredential(config["Data:Smtp:Username"], config["Data:Smtp:Password"]),
+        //        EnableSsl = true,
+        //    };
 
 
+        //    return smtpClient;
 
-        public SmtpClient MakeSmtpClient()
-        {
-
-            var builder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json");
-            var config = builder.Build();
-
-            SmtpClient smtpClient = new SmtpClient(config["Data:Smtp:Host"])
-            {
-                Port = int.Parse(config["Data:Smtp:Port"]),
-                Credentials = new NetworkCredential(config["Data:Smtp:Username"], config["Data:Smtp:Password"]),
-                EnableSsl = true,
-            };
-
-
-            return smtpClient;
-
-        }
-
-
-
-
-
-
-
-
+        //}
 
         public void Send()
         {
