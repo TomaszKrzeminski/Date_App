@@ -17,17 +17,17 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Quartz;
 using System.Collections.Specialized;
 using Quartz.Impl;
-
+using DateApp.Jobs;
 
 namespace DateApp
 {
     public class Startup
     {
-        
+        private IScheduler _quartzScheduler;
         public Startup(IConfiguration configruation)
         {
             Configuration = configruation;
-          
+            _quartzScheduler = ConfigureQuartz();
 
         }
 
@@ -56,14 +56,31 @@ namespace DateApp
             services.AddSignalR();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
-            
+            services.AddTransient<SimpleJob>();
+            services.AddSingleton<IEmailService, EmailService>();
+            services.AddSingleton(provider => _quartzScheduler);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 
         }
 
+
+        private void OnShutdown()
+        {
+            //shutdown quartz is not shutdown already
+            if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown();
+        }
+
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppIdentityDbContext context)
         {
+
+            _quartzScheduler.JobFactory = new AspnetCoreJobFactory(app.ApplicationServices);
+            _quartzScheduler.Start().Wait();
+
+
+
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
 
@@ -141,8 +158,29 @@ namespace DateApp
 
         }
 
+        public IScheduler ConfigureQuartz()
+        {
 
-       
+            NameValueCollection props = new NameValueCollection
+             {
+              { "quartz.serializer.type", "json" },
+               //{ "quartz.jobStore.type", "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz" },
+               //  { "quartz.jobStore.dataSource", "default" },
+               //  { "quartz.dataSource.default.provider", "SqlServer" },
+               //   { "quartz.dataSource.default.connectionString", "Server=.;Integrated Security=true;Initial Catalog = Quartz" },
+               //   {"quartz.jobStore.clustered","true" },
+               //   { "quartz.jobStore.driverDelegateType", "Quartz.Impl.AdoJobStore.SqlServerDelegate, Quartz" }
+              };
+            StdSchedulerFactory factory = new StdSchedulerFactory(props);
+            var scheduler = factory.GetScheduler().Result;
+
+            scheduler.ListenerManager.AddTriggerListener(new TriggerListener());
+            scheduler.ListenerManager.AddJobListener(new JobListener());
+            scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener());
+            return scheduler;
+
+        }
+
 
 
     }

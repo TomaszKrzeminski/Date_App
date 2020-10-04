@@ -1,12 +1,11 @@
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.csproj.CoreCompileInputs.cache
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfoInputs.cache
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfo.cs
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\appsettings.json
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.deps.json
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.runtimeconfig.json
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.runtimeconfig.dev.json
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.dll
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.pdb
-C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.csproj.CoreCompileInputs.cache
-C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfoInputs.cache
-C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfo.cs
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.dll
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.pdb
-C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\appsettings.json
-C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.csprojAssemblyReference.cache
