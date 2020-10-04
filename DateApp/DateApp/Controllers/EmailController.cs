@@ -6,12 +6,14 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Threading.Tasks;
+
 using DateApp.Models;
 using DateApp.Models.DateApp.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using Quartz;
 
 namespace DateApp.Controllers
 {
@@ -19,31 +21,26 @@ namespace DateApp.Controllers
     {
         private IHostingEnvironment _env;
         private IRepository repository;
+        private IScheduler scheduler;
 
-        public EmailController(IHostingEnvironment env, IRepository repo)
+        public EmailController(IHostingEnvironment env, IRepository repo, IScheduler scheduler)
         {
             _env = env;
             repository = repo;
+            this.scheduler = scheduler;
         }
 
-        //public SmtpClient MakeSmtpClient()
-        //{
+      
 
-        //    var builder = new ConfigurationBuilder()
-        //    .AddJsonFile("appsettings.json");
-        //    var config = builder.Build();
+        public async Task<IActionResult> Test()
+        {
 
-        //    SmtpClient smtpClient = new SmtpClient(config["Data:Smtp:Host"])
-        //    {
-        //        Port = int.Parse(config["Data:Smtp:Port"]),
-        //        Credentials = new NetworkCredential(config["Data:Smtp:Username"], config["Data:Smtp:Password"]),
-        //        EnableSsl = true,
-        //    };
+            
+
+            return View();
+        }
 
 
-        //    return smtpClient;
-
-        //}
 
         public void Send()
         {

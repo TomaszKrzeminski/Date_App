@@ -14,15 +14,27 @@ using UndergroundSound.Models;
 using DateApp.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Quartz;
+using System.Collections.Specialized;
+using Quartz.Impl;
+
 
 namespace DateApp
 {
     public class Startup
     {
+        
+        public Startup(IConfiguration configruation)
+        {
+            Configuration = configruation;
+          
 
-        public Startup(IConfiguration configruation) => Configuration = configruation;
+        }
 
         public IConfiguration Configuration { get; }
+
+       
+
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -44,7 +56,9 @@ namespace DateApp
             services.AddSignalR();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
-           
+            
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,12 +66,18 @@ namespace DateApp
         {
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
+
+
+           
+
+
+
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseSignalR(config => { config.MapHub<MessageHub>("/messages"); });
             app.UseSignalR(config => { config.MapHub<CheckConnectionHub>("/messages2"); });
             ////
-           app.UseSignalR(config => { config.MapHub<NotificationHub>("/messages3"); });
+            app.UseSignalR(config => { config.MapHub<NotificationHub>("/messages3"); });
 
             app.Use(async (ext, next) =>
             {
@@ -120,5 +140,10 @@ namespace DateApp
 
 
         }
+
+
+       
+
+
     }
 }
