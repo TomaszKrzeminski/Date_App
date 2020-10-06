@@ -54,10 +54,12 @@ namespace DateApp
 
             //services.AddMvc();
             services.AddSignalR();
-            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();                    
 
-            services.AddTransient<SimpleJob>();
-            services.AddSingleton<IEmailService, EmailService>();
+
+            services.AddTransient<NotificationJob>();            
+            services.AddTransient<INotificationsSheduler, NotificationsSheduler>();
+
             services.AddSingleton(provider => _quartzScheduler);
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -174,9 +176,9 @@ namespace DateApp
             StdSchedulerFactory factory = new StdSchedulerFactory(props);
             var scheduler = factory.GetScheduler().Result;
 
-            scheduler.ListenerManager.AddTriggerListener(new TriggerListener());
+            //scheduler.ListenerManager.AddTriggerListener(new TriggerListener());
             scheduler.ListenerManager.AddJobListener(new JobListener());
-            scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener());
+            //scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener());
             return scheduler;
 
         }

@@ -34,150 +34,76 @@ namespace DateApp.Controllers
 
         public async Task<IActionResult> Test()
         {
-            IJobDetail job = JobBuilder.Create<SimpleJob>()
-                                       .UsingJobData("username", "devhow")
-                                       .UsingJobData("password", "Security!!")
-                                       .WithIdentity("simplejob", "quartzexamples")
-                                       .StoreDurably()
-                                       .RequestRecovery()
-                                       .Build();
-            job.JobDataMap.Put("user", new JobUserParameter { Username = "devhow", Password = "Security!!" });
 
-            //save the job
+
+            IJobDetail job = JobBuilder.Create<NotificationJob>().WithIdentity("notifyjob", "Notification").StoreDurably().RequestRecovery().Build();
+
             await _scheduler.AddJob(job, true);
 
             ITrigger trigger = TriggerBuilder.Create()
-                                             .ForJob(job)
-                                             .UsingJobData("triggerparam", "Simple trigger 1 Parameter")
-                                             .WithIdentity("testtrigger", "quartzexamples")
-                                             .StartNow()
-                                             .WithSimpleSchedule(z => z.WithIntervalInSeconds(5).RepeatForever().WithMisfireHandlingInstructionIgnoreMisfires())
-                                             .Build();
-            ITrigger trigger2 = TriggerBuilder.Create()
                                             .ForJob(job)
-                                            .UsingJobData("triggerparam", "Simple trigger 2 Parameter")
-                                            .WithIdentity("testtrigger2", "quartzexamples")
+                                            .WithIdentity("notifytrigger", "Notification")
                                             .StartNow()
-                                            .WithSimpleSchedule(z => z.WithIntervalInSeconds(5).RepeatForever().WithMisfireHandlingInstructionIgnoreMisfires())
-                                            .Build();
-            ITrigger trigger3 = TriggerBuilder.Create()
-                                            .ForJob(job)
-                                            .UsingJobData("triggerparam", "Simple trigger 3 Parameter")
-                                            .WithIdentity("testtrigger3", "quartzexamples")
-                                            .StartNow()
-                                            .WithSimpleSchedule(z => z.WithIntervalInSeconds(5).RepeatForever().WithMisfireHandlingInstructionIgnoreMisfires())
+                                            .WithSimpleSchedule(z => z.WithIntervalInSeconds(120).RepeatForever().WithMisfireHandlingInstructionIgnoreMisfires())
                                             .Build();
 
             await _scheduler.ScheduleJob(trigger);
-            await _scheduler.ScheduleJob(trigger2);
-            await _scheduler.ScheduleJob(trigger3);
+            
 
 
             return View();
         }
 
 
-
-        public void Send()
-        {
-            while (repository.GetUserToNotify() != null)
-            {
-
-                string UserId = repository.GetUserToNotify();
-
-                NotificationEmail pair = repository.CheckPairsForNofification(UserId);
-                NotificationEmail message = repository.CheckMessagesForNofification(UserId);
-                NotificationEmail like = repository.CheckLikesForNotification(UserId);
-                NotificationEmail superLike = repository.CheckSuperLikesForNofification(UserId);
-
-                List<NotificationEmail> list = new List<NotificationEmail>() { pair, message ,like,superLike};
-
-                foreach (var email in list)
-                {
-
-                    if (email != null)
-                    {
-                        email.MakeEmail();
-                        email.SendEmail();
-                    }
-
-                }
-
-                repository.SetNotify(UserId);
-
-
-            }
+        //public async Task<IActionResult> Test2()
+        //{       
 
 
 
 
-        }
+        //IJobDetail job = JobBuilder.Create<SimpleJob>()
+        //                           .UsingJobData("username", "devhow")
+        //                           .UsingJobData("password", "Security!!")
+        //                           .WithIdentity("simplejob", "quartzexamples")
+        //                           .StoreDurably()
+        //                           .RequestRecovery()
+        //                           .Build();
+        //job.JobDataMap.Put("user", new JobUserParameter { Username = "devhow", Password = "Security!!" });
+        //await _scheduler.AddJob(job, true);
+        ////save the job
 
 
-        //public IActionResult Test()
-        //{
+        //ITrigger trigger = TriggerBuilder.Create()
+        //                                 .ForJob(job)
+        //                                 .UsingJobData("triggerparam", "Simple trigger 1 Parameter")
+        //                                 .WithIdentity("testtrigger", "quartzexamples")
+        //                                 .StartNow()
+        //                                 .WithSimpleSchedule(z => z.WithIntervalInSeconds(5).RepeatForever().WithMisfireHandlingInstructionIgnoreMisfires())
+        //                                 .Build();
+        //ITrigger trigger2 = TriggerBuilder.Create()
+        //                                .ForJob(job)
+        //                                .UsingJobData("triggerparam", "Simple trigger 2 Parameter")
+        //                                .WithIdentity("testtrigger2", "quartzexamples")
+        //                                .StartNow()
+        //                                .WithSimpleSchedule(z => z.WithIntervalInSeconds(5).RepeatForever().WithMisfireHandlingInstructionIgnoreMisfires())
+        //                                .Build();
+        //ITrigger trigger3 = TriggerBuilder.Create()
+        //                                .ForJob(job)
+        //                                .UsingJobData("triggerparam", "Simple trigger 3 Parameter")
+        //                                .WithIdentity("testtrigger3", "quartzexamples")
+        //                                .StartNow()
+        //                                .WithSimpleSchedule(z => z.WithIntervalInSeconds(5).RepeatForever().WithMisfireHandlingInstructionIgnoreMisfires())
+        //                                .Build();
 
-
-
-        //    while (repository.GetUserToNotify() != null)
-        //    {
-
-        //        string UserId = repository.GetUserToNotify();
-
-        //        INotificationEmail pair = repository.CheckPairsForNofification(UserId);
-        //        INotificationEmail message = repository.CheckMessagesForNofification(UserId);
-        //        INotificationEmail like = repository.CheckLikesForNotification(UserId);
-        //        INotificationEmail superlike = repository.CheckSuperLikesForNofification(UserId);
-
-        //        List<INotificationEmail> list = new List<INotificationEmail>() { pair, message, like, superlike };
-
-        //        foreach (var email in list)
-        //        {
-
-        //            if (email != null)
-        //            {
-        //                email.SendEmail();
-        //            }
-
-        //        }
-
-        //        repository.SetNotify(UserId);
-
-
-        //    }
-
-
+        //await _scheduler.ScheduleJob(trigger);
+        //await _scheduler.ScheduleJob(trigger2);
+        //await _scheduler.ScheduleJob(trigger3);
 
 
         //    return View();
         //}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                    
 
     }
 }
