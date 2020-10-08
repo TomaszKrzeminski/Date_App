@@ -1,0 +1,122 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SchedulerDetails</title>
+
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <form asp-action="Logout" asp-controller="Account">
+                    <div>
+                        <button type="submit" class=" btn btn-warning">Wyloguj</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3">
+                <form asp-action="SchedulerAction" asp-controller="Email" method="post">
+                    <div>
+                        <input type="hidden" value="Start" name="Action" />
+                        <button class="btn btn-info" type="submit">Start</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3">
+                <form asp-action="SchedulerAction" asp-controller="Email" method="post">
+                    <div>
+                        <input type="hidden" value="Stop" name="Action" />
+                        <button class="btn btn-danger" type="submit">Stop</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3">
+                <form asp-action="SchedulerIntervalChange" asp-controller="Email" method="post">
+                    <div>
+                        <input type="hidden" value="Start" name="Action" />
+                        <button class="btn btn-primary" type="submit">Zmień</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+
+        <div class="row">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Wydarzenie</th>
+                        <th scope="col">Początek</th>
+                        <th scope="col">Zakończono</th>
+                        <th scope="col">Następny</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Email Notifications</td>
+                        <td>07.10.2010 10:02</td>
+                        <td>07.10.2010 10:05</td>
+                        <td>08.10.2010 10:02</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Email Notifications</td>
+                        <td>07.10.2010 10:02</td>
+                        <td>07.10.2010 10:05</td>
+                        <td>08.10.2010 10:02</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>Email Notifications</td>
+                        <td>07.10.2010 10:02</td>
+                        <td>07.10.2010 10:05</td>
+                        <td>08.10.2010 10:02</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+</body>
+</html>

@@ -27,10 +27,63 @@ namespace DateApp.Controllers
         {
             _env = env;
             repository = repo;
-           _scheduler = scheduler;
+            _scheduler = scheduler;
         }
 
-      
+
+
+        public IActionResult SchedulerDetails()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> SchedulerAction(string Action)
+        {
+
+            IJobDetail job = null;
+            string Name = "NotifyWithEmailJob";
+            string Group = "Notification";
+            JobKey key = new JobKey(Name, Group);
+
+
+            if (Action == "Start")
+            {
+                if (_scheduler.CheckExists(key).Result == false)
+                {
+
+                    job = JobBuilder.Create<NotificationJob>().WithIdentity(Name, Group).StoreDurably().RequestRecovery().Build();
+
+                    await _scheduler.AddJob(job, true);
+
+                    ITrigger trigger = TriggerBuilder.Create()
+                                                    .ForJob(job)
+                                                    .WithIdentity("NotifyWithEmail", "Notification")
+                                                    .StartNow()
+                                                    .WithSimpleSchedule(z => z.WithIntervalInSeconds(120).RepeatForever().WithMisfireHandlingInstructionIgnoreMisfires())
+                                                    .Build();
+
+                    await _scheduler.ScheduleJob(trigger);
+                }
+                
+
+            }
+            else if (Action == "Stop")
+            {
+                if (_scheduler.CheckExists(key).Result)
+                {
+                    await _scheduler.PauseJob(job.Key);
+                }
+            }
+
+
+
+            return View("SchedulerDetails");
+        }
+
+        public IActionResult SchedulerIntervalChange()
+        {
+            return View();
+        }
 
         public async Task<IActionResult> Test()
         {
@@ -48,7 +101,7 @@ namespace DateApp.Controllers
                                             .Build();
 
             await _scheduler.ScheduleJob(trigger);
-            
+
 
 
             return View();
@@ -103,7 +156,7 @@ namespace DateApp.Controllers
         //    return View();
         //}
 
-                                    
+
 
     }
 }

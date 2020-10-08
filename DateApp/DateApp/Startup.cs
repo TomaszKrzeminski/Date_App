@@ -19,6 +19,7 @@ using System.Collections.Specialized;
 using Quartz.Impl;
 using DateApp.Jobs;
 
+
 namespace DateApp
 {
     public class Startup
@@ -163,17 +164,31 @@ namespace DateApp
         public IScheduler ConfigureQuartz()
         {
 
-            NameValueCollection props = new NameValueCollection
-             {
-              { "quartz.serializer.type", "json" },
-               //{ "quartz.jobStore.type", "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz" },
-               //  { "quartz.jobStore.dataSource", "default" },
-               //  { "quartz.dataSource.default.provider", "SqlServer" },
-               //   { "quartz.dataSource.default.connectionString", "Server=.;Integrated Security=true;Initial Catalog = Quartz" },
-               //   {"quartz.jobStore.clustered","true" },
-               //   { "quartz.jobStore.driverDelegateType", "Quartz.Impl.AdoJobStore.SqlServerDelegate, Quartz" }
-              };
-            StdSchedulerFactory factory = new StdSchedulerFactory(props);
+            //NameValueCollection props = new NameValueCollection
+            // {
+            //  { "quartz.serializer.type", "json" },             
+            //  };
+
+            NameValueCollection properties = new NameValueCollection
+        {
+            { "quartz.scheduler.instanceName", "RemoteServer" },
+            { "quartz.scheduler.instanceId", "RemoteServer" },
+            { "quartz.jobStore.type", "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz" },
+            { "quartz.jobStore.useProperties", "true" },
+            { "quartz.jobStore.dataSource", "default" },
+            { "quartz.jobStore.tablePrefix", "QRTZ_" },
+            { "quartz.dataSource.default.connectionString",
+              "Server=(localdb)\\MSSQLLocalDB;Database=Quartz;Trusted_Connection=true;" },
+            { "quartz.dataSource.default.provider", "SqlServer" },
+            { "quartz.threadPool.threadCount", "1" },
+            { "quartz.serializer.type", "json" },
+        };
+
+
+
+
+
+            StdSchedulerFactory factory = new StdSchedulerFactory(properties);
             var scheduler = factory.GetScheduler().Result;
 
             //scheduler.ListenerManager.AddTriggerListener(new TriggerListener());

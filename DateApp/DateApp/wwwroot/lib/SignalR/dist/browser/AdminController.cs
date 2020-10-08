@@ -134,8 +134,7 @@ namespace DateApp.Controllers
 
 
         }
-
-
+        
 
         public IActionResult RemovePhoto(string id)
         {
@@ -173,9 +172,7 @@ namespace DateApp.Controllers
 
 
         }
-
-
-
+               
         public ActionResult SearchUser(string term)
         {
 
@@ -200,8 +197,7 @@ namespace DateApp.Controllers
             //                  .Select(r => new { id = r.ProductID, label = r.ProductName, name = "ProductNameID" }).ToArray();
             return Ok(Emails);
         }
-
-
+        
         [HttpPost]
         public ActionResult SelectUser(string term)
         {
@@ -219,17 +215,13 @@ namespace DateApp.Controllers
             return View("AdministrationPanel", model);
 
         }
-
-
-
+               
         public ActionResult Create()
         {
             CreateModel create = new CreateModel();
             return View(create);
         }
-
-
-
+               
         [HttpPost]
         public async Task<IActionResult> Create(CreateModel model)
         {
@@ -291,10 +283,7 @@ namespace DateApp.Controllers
 
             return View(model);
         }
-
-
-
-
+                     
         [HttpPost]
         public async Task<IActionResult> Delete()
         {
@@ -331,11 +320,7 @@ namespace DateApp.Controllers
 
 
         }
-
-
-
-
-
+                          
         public IActionResult Index()
         {
             return View(userManager.Users);

@@ -1,0 +1,117 @@
+﻿1>------ Build started: Project: DateApp, Configuration: Debug Any CPU ------
+1>C:\Program Files\dotnet\sdk\2.2.106\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.ObsoleteReferences.targets(33,5): warning NETSDK1059: The tool 'Microsoft.EntityFrameworkCore.Tools.DotNet' is now included in the .NET Core SDK. Information on resolving this warning is available at (https://aka.ms/dotnetclitools-in-box).
+1>Models\Seed.cs(73,34,73,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Seed.cs(131,34,131,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Seed.cs(197,34,197,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Seed.cs(226,34,226,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Seed.cs(246,34,246,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Seed.cs(268,34,268,36): warning CS0168: The variable 'ex' is declared but never used
+1>Controllers\PairController.cs(49,30,49,32): warning CS0168: The variable 'ex' is declared but never used
+1>Jobs\SchedulerListener.cs(13,27,13,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\TriggerListener.cs(15,27,15,42): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(18,27,18,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\TriggerListener.cs(20,27,20,39): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(23,27,23,41): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\TriggerListener.cs(25,27,25,42): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(28,27,28,36): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\TriggerListener.cs(30,33,30,49): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\JobListener.cs(15,27,15,45): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\JobListener.cs(20,27,20,42): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\JobListener.cs(25,27,25,41): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(38,27,38,39): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(43,27,43,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(48,27,48,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(53,27,53,41): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(58,27,58,41): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(63,27,63,49): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(68,27,68,44): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(73,27,73,48): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(78,27,78,43): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(83,27,83,44): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(88,27,88,48): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(93,27,93,43): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(98,27,98,40): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(103,27,103,41): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(108,27,108,41): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Jobs\SchedulerListener.cs(113,27,113,42): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Models\INotificationsSheduler.cs(221,27,221,34): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+1>Models\Repository.cs(162,30,162,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(293,30,293,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\LoggedUser.cs(54,34,54,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(344,30,344,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(360,30,360,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(378,34,378,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(468,30,468,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(484,30,484,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\NotificationEmail.cs(264,34,264,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(514,30,514,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\NotificationEmail.cs(212,34,212,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\NotificationEmail.cs(158,34,158,36): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(540,30,540,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(574,30,574,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(589,30,589,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(607,30,607,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(625,30,625,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\PictureRemover.cs(60,22,60,34): warning CS0472: The result of the expression is always 'true' since a value of type 'PictureType' is never equal to 'null' of type 'PictureType?'
+1>Models\PictureRemover.cs(38,22,38,34): warning CS0472: The result of the expression is always 'true' since a value of type 'PictureType' is never equal to 'null' of type 'PictureType?'
+1>Models\PictureRemover.cs(104,22,104,34): warning CS0472: The result of the expression is always 'true' since a value of type 'PictureType' is never equal to 'null' of type 'PictureType?'
+1>Models\PictureSaver.cs(43,22,43,34): warning CS0472: The result of the expression is always 'true' since a value of type 'PictureType' is never equal to 'null' of type 'PictureType?'
+1>Models\PictureSaver.cs(61,22,61,34): warning CS0472: The result of the expression is always 'true' since a value of type 'PictureType' is never equal to 'null' of type 'PictureType?'
+1>Models\PictureSaver.cs(80,22,80,34): warning CS0472: The result of the expression is always 'true' since a value of type 'PictureType' is never equal to 'null' of type 'PictureType?'
+1>Models\PictureRemover.cs(82,22,82,34): warning CS0472: The result of the expression is always 'true' since a value of type 'PictureType' is never equal to 'null' of type 'PictureType?'
+1>Models\PictureSaver.cs(100,22,100,34): warning CS0472: The result of the expression is always 'true' since a value of type 'PictureType' is never equal to 'null' of type 'PictureType?'
+1>Models\Repository.cs(857,30,857,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(989,30,989,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1127,30,1127,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1145,30,1145,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1162,30,1162,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1176,30,1176,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1192,30,1192,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1209,30,1209,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1232,30,1232,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1244,30,1244,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1263,30,1263,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1286,30,1286,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1303,30,1303,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1368,30,1368,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1388,30,1388,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1422,30,1422,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1455,30,1455,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1502,30,1502,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1520,30,1520,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1629,30,1629,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1648,30,1648,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1671,30,1671,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1692,30,1692,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1711,30,1711,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1732,30,1732,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1754,30,1754,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1773,30,1773,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1765,22,1765,23): warning CS0219: The variable 'n' is assigned but its value is never used
+1>Models\Repository.cs(1860,30,1860,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1877,30,1877,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1895,30,1895,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1913,30,1913,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1931,30,1931,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1948,30,1948,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(1978,30,1978,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(2059,30,2059,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(2084,30,2084,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(2102,30,2102,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(2197,30,2197,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(2251,30,2251,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(2277,30,2277,32): warning CS0168: The variable 'ex' is declared but never used
+1>Models\Repository.cs(2303,30,2303,32): warning CS0168: The variable 'ex' is declared but never used
+1>DateApp -> C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.dll
+1>Done building project "DateApp.csproj".
+2>------ Build started: Project: DateApp_Tests, Configuration: Debug Any CPU ------
+2>UnitTest1.cs(1856,29,1856,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+2>UnitTest1.cs(57,29,57,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+2>UnitTest1.cs(1110,29,1110,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+2>UnitTest1.cs(2025,29,2025,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+2>UnitTest1.cs(627,29,627,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+2>UnitTest1.cs(2216,25,2216,29): warning CS0219: The variable 'type' is assigned but its value is never used
+2>UnitTest1.cs(2245,25,2245,29): warning CS0219: The variable 'type' is assigned but its value is never used
+2>DateApp_Tests -> C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\bin\Debug\netcoreapp2.2\DateApp_Tests.dll
+2>Done building project "DateApp_Tests.csproj".
+========== Build: 2 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
