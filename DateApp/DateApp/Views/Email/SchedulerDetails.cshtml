@@ -1,4 +1,4 @@
-﻿
+﻿@model SchedulerViewModel
 @{
     Layout = null;
 }
@@ -25,6 +25,10 @@
 <body>
     <div class="container-fluid">
         <div class="row">
+            <br />
+            <br />
+        </div>
+        <div class="row">
             <div class="col-lg-3">
                 <form asp-action="Logout" asp-controller="Account">
                     <div>
@@ -33,7 +37,7 @@
                 </form>
             </div>
             <div class="col-lg-3">
-                <form asp-action="SchedulerAction" asp-controller="Email" method="post">
+                <form asp-action="ActionAllJobs" asp-controller="Email" method="post">
                     <div>
                         <input type="hidden" value="Start" name="Action" />
                         <button class="btn btn-info" type="submit">Start</button>
@@ -41,79 +45,75 @@
                 </form>
             </div>
             <div class="col-lg-3">
-                <form asp-action="SchedulerAction" asp-controller="Email" method="post">
+                <form asp-action="ActionAllJobs" asp-controller="Email" method="post">
                     <div>
                         <input type="hidden" value="Stop" name="Action" />
                         <button class="btn btn-danger" type="submit">Stop</button>
                     </div>
                 </form>
             </div>
-            <div class="col-lg-3">
-                <form asp-action="SchedulerIntervalChange" asp-controller="Email" method="post">
-                    <div>
-                        <input type="hidden" value="Start" name="Action" />
-                        <button class="btn btn-primary" type="submit">Zmień</button>
-                    </div>
-                </form>
-            </div>
+            
 
 
         </div>
 
-        <div class="row">
 
+
+
+        <div class="row">
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Wydarzenie</th>
+                        <th scope="col">Grupa</th>
                         <th scope="col">Początek</th>
-                        <th scope="col">Zakończono</th>
                         <th scope="col">Następny</th>
+                        <th scope="col">Stan</th>
+                        <th scope="col">Zakończono</th>
+                        <th scope="col">Edytuj</th>
+
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Email Notifications</td>
-                        <td>07.10.2010 10:02</td>
-                        <td>07.10.2010 10:05</td>
-                        <td>08.10.2010 10:02</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Email Notifications</td>
-                        <td>07.10.2010 10:02</td>
-                        <td>07.10.2010 10:05</td>
-                        <td>08.10.2010 10:02</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Email Notifications</td>
-                        <td>07.10.2010 10:02</td>
-                        <td>07.10.2010 10:05</td>
-                        <td>08.10.2010 10:02</td>
-                    </tr>
+                    @for (int i = 0; i < Model.schedulerList.Count; i++)
+                    {
+                        <tr>
+                            <th scope="row">@(i + 1)</th>
+
+                            <td>@Model.schedulerList[i].JobName</td>
+                            <td>@Model.schedulerList[i].Group</td>
+                            <td>@Model.schedulerList[i].Start</td>
+                            <td>@Model.schedulerList[i].NextStart</td>
+                            <td>@Model.schedulerList[i].State</td>
+                            @if (Model.schedulerList[i].End.ToString() == "0001 - 01 - 01 00:00:00")
+                            {
+                                <td>@Model.schedulerList[i].End</td>
+                            }
+                            else
+                            {
+                                <td>Brak  Danych</td>
+                            }
+                            <td>
+                                <form asp-action="EditJob" asp-controller="Email" method="get">
+                                    <input type="hidden" value="@Model.schedulerList[i].JobName" name="JobName" />
+                                    <input type="hidden" value="@Model.schedulerList[i].Group" name="Group" />
+                                    <input type="hidden" value="@Model.schedulerList[i].TriggerGroup" name="TriggerGroup" />
+                                    <input type="hidden" value="@Model.schedulerList[i].TriggerName" name="TriggerName" />
+                                    <button class="btn btn-info">Edytuj</button>
+                                </form>
+
+
+                            </td>
+
+
+
+                        </tr>
+                    }
+
                 </tbody>
             </table>
-
-
-
-
-
-
-
         </div>
-
-
-
-
-
-
-
-
-
-
     </div>
 
 

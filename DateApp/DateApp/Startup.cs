@@ -48,6 +48,11 @@ namespace DateApp
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
             services.AddTransient<IRepository, Repository>();
 
+            //Quartz Repo
+            services.AddTransient<QuartzContext>();
+            services.AddTransient<IRepositoryQuartz, RepositoryQuartz>();
+
+
             //EF
             services.AddMvc()
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -71,7 +76,10 @@ namespace DateApp
         private void OnShutdown()
         {
             //shutdown quartz is not shutdown already
-            if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown();
+            //if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown();
+
+            if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown(true);
+
         }
 
 

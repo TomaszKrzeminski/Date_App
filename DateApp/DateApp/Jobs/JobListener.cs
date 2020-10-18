@@ -14,17 +14,17 @@ namespace DateApp.Jobs
 
         public async Task JobExecutionVetoed(IJobExecutionContext context, CancellationToken cancellationToken = default(CancellationToken))
         {
-            Debug.WriteLine($"Job vetoed xxxxxxxx: {context.JobDetail.Key.Name}");
+            Debug.WriteLine($"Job vetoed xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: {context.JobDetail.Key.Name}");
         }
 
         public async Task JobToBeExecuted(IJobExecutionContext context, CancellationToken cancellationToken = default(CancellationToken))
         {
-            Debug.WriteLine($"Job is to be executed xxxxxxxxx: {context.JobDetail.Key.Name}");
+            Debug.WriteLine($"Job is to be executed xxxxxxxxxxxxxxxxxxxxxxxxxxxxx: {context.JobDetail.Key.Name}");
         }
 
         public async Task JobWasExecuted(IJobExecutionContext context, JobExecutionException jobException, CancellationToken cancellationToken = default(CancellationToken))
         {
-            Debug.WriteLine($"Job executed xxxxxxxxxxx: {context.JobDetail.Key.Name}");
+            Debug.WriteLine($"Job executed xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: {context.JobDetail.Key.Name}");
         }
     }
 }

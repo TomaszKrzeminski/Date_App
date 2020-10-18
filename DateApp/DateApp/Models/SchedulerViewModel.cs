@@ -8,8 +8,12 @@ namespace DateApp.Models
     public class SchedulerDetails
     {
         public string JobName { get; set; }
+        public string Group { get; set; }
+        public string TriggerName { get; set; }
+        public string TriggerGroup { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+        public string State { get; set; }
         public DateTime NextStart { get; set; }
 
         public SchedulerDetails()
@@ -26,7 +30,7 @@ namespace DateApp.Models
 
     public class SchedulerViewModel
     {
-        IList<SchedulerDetails> schedulerList { get; set; }
+       public  IList<SchedulerDetails> schedulerList { get; set; }
 
         public SchedulerViewModel()
         {

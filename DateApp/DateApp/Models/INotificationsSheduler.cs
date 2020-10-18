@@ -225,5 +225,37 @@ namespace DateApp.Models
     }
 
 
+    public class TestJob1Minute : IJob
+    {
+        
+
+        public TestJob1Minute()
+        {
+           
+        }
+        public async Task Execute(IJobExecutionContext context)
+        {
+            DateTime time = DateTime.Now;
+            Debug.WriteLine("TestJob1Minute xxxxxxxxxxxxxxxx execute "+time);
+        }
+    }
+
+
+    public class TestJob2Minutes : IJob
+    {
+
+
+        public TestJob2Minutes()
+        {
+
+        }
+        public async Task Execute(IJobExecutionContext context)
+        {
+            DateTime time = DateTime.Now;
+            Debug.WriteLine("TestJob2Minutes xxxxxxxxxxxxxxxx execute " + time);
+        }
+    }
+
+
 
 }

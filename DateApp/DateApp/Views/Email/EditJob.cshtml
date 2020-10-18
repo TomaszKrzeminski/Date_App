@@ -1,0 +1,140 @@
+﻿@model EditJobView
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SchedulerDetails</title>
+
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+</head>
+<body>
+
+   
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+
+                <form asp-action="EditJob" asp-controller="Email" method="post">
+
+                    <div class="form-group">
+                        <label asp-for="JobName">Nazwa</label>
+                        <input class="form-control" asp-for="JobName" readonly="readonly" />
+                    </div>
+                    <div class="form-group">
+
+                        <input type="hidden" asp-for="Group"  />
+                        <input type="hidden" asp-for="TriggerName"  />
+                        <input type="hidden" asp-for="TriggerGroup"  />
+                      
+                    </div>                               
+
+
+                    <div class="form-group">
+                        <lablel asp-for="time">Interwał</lablel>
+                        <select id="FewTimes" class="browser-default custom-select" asp-for="Crone.Days">
+                            <option asp-for="Crone.Days" value="1">Codziennie</option>
+
+                            @for (int i = 2; i < 32; i++)
+                            {
+                                <option asp-for="Crone.Days" value="@i">Co  @i dni</option>
+                            }
+
+                        </select>
+
+
+                    </div>
+
+
+
+
+               
+
+                    <div class="form-group">
+                        <label asp-for="Crone.Hours">Godziny</label>
+                        <input min="0" max="23" class="form-control" asp-for="Crone.Hours" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Crone.Minutes">Minuty</label>
+                        <input min="0" max="59" class="form-control" asp-for="Crone.Minutes" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Crone.Seconds">Sekundy</label>
+                        <input min="0" max="59" class="form-control" asp-for="Crone.Seconds" />
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-danger" type="submit">Zapisz</button>
+                    </div>
+                    <div class="form-group">
+                        <a asp-action="SchedulerDetails" asp-controller="Email">Anuluj</a>
+                    </div>
+
+                </form>
+
+
+            </div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4"></div>
+
+        </div>
+    </div>
+
+
+
+   
+
+
+
+
+
+</body>
+</html>
+
+
+
+<script>
+
+
+   
+
+
+    $(document).ready(function () {
+
+        $('#times').hide();
+
+        $("#FewTimes").on('change', function () {
+
+            var selectedCountry = $(this).children("option:selected").val();
+
+            if (selectedCountry == "FewTimes") {
+                $('#times').show();
+            }
+            else
+            {
+                $('#times').hide();
+            }
+
+        });
+
+
+    });
+
+
+</script>
