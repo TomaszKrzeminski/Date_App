@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,26 +26,23 @@ namespace DateApp.Models
             this.Minutes = Minutes;
             this.Seconds = Seconds;
         }
+
+        [Required(ErrorMessage = "Podaj ilość dni")]
+        [Range(1,31,ErrorMessage ="Wybierz wartość pomiędzy 1-31")]
         public int Days { get; set; }
+        [Required(ErrorMessage = "Podaj ilość godzin")]
+        [Range(0, 23, ErrorMessage = "Wybierz wartość pomiędzy 0-23")]
         public int Hours { get; set; }
+        [Required(ErrorMessage = "Podaj ilość minut")]
+        [Range(0, 59, ErrorMessage = "Wybierz wartość pomiędzy 0-59")]
         public int Minutes { get; set; }
+        [Required(ErrorMessage = "Podaj ilość sekund")]
+        [Range(0, 59, ErrorMessage = "Wybierz wartość pomiędzy 0-59")]
         public int Seconds { get; set; }
 
-    }
+    } 
 
-    
-
-    //public enum Action
-    //{
-    //    Stop,Start
-    //}
-
-
-    //public enum Time
-    //{
-    //    Once,FewTimes,Forever
-    //}
-
+   
   
 
     public class EditJobView

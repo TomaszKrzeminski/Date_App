@@ -24,6 +24,23 @@ namespace DateApp.Models
             NextStart = new DateTime();
         }
 
+        public SchedulerDetails(string Test)
+        {
+
+            JobName = "JobName"+Test;
+            Group = "Group"+Test;
+            TriggerName = "TriggerName"+Test;
+            TriggerGroup = "TriggerGroup"+Test;
+            Start = new DateTime();
+            End = new DateTime();
+            NextStart = new DateTime();
+
+
+
+        }
+
+
+
     }
 
 

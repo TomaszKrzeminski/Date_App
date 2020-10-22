@@ -21,6 +21,16 @@
     <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("input.input-validation-error").closest(".form-group").addClass("has-danger");
+
+        });
+    </script>
+
 </head>
 <body>
 
@@ -42,11 +52,16 @@
                         <input type="hidden" asp-for="TriggerName"  />
                         <input type="hidden" asp-for="TriggerGroup"  />
                       
-                    </div>                               
+                    </div>     
+                    
 
+                    @*<div asp-validation-summary="All"  class="text-danger">
+                       
+                    </div>*@
 
                     <div class="form-group">
                         <lablel asp-for="time">Interwał</lablel>
+                       
                         <select id="FewTimes" class="browser-default custom-select" asp-for="Crone.Days">
                             <option asp-for="Crone.Days" value="1">Codziennie</option>
 
@@ -67,22 +82,25 @@
 
                     <div class="form-group">
                         <label asp-for="Crone.Hours">Godziny</label>
-                        <input min="0" max="23" class="form-control" asp-for="Crone.Hours" />
+                        <div><span asp-validation-for="Crone.Hours" class="text-danger"></span></div>
+                        <input  class="form-control" asp-for="Crone.Hours" />
                     </div>
                     <div class="form-group">
                         <label asp-for="Crone.Minutes">Minuty</label>
-                        <input min="0" max="59" class="form-control" asp-for="Crone.Minutes" />
+                        <div><span asp-validation-for="Crone.Minutes" class="text-danger"></span></div>
+                        <input class="form-control" asp-for="Crone.Minutes" />
                     </div>
                     <div class="form-group">
                         <label asp-for="Crone.Seconds">Sekundy</label>
-                        <input min="0" max="59" class="form-control" asp-for="Crone.Seconds" />
+                        <div><span asp-validation-for="Crone.Seconds" class="text-danger"></span></div>
+                        <input  class="form-control" asp-for="Crone.Seconds" />
                     </div>
 
                     <div class="form-group">
                         <button class="btn btn-danger" type="submit">Zapisz</button>
                     </div>
                     <div class="form-group">
-                        <a asp-action="SchedulerDetails" asp-controller="Email">Anuluj</a>
+                        <a class="btn btn-warning" asp-action="SchedulerDetails" asp-controller="Email">Anuluj</a>
                     </div>
 
                 </form>

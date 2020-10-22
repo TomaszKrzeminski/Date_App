@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Server.Kestrel.Internal.System.IO.Pipelines;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -21,6 +22,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Quartz;
 
 namespace Tests
 {
@@ -2605,7 +2607,7 @@ namespace Tests
 
         }
 
-     
+
 
 
 
@@ -2614,7 +2616,176 @@ namespace Tests
 
     }
 
+    public class EmailControllerTests
+    {
 
+        [Test]
+        public void EditJob_Returns_View_WithCroneDate()
+        {
+
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+
+            var mockRepository = new Mock<IRepository>();
+
+            var mockSheduler = new Mock<IScheduler>();
+            var mockCroneTrigger = new Mock<ICronTrigger>();
+            mockCroneTrigger.Setup(c => c.CronExpressionString).Returns("0/10 * * 1/1 * ? *");
+
+            var mockTrigger = (ITrigger)mockCroneTrigger.Object;
+            var mockIRepositoryQuartz = new Mock<IRepositoryQuartz>();
+
+            mockSheduler.Setup(m => m.GetTrigger(It.IsAny<TriggerKey>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(mockTrigger));
+
+
+            EmailController controller = new EmailController(mockEnvironment.Object, mockRepository.Object, mockSheduler.Object, mockIRepositoryQuartz.Object);
+
+
+            ViewResult result = (ViewResult)controller.EditJob("JobName", "Group", "TriggerName", "TriggerGroup");
+            EditJobView model = result.Model as EditJobView;
+
+            Assert.AreEqual(model.Crone.Seconds, 10);
+
+        }
+
+        [Test]
+        public void SchedulerDetails_Returns_Model()
+        {
+          
+            List<SchedulerDetails> list = new List<SchedulerDetails>() { new SchedulerDetails("1"), new SchedulerDetails("2"), new SchedulerDetails("3"), new SchedulerDetails("4") };                       
+            SchedulerViewModel model = new SchedulerViewModel();
+            model.schedulerList = list;
+            var mockIRepositoryQuartz = new Mock<IRepositoryQuartz>();
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+
+            var mockRepository = new Mock<IRepository>();
+            var mockSheduler = new Mock<IScheduler>();
+
+            //var mockJobExecutionContext = new Mock<IJobExecutionContext>();
+            var mockIReadOnlyCollection = new Mock<IReadOnlyCollection<IJobExecutionContext>>();
+
+            mockSheduler.Setup(m => m.GetCurrentlyExecutingJobs(It.IsAny<CancellationToken>())).Returns(Task.FromResult(mockIReadOnlyCollection.Object));
+            mockIRepositoryQuartz.Setup(r => r.GetQuartzReport()).Returns(model);
+            mockIRepositoryQuartz.Setup(r => r.CheckJobCount()).Returns(1);
+
+
+
+            EmailController controller = new EmailController(mockEnvironment.Object, mockRepository.Object, mockSheduler.Object, mockIRepositoryQuartz.Object);
+
+            IActionResult result = controller.SchedulerDetails().Result;
+
+
+            SchedulerViewModel details = (SchedulerViewModel)(result as ViewResult).Model;
+
+
+            Assert.AreEqual(details.schedulerList[2].JobName, "JobName3");
+
+
+
+
+
+
+
+        }
+
+
+
+        [Test]
+        public void EditJob_Returns_View_When_ModelState_Isnt_Valid()
+        {
+
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+
+            var mockRepository = new Mock<IRepository>();
+
+            var mockSheduler = new Mock<IScheduler>();
+           
+            var mockIRepositoryQuartz = new Mock<IRepositoryQuartz>();
+
+            EditJobView viewmodel = new EditJobView();
+            viewmodel.JobName = "TEST With Error";
+
+            EmailController controller = new EmailController(mockEnvironment.Object, mockRepository.Object, mockSheduler.Object, mockIRepositoryQuartz.Object);
+            controller.ModelState.AddModelError("Days", "Podaj ilość dni");
+
+            ViewResult result = (ViewResult)controller.EditJob(viewmodel).Result;
+            EditJobView model = result.Model as EditJobView;
+
+            Assert.AreEqual(model.JobName, "TEST With Error");
+
+        }
+
+
+        [Test]
+        public void EditJob_Redirects_To_SchedulerDetails_When_ModelState_Is_Valid()
+        {
+
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+
+            var mockRepository = new Mock<IRepository>();
+
+            var mockSheduler = new Mock<IScheduler>();
+            var mockCroneTrigger = new Mock<ICronTrigger>();
+            mockCroneTrigger.Setup(c => c.CronExpressionString).Returns("0/10 * * 1/1 * ? *");
+
+            var mockTrigger = (ITrigger)mockCroneTrigger.Object;
+            var mockIRepositoryQuartz = new Mock<IRepositoryQuartz>();
+
+            var mockJobDetail = new Mock<IJobDetail>();
+
+            Type type = typeof(TestJob1Minute);
+
+            mockJobDetail.Setup(m => m.JobType).Returns(type);
+
+            mockSheduler.Setup(m => m.GetJobDetail(It.IsAny<JobKey>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(mockJobDetail.Object));
+
+            mockSheduler.Setup(m => m.GetTrigger(It.IsAny<TriggerKey>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(mockTrigger));
+
+            mockSheduler.Setup(m => m.DeleteJob(It.IsAny<JobKey>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(true));
+
+            CroneDate date = new CroneDate(10, 9, 8, 7);
+            EditJobView model = new EditJobView("JobName", "Group", "TriggerName", "TriggerGroup", date);        
+
+
+            EmailController controller = new EmailController(mockEnvironment.Object, mockRepository.Object, mockSheduler.Object, mockIRepositoryQuartz.Object);
+
+
+            RedirectToActionResult result = (RedirectToActionResult)controller.EditJob(model).Result;
+            
+
+            Assert.AreEqual(result.ActionName, "SchedulerDetails");
+
+
+        }
+
+
+
+
+
+
+
+
+
+    }
 
 
 

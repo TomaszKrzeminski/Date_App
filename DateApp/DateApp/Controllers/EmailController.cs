@@ -119,9 +119,6 @@ namespace DateApp.Controllers
 
 
 
-
-
-
                 IJobDetail job6 = JobBuilder.Create<TestJob2Minutes>().WithIdentity("TestJob10sec", "Test").StoreDurably().RequestRecovery().Build();
 
                 await _scheduler.AddJob(job6, true);
@@ -142,25 +139,14 @@ namespace DateApp.Controllers
 
                 ITrigger trigger7 = TriggerBuilder.Create()
                                                 .ForJob(job7)
-                                                .WithIdentity("Testing6", "Test")
+                                                .WithIdentity("Testing7", "Test")
                                                 .StartNow()
                                                .WithCronSchedule("10 0/5 * 1/1 * ? *")
                                                 .Build();
 
                 await _scheduler.ScheduleJob(trigger7);
 
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                                         
                 return true;
             }
             else
@@ -232,22 +218,7 @@ namespace DateApp.Controllers
 
             return date;
         }
-
-
-        //string MakeNumber(int Number)
-        //{
-        //    string number;
-        //    if (Number == 0)
-        //    {
-        //        number = "*";
-        //    }
-        //    else
-        //    {
-        //        number = "0/" + Number;
-        //    }
-        //    return number;
-
-        //}
+                     
 
         string MakeCroneDate(CroneDate crone)
         {
@@ -329,34 +300,16 @@ namespace DateApp.Controllers
         {
             SchedulerViewModel model = repositoryQuartz.GetQuartzReport();
 
-            BuidlDefaultJobs();
+           await BuidlDefaultJobs();
 
             return View(model);
-        }
-
-        public async Task<IActionResult> ActionAllJobs(string Action)
-        {
-
-            if (Action == "Start")
-            {
-
-                await _scheduler.ResumeAll();
-            }
-            else if (Action == "Stop")
-            {
-                await _scheduler.PauseAll();
-            }
-
-            return RedirectToAction("SchedulerDetails");
-
-        }
-
-
+        }     
+        
 
         public IActionResult EditJob(string JobName, string Group, string TriggerName, string TriggerGroup)
         {
             JobKey key = new JobKey(JobName, Group);
-            IJobDetail details = _scheduler.GetJobDetail(key).Result;
+            //IJobDetail details = _scheduler.GetJobDetail(key).Result;
             TriggerKey triggerKey = new TriggerKey(TriggerName, TriggerGroup);
             ITrigger trigger = _scheduler.GetTrigger(triggerKey).Result;
 
@@ -375,30 +328,55 @@ namespace DateApp.Controllers
         public async Task<IActionResult> EditJob(EditJobView model)
         {
 
-            JobKey key = new JobKey(model.JobName, model.Group);
-            IJobDetail details = _scheduler.GetJobDetail(key).Result;
-            var Type = details.JobType;
+            if(ModelState.IsValid)
+            {
+                JobKey key = new JobKey(model.JobName, model.Group);
+                IJobDetail details = _scheduler.GetJobDetail(key).Result;
+                var Type = details.JobType;
+                FactoryMethodIJobDetail factory;
+                IJobDetail JOB;
+                //Remove Job
+                await _scheduler.DeleteJob(key);
+                string CroneText = MakeCroneDate(model.Crone);
 
 
-            await _scheduler.DeleteJob(key);
 
-            string CroneText = MakeCroneDate(model.Crone);
+                switch (Type.ToString())
+                {
+                    case "DateApp.Models.NotificationJob":
+                        factory = new NotificationJobFactory(model.JobName, model.Group);
+                        break;
+                    case "DateApp.Models.TestJob1Minute":
+                        factory = new TestJob1MinuteFactory(model.JobName, model.Group);
+                        break;
+                    case "DateApp.Models.TestJob2Minutes":
+                        factory = new TestJob2MinutesFactory(model.JobName, model.Group);
+                        break;
+                    default:
+                        return RedirectToAction("SchedulerDetails");
+                }
+
+                JOB = factory.GetJobDetail();
 
 
-            IJobDetail job5 = JobBuilder.Create<TestJob2Minutes>().WithIdentity(model.JobName, model.Group).StoreDurably().RequestRecovery().Build();
+                await _scheduler.AddJob(JOB, true);
 
-            await _scheduler.AddJob(job5, true);
+                ITrigger trigger5 = TriggerBuilder.Create()
+                                                .ForJob(JOB)
+                                                .WithIdentity(model.TriggerName, model.TriggerGroup)
+                                                .StartNow()
+                                               .WithCronSchedule(CroneText)
+                                                .Build();
 
-            ITrigger trigger5 = TriggerBuilder.Create()
-                                            .ForJob(job5)
-                                            .WithIdentity(model.TriggerName, model.TriggerGroup)
-                                            .StartNow()
-                                           .WithCronSchedule(CroneText)
-                                            .Build();
+                await _scheduler.ScheduleJob(trigger5);
 
-            await _scheduler.ScheduleJob(trigger5);
-
-            return RedirectToAction("SchedulerDetails");
+                return RedirectToAction("SchedulerDetails");
+            }
+            else
+            {
+                return View(model);
+            }
+          
         }
 
 
