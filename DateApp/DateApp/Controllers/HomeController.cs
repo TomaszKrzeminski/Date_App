@@ -1,13 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using DateApp.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGeneration;
+using Newtonsoft.Json.Linq;
 
 namespace DateApp.Controllers
 {
@@ -17,18 +20,18 @@ namespace DateApp.Controllers
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
-      
 
 
 
 
 
-        public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,Func<Task<AppUser>> GetUser = null)
+
+        public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
-           
+
 
             if (GetUser == null)
             {
@@ -40,10 +43,138 @@ namespace DateApp.Controllers
             }
 
 
-           
-            
+
+
 
         }
+
+
+
+
+
+        //public async Task<IActionResult> CalculateRoute(RoutingViewModel model)
+        //{
+
+        //    var httpClient = new HttpClient();
+        //    string Coordinates = model.UserLatitude + "," + model.UserLongitude + ":" + model.PairLatitude + "," + model.UserLongitude;
+        //    string Key = "YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O";
+        //    var url = "https://api.tomtom.com/routing/1/calculateRoute/" + Coordinates + "/json?key=" + Key;
+        //    HttpResponseMessage response = await httpClient.GetAsync(url);
+
+        //    string responseBody = await response.Content.ReadAsStringAsync();
+        //    JObject o = JObject.Parse(responseBody);
+
+        //    RoutingDetails details = new RoutingDetails();
+        //    string distance = (string)o["routes"]["summary"]["lengthInMeters"];
+
+        //    //Weather_JSON_LINQ weather = new Weather_JSON_LINQ();
+        //    //weather.City = (string)o["name"];
+        //    //weather.Temp = (double)o["main"]["temp"];
+        //    //weather.Temp_Min = (double)o["main"]["temp_min"];
+        //    //weather.Temp_Max = (double)o["main"]["temp_max"];
+        //    //weather.Description = (string)o["weather"][0]["description"];
+
+
+
+
+
+
+
+
+
+        //    return PartialView("CalculateRoute", details);
+        //}
+
+
+
+            public string ChangeToMinutes(int seconds)
+        {
+
+            if(seconds>60)
+            {
+                return (seconds / 60).ToString()+ " minutes";
+            }
+            else
+            {
+                return "less than 1 minute";
+            }
+        }
+
+
+        public string ChangeMetersToKM(int meters)
+        {
+            if(meters>1000)
+            {
+                return (meters / 1000).ToString()+ " km";
+            }
+            else
+            {
+                return "less than 1 km";
+            }
+        }
+
+
+
+        public async Task<IActionResult> StaticRoute(RoutingViewModel model)
+        {
+
+            //var httpClient = new HttpClient();
+            //string Coordinates = model.UserLatitude + "," + model.UserLongitude + ":" + model.PairLatitude + "," + model.UserLongitude + ":53.4072518,18.4455253";
+            //string Key = "YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O";
+            //var url = "https://api.tomtom.com/routing/1/calculateRoute/" + Coordinates + "/json?key=" + Key;
+            //HttpResponseMessage response = await httpClient.GetAsync(url);
+
+            //string responseBody = await response.Content.ReadAsStringAsync();
+            //JObject o = JObject.Parse(responseBody);
+
+            //RoutingDetails details = new RoutingDetails();
+            
+            //int d=(int)o["routes"][0]["summary"]["lengthInMeters"];
+            //string d1 = (string)o["routes"][0]["summary"]["arrivalTime"];
+            //string d2 = (string)o["routes"][0]["summary"]["departureTime"];
+            //int d3 = (int)o["routes"][0]["summary"]["travelTimeInSeconds"];
+
+            //details.Distance = ChangeMetersToKM(d);
+            //details.arrivalTime = d1;
+            //details.departureTime = d2;
+            //details.travelTimeInSeconds = ChangeToMinutes(d3);
+
+            //model.details = details;
+                    
+                                                  
+            return View("StaticRoute", model);
+        }
+
+
+
+        //public async Task<IActionResult> StaticRoute(RoutingViewModel model)
+        //{
+
+        //    var httpClient = new HttpClient();
+        //    string Coordinates = model.UserLatitude + "," + model.UserLongitude + ":" + model.PairLatitude + "," + model.UserLongitude;
+        //    string Key = "YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O";
+        //    var url = "https://api.tomtom.com/routing/1/calculateRoute/" + Coordinates + "/xml?key=" + Key;
+        //    XDocument document = XDocument.Load(url);
+
+
+        //    RoutingDetails details = new RoutingDetails();
+
+        //    string obj = document.Element("calculateRouteResponse").Value;
+
+        //    //string distance= document.Element("calculateRouteResponse").Element("route").Element("summary").Element("lengthInMeters").Value;
+        //    //string time= document.Element("route").Element("summary").Attribute("departureTime").Value;
+
+
+
+
+
+
+
+        //    return View("StaticRoute", model);
+        //}
+
+
+
 
 
         public PictureType GetPictureType(string PictureNumber)
@@ -66,7 +197,7 @@ namespace DateApp.Controllers
             }
             else
             {
-              type = (PictureType)number;
+                type = (PictureType)number;
             }
 
             return type;

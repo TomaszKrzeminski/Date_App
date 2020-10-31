@@ -73,8 +73,39 @@ namespace DateApp.Models
     }
 
 
+    public class RoutingViewModel
+    {
+
+        public RoutingViewModel()
+        {
+            details = new RoutingDetails();
+        }
+
+        public RoutingViewModel(string UserLongitude, string UserLatitude, string PairLongitude, string PairLatitude)
+        {
+            details = new RoutingDetails();
+            this.UserLongitude = UserLongitude;
+            this.UserLatitude = UserLatitude;
+            this.PairLongitude = PairLongitude;
+            this.PairLatitude = PairLatitude;
+        }
+
+        public RoutingDetails details { get; set; }
+        public string UserLongitude { get; set; }
+        public string UserLatitude { get; set; }
+        public string PairLongitude { get; set; }
+        public string PairLatitude { get; set; }
+    }
+
+
     public class PairDetailsViewModel
     {
+
+        public PairDetailsViewModel()
+        {
+            routingViewModel = new RoutingViewModel();
+        }
+
         public int DetailsId { get; set; }
         public string MainPhotoPath { get; set; }
         public string PhotoPath1 { get; set; }
@@ -95,6 +126,10 @@ namespace DateApp.Models
         public string Sex { get; set; }
         public DateTime Dateofbirth { get; set; }
         public string City { get; set; }
+
+        public RoutingViewModel routingViewModel { get; set; }
+
+
     }
 
     public class UserSettingsModel
@@ -189,7 +224,7 @@ namespace DateApp.Models
 
         public void MakeList()
         {
-            if(list.Count>0)
+            if (list.Count > 0)
             {
                 foreach (var item in list)
                 {
@@ -233,7 +268,7 @@ namespace DateApp.Models
             this.ReceiverId = ReceiverId;
         }
 
-        public MessageShort(string ReceiverMainPhotoPath, string MessageBeggining, string Name, string ReceiverId,bool IsRead)
+        public MessageShort(string ReceiverMainPhotoPath, string MessageBeggining, string Name, string ReceiverId, bool IsRead)
         {
             this.ReceiverMainPhotoPath = ReceiverMainPhotoPath;
             this.MessageBeggining = MessageBeggining;
@@ -320,7 +355,7 @@ namespace DateApp.Models
         public PageInfo(int TotalMessages, string ReceiverId, string Action, string ActivePage, int MessagesPerPage = 5)
         {
             this.TotalMessages = TotalMessages;
-            this.MessagesPerPage = MessagesPerPage;           
+            this.MessagesPerPage = MessagesPerPage;
             this.ReceiverId = ReceiverId;
             SetActivePage(ActivePage);
             SetCurrentPage(Action);
@@ -347,13 +382,13 @@ namespace DateApp.Models
 
         public void SetCurrentPage(string Action)
         {
-            
-            if(Action=="Next")
+
+            if (Action == "Next")
             {
 
                 int number = ActivePage + 1;
 
-                if(number<=TotalPages)
+                if (number <= TotalPages)
                 {
                     CurrentPage = number;
                 }
@@ -363,7 +398,7 @@ namespace DateApp.Models
                 }
 
             }
-           else if(Action=="Previous")
+            else if (Action == "Previous")
             {
                 int number = ActivePage - 1;
 
@@ -376,18 +411,18 @@ namespace DateApp.Models
                     CurrentPage = ActivePage;
                 }
             }
-            else 
+            else
             {
                 int number;
                 bool result = Int32.TryParse(Action, out number);
                 this.CurrentPage = number;
-                   
+
             }
         }
 
 
 
-        
+
     }
 
 
@@ -402,6 +437,6 @@ namespace DateApp.Models
 
 
 
-   
+
 
 }

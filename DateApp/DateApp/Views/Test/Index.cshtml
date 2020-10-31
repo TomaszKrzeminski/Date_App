@@ -1,0 +1,145 @@
+﻿
+@{   
+    Layout = "~/Views/Shared/_LayoutTomTom.cshtml";
+}
+
+@{ ViewData["Title"] = "World Map"; }
+
+<style>
+
+    #map {
+        height: 500px;
+        width: 1200px;
+    }
+</style>
+@*<input id="myTomTomKey" type="hidden" value="@ViewData["MyTomTomKey"]" />*@
+<div id='map' class='map'></div>
+
+@section Scripts {
+
+    <script>
+
+
+        let famousPlaces = [
+
+            {
+
+                "id": 1,
+
+                "name": "Central Park, N.Y., United States",
+
+                "center": [-73.9712, 40.7831]
+
+            },
+
+            {
+
+                "id": 2,
+
+                "name": "Plaza Mayor, Madrid, Spain",
+
+                "center": [-3.7074, 40.4155]
+
+            },
+
+            {
+
+                "id": 3,
+
+                "name": "Taj Mahal Garden, Agra, India",
+
+                "center": [78.0421, 27.1732]
+
+            },
+
+            {
+
+                "id": 4,
+
+                "name": "Red Square, Moscow, Russia",
+
+                "center": [37.61970, 55.75432]
+
+            }
+
+        ];
+
+
+
+
+
+
+
+        let myTomTomKey = $('#myTomTomKey').val();
+        let map;
+
+        map = tt.map({
+
+            key: 'YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O',
+
+            container: 'map',
+
+            zoom: 1.5,
+
+            center: [0, 40],
+
+            style: 'tomtom://vector/1/basic-main'
+
+        });
+
+       
+
+        initialize();
+
+        showWorld();
+
+        function initialize() {
+
+            map = tt.map({
+
+                key:'YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O',
+
+                container: 'map',
+
+                style: 'tomtom://vector/1/basic-main'
+
+            });
+
+            for (var i = 0; i < famousPlaces.length; i++) {
+
+                let place = famousPlaces[i];
+
+                var marker = new tt.Marker().setLngLat(place.center).addTo(map);
+
+                var popupOffsets = {
+
+                    bottom: [0, -40]
+
+                }
+
+                var popup = new tt.Popup({ offset: popupOffsets }).setHTML(place.name);
+
+                marker.setPopup(popup);
+
+            }
+
+        }
+
+        function showWorld() {
+
+            $('#placeName').html('');
+
+            map.jumpTo({
+
+                zoom: 1.5,
+
+                center: [0, 40]
+
+            });
+
+        }
+
+    </script>
+
+}
+

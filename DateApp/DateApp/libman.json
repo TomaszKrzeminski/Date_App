@@ -21,6 +21,16 @@
       "provider": "unpkg",
       "library": "@microsoft/signalr@latest",
       "destination": "wwwroot/lib/SignalR"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@tomtom-international/web-sdk-maps@5.64.0",
+      "destination": "wwwroot/lib/tomtom-international/web-sdk-maps/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "jqueryui@1.12.1",
+      "destination": "wwwroot/lib/jquery-ui/"
     }
   ]
 }

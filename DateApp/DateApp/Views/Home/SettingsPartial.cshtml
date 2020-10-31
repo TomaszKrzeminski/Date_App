@@ -115,9 +115,20 @@
             </div>
             <div id="Map" class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <div class="row">
-                    @Html.Partial("TomTomPartial",Model.Coordinates)
+                    @Html.Partial("TomTomPartial", Model.Coordinates)
                 </div>
                
+            </div>
+            <div class=" col-lg-12" style="min-height:50px;border-style:solid;">
+                @*<div class="row">
+
+                    <a href='@Url.Action("StaticRoute","Home",new { Latitude1 = Model.Coordinates.Latitude, Longitude1 = Model.Coordinates.Longitude ,Latitude2 = Model.Coordinates.Latitude, Longitude2 = Model.Coordinates.Longitude })'>
+                       <input  value="Nawiguj" class="btn btn-info" />
+                    </a>
+
+                </div>*@
+
+
             </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <form id="DistanceForm" asp-action="SetDistance" asp-controller="Home" method="post">
@@ -207,6 +218,82 @@
 </div>
 
 <script>
+
+   //StaticRoute
+    //
+    //$(document).on("click", "#StaticRoute", function () {
+
+
+
+        //alert("fuck");
+        //$.post("/Home/StaticRoute",
+        //    {
+        //        Latitude: $('#LatSR').val(),
+        //        Longitude: $('#LonSR').val()
+
+                
+
+        //    }
+        //    ,
+        //    function (data, status) {
+
+        //    });
+
+        @*var data = {};
+        //var Id = $(this).find('input[name="ReceiverId"]').val();
+        data["Latitude"] = "100";
+        data["Longitude"] = "200";
+
+        $.ajax({
+     url: '@Url.Action("StaticRoute", "Home")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+     data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+            success: function (result) {
+
+
+
+                alert("Works");
+                
+
+
+     }
+ });*@
+
+
+
+
+    //     $.post("/Home/StaticRoute",
+    //        {
+    //            Latitude: $('#LatSR').val(),
+    //            Longitude: $('#LonSR').val()
+
+
+
+    //        }
+    //        ,
+    //        function (data, status) {
+
+    //        });
+
+
+
+
+
+
+
+    //});
+
+
+
+
+
+
+
 
     ///SearchAge
 
