@@ -71,7 +71,7 @@
         </div>
 
 
-      
+
 
 
         <table class="table table-striped">
@@ -91,9 +91,37 @@
                     <td id="arrivalTime">@*@Model.details.arrivalTime*@</td>
                     <td id="travelTimeInSeconds">@*@Model.details.travelTimeInSeconds*@</td>
                 </tr>
-               
+
             </tbody>
         </table>
+
+
+       
+
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th scope="col">Miasto</th>
+                    <th scope="col">Temperatura</th>
+                    <th scope="col">Temperatura min</th>
+                    <th scope="col">Temperatura max</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td >@Model.details.City</td>
+                    <td >@Model.details.Temp</td>
+                    <td>@Model.details.Temp_Min</td>
+                    <td>@Model.details.Temp_Max</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
 
     </div>
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +12,7 @@ namespace DateApp.Models
 
         public AppUser(string Sex)
         {
-
+            EventUser = new List<EventUser>();
             this.Sex = Sex;
 
 
@@ -31,9 +32,8 @@ namespace DateApp.Models
             coordinates = new Coordinates();
             MatchUser = new List<MatchUser>();
             LoginHistory = new List<LoginHistory>();
-            Notification = new NotificationCheck(false,DateTime.Now);
+            Notification = new NotificationCheck(false, DateTime.Now);
         }
-
 
 
 
@@ -45,6 +45,7 @@ namespace DateApp.Models
         {
             //Pair = new List<Pair>();
             MessageUser = new List<MessageUser>();
+            EventUser = new List<EventUser>();
 
             if (Sex == "Mężczyzna")
             {
@@ -81,8 +82,66 @@ namespace DateApp.Models
         public IList<MessageUser> MessageUser { get; set; }
         public IList<ReportUser> ReportUsers { get; set; }
         public IList<LoginHistory> LoginHistory { get; set; }
+        public IList<EventUser> EventUser { get; set; }
+
+        //public string EventId { get; set; }
+        //public Event Event { get; set; }
+
 
     }
+
+
+    public class EventUser
+    {
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+
+        public int EventId { get; set; }
+        public Event Event { get; set; }
+    }
+
+
+
+
+    public class Event
+    {
+
+        public Event()
+        {
+            EventUser = new List<EventUser>();
+            ZipCode = " ";
+            Date = DateTime.Now;
+            PhotoPath1 = "/AppPictures/photo.png";
+            PhotoPath2 = "/AppPictures/photo.png";
+            PhotoPath3 = "/AppPictures/photo.png";
+            FilePath = "/Videos/testvideofile.mp4";
+        }
+
+
+
+
+
+        public int EventId { get; set; }
+        [Required]
+        public string EventName { get; set; }
+        [Required]
+        public DateTime Date { get; set; }
+        [Required]
+        public string ZipCode { get; set; }
+        [Required]
+        public string City { get; set; }
+
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+        public string Description { get; set; }
+        public string FilePath { get; set; }
+        public string PhotoPath1 { get; set; }
+        public string PhotoPath2 { get; set; }
+        public string PhotoPath3 { get; set; }
+        public IList<EventUser> EventUser { get; set; }
+    }
+
+
 
     public class NotificationCheck
     {
@@ -93,7 +152,7 @@ namespace DateApp.Models
             LastCheck = new DateTime();
         }
 
-        public NotificationCheck(bool Check,DateTime LastCheck)
+        public NotificationCheck(bool Check, DateTime LastCheck)
         {
             this.Check = Check;
             this.LastCheck = LastCheck;

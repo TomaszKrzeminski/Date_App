@@ -78,19 +78,19 @@ namespace DateApp.Models
 
         public RoutingViewModel()
         {
-            details = new RoutingDetails();
+            details = new Weather_Data();
         }
 
         public RoutingViewModel(string UserLongitude, string UserLatitude, string PairLongitude, string PairLatitude)
         {
-            details = new RoutingDetails();
+            details = new Weather_Data();
             this.UserLongitude = UserLongitude;
             this.UserLatitude = UserLatitude;
             this.PairLongitude = PairLongitude;
             this.PairLatitude = PairLatitude;
         }
 
-        public RoutingDetails details { get; set; }
+        public Weather_Data details { get; set; }
         public string UserLongitude { get; set; }
         public string UserLatitude { get; set; }
         public string PairLongitude { get; set; }

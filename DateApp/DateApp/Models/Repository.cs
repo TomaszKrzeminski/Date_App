@@ -12,6 +12,14 @@ namespace DateApp.Models
 
     public interface IRepository
     {
+        bool CancelEvent(int EventId);
+        List<Event> GetEventsByZipCodes(List<string> ZipCodes);
+        List<Event> GetEventsByName(string Name);
+        List<Event> GetEventsByCities(List<string> list);
+        List<Event> GetEventsByCityName(string City);
+        List<Event> GetEventsByDate(DateTime date);
+        List<Event> GetUserEvents(string Id);
+        bool AddEvent(AddEventViewModel model);
         NotificationViewModel GetNotifications(string Id);
         SearchDetails GetUserDetails(string UserId);
         LoginDetails GetLoginDetails();
@@ -1714,8 +1722,6 @@ namespace DateApp.Models
             }
         }
 
-
-
         public async Task<bool> CountLogout2(string Id)
         {
             try
@@ -1734,12 +1740,6 @@ namespace DateApp.Models
                 return false;
             }
         }
-
-
-
-
-
-
 
         public int GetOnline()
         {
@@ -1778,7 +1778,6 @@ namespace DateApp.Models
 
         }
 
-
         private bool DatesAreInTheSameWeek(DateTime date1, DateTime date2)
         {
             var cal = System.Globalization.DateTimeFormatInfo.CurrentInfo.Calendar;
@@ -1787,13 +1786,6 @@ namespace DateApp.Models
 
             return d1 == d2;
         }
-
-
-
-
-
-
-
 
         public static class Predicate
         {
@@ -1832,9 +1824,6 @@ namespace DateApp.Models
 
 
         }
-
-
-
 
         Func<LoginHistory, bool> checkWeek = Predicate.DatesWeek;
         Func<DateTime, bool> checkCreated = Predicate.CreatedWeek;
@@ -1953,8 +1942,6 @@ namespace DateApp.Models
 
         }
 
-
-
         public LoginDetails GetLoginDetails()
         {
 
@@ -2065,8 +2052,6 @@ namespace DateApp.Models
 
         }
 
-
-
         public bool SetNotify(string UserId)
         {
             try
@@ -2088,15 +2073,13 @@ namespace DateApp.Models
 
         }
 
-
-
         public string GetUserToNotify()
         {
             string Id = null;
 
             try
             {
-                Id = context.NotificationCheck.Where(x => x.Check == false || (x.Check == true && x.LastCheck.DayOfYear < DateTime.Now.DayOfYear)).FirstOrDefault(s=>!string.IsNullOrEmpty(s.AppUserId)).AppUserId;
+                Id = context.NotificationCheck.Where(x => x.Check == false || (x.Check == true && x.LastCheck.DayOfYear < DateTime.Now.DayOfYear)).FirstOrDefault(s => !string.IsNullOrEmpty(s.AppUserId)).AppUserId;
                 return Id;
             }
             catch (Exception ex)
@@ -2105,18 +2088,18 @@ namespace DateApp.Models
             }
         }
 
-        public string CheckPhotoPath(string Path,string ReturnIfDoesNotExist= "NoUserPhoto.jpg")
+        public string CheckPhotoPath(string Path, string ReturnIfDoesNotExist = "NoUserPhoto.jpg")
         {
 
 
-            if(Path== "/AppPictures/photo.png")
+            if (Path == "/AppPictures/photo.png")
             {
                 return ReturnIfDoesNotExist;
             }
             else
             {
 
-                string text = Path.Replace("/AppPictures/","");
+                string text = Path.Replace("/AppPictures/", "");
                 return text;
 
             }
@@ -2190,7 +2173,7 @@ namespace DateApp.Models
                 Names.Add(PairPhotoPath);
                 Names.Add("PairImage.jpg");
 
-                data = new PairNotificationEmail(Environment, UserEmail, EmailPair, Pair.Time, count,Names );
+                data = new PairNotificationEmail(Environment, UserEmail, EmailPair, Pair.Time, count, Names);
 
                 return data;
             }
@@ -2243,7 +2226,7 @@ namespace DateApp.Models
                 Names.Add(PairPhotoPath);
                 Names.Add("MessagePage.jpg");
 
-                data = new MessageNotificationEmail(Environment, UserEmail, EmailSender, Time, Count,Names);
+                data = new MessageNotificationEmail(Environment, UserEmail, EmailSender, Time, Count, Names);
 
 
                 return data;
@@ -2269,7 +2252,7 @@ namespace DateApp.Models
                 if (details.LikeDate < time && details.Likes == 2)
                 {
                     List<string> list = new List<string>() { "LikePage.jpg" };
-                    data = new LikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate,list);
+                    data = new LikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate, list);
                 }
 
                 return data;
@@ -2295,7 +2278,7 @@ namespace DateApp.Models
                 if (details.SuperLikeDate < time && details.SuperLikes == 2)
                 {
                     List<string> list = new List<string>() { "SuperLikePage.jpg" };
-                    data = new SuperLikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate,list );
+                    data = new SuperLikeNotificationEmail(Environment, UserEmail, UserEmail, details.LikeDate, list);
                 }
 
                 return data;
@@ -2303,6 +2286,154 @@ namespace DateApp.Models
             catch (Exception ex)
             {
                 return data;
+            }
+        }
+
+        public bool AddEvent(AddEventViewModel model)
+        {
+            try
+            {
+
+                AppUser user = model.User;
+                Event Event = model.Event;
+
+                EventUser eventUser = new EventUser();
+                eventUser.Event = Event;
+                eventUser.AppUser = user;
+
+                user.EventUser.Add(eventUser);
+                context.SaveChanges();
+                return true;
+
+
+
+                //context.Events.Add(model.Event);
+                //context.SaveChanges();
+                //return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public List<Event> GetUserEvents(string Id)
+        {
+            List<Event> list = new List<Event>();
+            try
+            {
+
+                List<EventUser> listEvents = context.Users.Include(m => m.EventUser).ThenInclude(me => me.Event).Where(u => u.Id == Id).First().EventUser.ToList();
+
+                if (listEvents != null && listEvents.Count() > 0)
+                {
+                    list = listEvents.Select(x => x.Event).ToList();
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return list;
+            }
+
+        }
+
+        public bool CancelEvent(int EventId)
+        {
+            try
+            {
+                Event Event = context.Events.Find(EventId);
+                context.Events.Remove(Event);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public List<Event> GetEventsByCities(List<string> list)
+        {
+            List<Event> Events = new List<Event>();
+            try
+            {
+                foreach (var item in list)
+                {
+                    Events.AddRange(context.Events.Include(m => m.EventUser).ThenInclude(me => me.AppUser).Where(x => x.City == item));
+                }
+
+                return Events;
+            }
+            catch (Exception ex)
+            {
+                return Events;
+            }
+        }
+
+        public List<Event> GetEventsByCityName(string City)
+        {
+            List<Event> Events = new List<Event>();
+            try
+            {
+
+                Events = context.Events.Where(x => x.City == City).ToList();
+
+                return Events;
+            }
+            catch (Exception ex)
+            {
+                return Events;
+            }
+        }
+
+        public List<Event> GetEventsByDate(DateTime date)
+        {
+            List<Event> Events = new List<Event>();
+            try
+            {
+                Events = context.Events.Include(m => m.EventUser).ThenInclude(me => me.AppUser).Where(x => x.Date.Date == date.Date).ToList();
+
+                return Events;
+
+
+            }
+            catch (Exception ex)
+            {
+                return Events;
+            }
+        }
+
+        public List<Event> GetEventsByName(string Name)
+        {
+            List<Event> list = new List<Event>();
+            try
+            {
+                list = context.Events.Include(m => m.EventUser).ThenInclude(me => me.AppUser).Where(x => x.EventName == Name).ToList();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return list;
+            }
+        }
+
+        public List<Event> GetEventsByZipCodes(List<string> ZipCodes)
+        {
+            List<Event> list = new List<Event>();
+            try
+            {
+                foreach (var ZipCode in ZipCodes)
+                {
+                    list.AddRange(context.Events.Include(m => m.EventUser).ThenInclude(me => me.AppUser).Where(x => x.ZipCode == ZipCode).ToList());
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return list;
             }
         }
     }

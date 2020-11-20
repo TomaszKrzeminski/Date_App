@@ -18,6 +18,7 @@ namespace DateApp.Models
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<MessageUser>().HasKey(sc => new { sc.AppUserId, sc.MessageId });
+            modelBuilder.Entity<EventUser>().HasKey(sc => new { sc.AppUserId, sc.EventId });
             modelBuilder.Entity<AppUser>()
         .HasOne(a => a.Details)
         .WithOne(b => b.User)
@@ -61,6 +62,9 @@ namespace DateApp.Models
 
         public DbSet<LoginHistory> LoginHistory { get; set; }
 
+        public DbSet<Event> Events { get; set; }
+
+        public DbSet<EventUser> EventUser { get; set; }
 
     }
 }

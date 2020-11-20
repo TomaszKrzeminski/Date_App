@@ -1,0 +1,295 @@
+﻿@model AddEventViewModel
+
+@{
+    ViewData["Title"] = "AddEvent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+
+        </div>
+        <div class="col-lg-4">
+            <h2>Dodaj Wydarzenie</h2>
+            <form asp-action="AddEvent" method="post">
+
+                <div class="row">
+                    <div class="btn-group">
+                        <label class="font-weight-bold" asp-for="Event.EventName">Nazwa</label>
+                        <input class="form-control" asp-for="Event.EventName" />
+                    </div>
+                    <div class="btn-group">
+                        <label class="font-weight-bold" asp-for="Event.ZipCode">Kod Pocztowy</label>
+                        <input id="ZipCode" class="form-control" asp-for="Event.ZipCode" />
+                    </div>
+
+                   
+                    <div class="btn-group">
+                        <label class="font-weight-bold" >Miasto</label>
+                        <select asp-for="Event.City" id="City">
+                          
+                        </select>
+                    </div>
+
+
+                    @*<div class="btn-group">
+                        <label class="font-weight-bold" asp-for="Event.City">Miasto</label>                       
+                        <input id="City" class="form-control" asp-for="Event.City" />
+                    </div>*@
+                    <div class="btn-group">
+                        <label class="font-weight-bold" asp-for="Event.Description">Opis</label>
+                        <input class="form-control" asp-for="Event.Description" />
+                    </div>
+                    <div class="btn-group">
+                        <input id="Latitude" type="hidden" class="form-control" asp-for="Event.Latitude" />
+                        <input id="Longitude" type="hidden" class="form-control" asp-for="Event.Longitude" />
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 ">
+                        <a href="#">
+                            <video width="320" height="240" controls>
+                                <source src="~/Videos/testvideofile.mp4" type="video/mp4">
+                                <source src="movie.ogg" type="video/ogg">
+                                Your browser does not support the video tag.
+                            </video>
+
+                            @if (Model.Event.FilePath != "/AppPictures/photo.png")
+                            {
+                                <img alt="0" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
+                            }
+                            else
+                            {
+                                <img alt="0" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
+                            }
+
+
+                        </a>
+
+
+                        <a href="#">
+                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath1 alt="">
+
+                            @if (Model.Event.PhotoPath1 == "/AppPictures/photo.png")
+                            {
+                                <img alt="0" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
+                            }
+                            else
+                            {
+                                <img alt="0" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
+                            }
+
+
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-6 ">
+                        <a href="#">
+                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath2 alt="">
+                            @if (Model.Event.PhotoPath2 != "/AppPictures/photo.png")
+                            {
+                                <img alt="1" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
+                            }
+                            else
+                            {
+                                <img alt="1" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
+                            }
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-6 ">
+                        <a href="#">
+                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath3 alt="">
+                            @if (Model.Event.PhotoPath3 != "/AppPictures/photo.png")
+                            {
+                                <img alt="1" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
+                            }
+                            else
+                            {
+                                <img alt="1" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
+                            }
+                        </a>
+                    </div>
+
+                </div>
+
+
+                <button type="submit" class="btn btn-danger form-control">Utwórz</button>
+            </form>
+
+        </div>
+        <div class="col-lg-4">
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<div id="dialog">
+
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <form id="PictureAddForm" asp-action="AddPictureAsync" method="post" enctype="multipart/form-data">
+        <div>
+            <div>
+                <label>Dodaj Zdjęcie</label>
+            </div>
+            <div>
+                <input title="Musisz wybrać plik" class="required error" id="choose" type="file" name="file" @*multiple*@ />
+                <input id="PictureNumber" style="display:none" name="PictureNumber" value="" />
+                <input id="Upload" style="display:none" type="submit" value="Upload" />
+
+            </div>
+
+        </div>
+
+    </form>
+</div>
+<div>
+    <form id="RemoveForm" asp-action="RemovePicture" asp-controller="Home" method="post">
+        <input id="RemovePicture" style="display:none" name="Number" value="" />
+    </form>
+</div>
+
+
+
+
+<script>
+   
+    $(document).ready(     
+        
+
+    function () {
+
+
+
+        $("#ZipCode").on('focusout', function () {
+            $.ajax({
+                url: "/Event/ZipCode",
+                type: "GET",
+                dataType: "json",
+                data: { fetch: $("#ZipCode").val() },
+                success: function (Cities) {
+
+                    //var optionhtml1 = '<option value="' +
+                    //    0 + '">' + "--Wybierz  Miasto--" + '</option>';
+                    //$("#City").append(optionhtml1);
+
+                
+
+                    $.each(Cities, function (i) {
+
+                        var optionhtml = '<option asp-for="Event.City" value="' +
+                            Cities[i] + '">' + Cities[i] + '</option>';
+                        $("#City").append(optionhtml);
+                    });
+
+
+
+
+
+                },
+            });
+        });
+
+
+
+        //$('#City').autocomplete({
+        //    source: "/Event/ZipCode"
+        //});
+
+
+
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(setPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+
+        function setPosition(position) {
+            $("#Latitude").val(position.coords.latitude); 
+            $("#Longitude").val(position.coords.longitude); 
+        }
+
+
+        getLocation();
+
+        $('#PictureAddForm').validate({
+
+            errorPlacement: function (error, element) {
+                error.insertBefore(element);
+            }
+
+        });
+
+        $("#dialog").dialog({
+            autoOpen: false,
+            draggable: false,
+            resizable: false,
+            width: 500,
+            height: 400,
+            modal: true,
+            show: 'slideDown',
+            hide: 'slideUp',
+            dialogClass: "no-close",
+            buttons: [
+                {
+
+                    text: "Anuluj",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+
+
+                },
+                {
+
+                    text: "Potwierdź",
+                    click: function () {
+                        $("#Upload").click();
+                    }
+                }
+            ]
+        });
+
+
+
+        $(".iconAction").click(function () {
+
+            var numb = $(this).attr("alt");
+
+            $("#PictureNumber").val(numb);
+            $("#dialog").dialog("open");
+        });
+
+
+        $(".Remove").click(function () {
+
+
+            var numb = $(this).attr("alt");
+            $("#RemovePicture").val(numb);
+            $("#RemoveForm").submit();
+
+        });
+
+    }
+
+
+
+    );
+
+
+
+
+
+
+
+</script>

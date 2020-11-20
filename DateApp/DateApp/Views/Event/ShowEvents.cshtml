@@ -1,0 +1,31 @@
+﻿@model List<Event>
+@{
+    ViewData["Title"] = "CancelEvent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <div class="row">
+        <h4>Lista  Wydarzeń</h4>
+    </div>
+    <div class="row">
+        @foreach (var Event in Model)
+        {
+            <div class="col-lg-12">
+                <form asp-action="ShowEvent" method="get">
+                    <div class="btn-group">
+                        <input type="hidden" name="EventId" value=@Event.EventId>
+                        <h4>@Event.EventName    @Event.City    @Event.Date.ToShortDateString()   </h4>
+                        <input type="submit" class="btn btn-danger" value="Szczegóły" />
+                    </div>
+                </form>
+            </div>
+
+        }
+
+
+
+
+
+    </div>
+

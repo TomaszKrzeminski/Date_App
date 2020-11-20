@@ -182,12 +182,13 @@ namespace UndergroundSound.Models
 
                         userStore = new UserStore<AppUser>(context);
 
+                        //userStore.CreateAsync(User).Wait();
                         userStore.CreateAsync(User).Wait();
-                         ////////
+                        ////////
                         Claim claim = new Claim(ClaimTypes.Email, User.Email);
                         List<Claim> claims = new List<Claim>();
                         claims.Add(claim);
-                        userStore.AddClaimsAsync(User, claims);
+                        userStore.AddClaimsAsync(User, claims).Wait();
                         userStore.AddToRoleAsync(User, "UserRole").Wait();
 
                     }
@@ -272,6 +273,45 @@ namespace UndergroundSound.Models
             }
 
 
+       
+
+
+
+
+        void AddEvents(string EventName,string City,string ZipCode,string Latitude,string Longitude,string UserEmail,DateTime time=new DateTime())
+        {
+
+            try
+            {
+                    Event Event = new Event();
+                    Event.EventName = EventName;
+                    Event.City = City;
+                    Event.Longitude = Longitude;
+                    Event.Latitude = Latitude;
+                    Event.Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+                    Event.Date = time;
+                    Event.ZipCode = ZipCode;
+
+                    AppUser user= context.Users.Where(u => u.Email == UserEmail).First();
+                   
+
+                    EventUser eventUser = new EventUser();
+                    eventUser.Event = Event;
+                    eventUser.AppUser = user;
+
+                    user.EventUser.Add(eventUser);
+                    context.SaveChanges();
+
+
+                }
+            catch (Exception ex)
+            {
+
+            }
+
+
+
+        }
 
 
 
@@ -327,6 +367,21 @@ namespace UndergroundSound.Models
                 AddNotificationCheckToUser("U11@gmail.com");
                 AddNotificationCheckToUser("U12@gmail.com");
 
+                AddEvents("Wydarzenie 1", "Świecie","86-100" , "53.4072518", "18.4455253", "U2@gmail.com",new DateTime(2020,12,11));
+                AddEvents("Wydarzenie 2", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 12));
+                AddEvents("Wydarzenie 3", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 13));
+                AddEvents("Wydarzenie 4", "Chełmno", "86-200", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 14));
+                AddEvents("Wydarzenie 5", "Chełmno", "86-200", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 15));
+                AddEvents("Wydarzenie 6", "Chełmno", "86-200", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 16));
+                AddEvents("Wydarzenie 7", "Grudziądz", "86-300", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 17));
+
+                AddEvents("Wydarzenie 8", "Grudziądz", "86-300", "53.4072518", "18.4455253", "U3@gmail.com", new DateTime(2020, 12, 11));
+                AddEvents("Wydarzenie 9", "Grudziądz", "86-300", "53.4072518", "18.4455253", "U3@gmail.com", new DateTime(2020, 12, 12));
+                AddEvents("Wydarzenie 10", "Toruń", "87-100", "53.4072518", "18.4455253", "U3@gmail.com", new DateTime(2020, 12, 13));
+                AddEvents("Wydarzenie 14", "Toruń", "87-100", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 14));
+                AddEvents("Wydarzenie 15", "Toruń", "87-100", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 15));
+                AddEvents("Wydarzenie 16", "Bydgoszcz", "85-000", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 16));
+                AddEvents("Wydarzenie 17", "Osie", "86-150", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 17));
 
 
 
@@ -334,7 +389,7 @@ namespace UndergroundSound.Models
             }
 
 
-           
+
 
 
 

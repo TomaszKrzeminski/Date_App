@@ -115,8 +115,84 @@ namespace DateApp.Controllers
 
 
 
+        //public async Task<IActionResult> Panel_JSON_LINQ()
+        //{
+
+        //    string ReverseGeocodingKey = "pk.6a0568ea2a60f5218a864c2d9f7e5432";
+
+        //    var httpClient1 = new HttpClient();
+        //    var url1 = "https://us1.locationiq.com/v1/reverse.php?key=" + ReverseGeocodingKey + "&lat=53.411131729515006&lon=18.451571537874628&format=json";
+        //    HttpResponseMessage response1 = await httpClient1.GetAsync(url1);
+
+        //    string responseBody1 = await response1.Content.ReadAsStringAsync();
+        //    JObject reverseGeocodingObj = JObject.Parse(responseBody1);
+
+
+
+
+
+        //    var httpClient = new HttpClient();
+        //    var url = "http://api.openweathermap.org/data/2.5/weather?q=Świecie,pl&units=metric&APPID=41270c91174b3fd8bdae41229160b95d";
+        //    HttpResponseMessage response = await httpClient.GetAsync(url);
+
+        //    string responseBody = await response.Content.ReadAsStringAsync();
+        //    JObject o = JObject.Parse(responseBody);
+
+        //    Weather_Data weather = new Weather_Data();
+        //    weather.City = (string)o["name"];
+        //    weather.Temp = (double)o["main"]["temp"];
+        //    weather.Temp_Min = (double)o["main"]["temp_min"];
+        //    weather.Temp_Max = (double)o["main"]["temp_max"];
+        //    weather.Description = (string)o["weather"][0]["description"];
+
+
+        //    return View(weather);
+        //}
+
+
+
+
+
+
+
+
         public async Task<IActionResult> StaticRoute(RoutingViewModel model)
         {
+
+
+
+
+
+            string ReverseGeocodingKey = "pk.6a0568ea2a60f5218a864c2d9f7e5432";
+
+            var httpClient1 = new HttpClient();
+            var url1 = "https://us1.locationiq.com/v1/reverse.php?key=" + ReverseGeocodingKey + "&lat="+model.UserLatitude+"&lon="+model.UserLongitude+"&format=json";
+            HttpResponseMessage response1 = await httpClient1.GetAsync(url1);
+
+            string responseBody1 = await response1.Content.ReadAsStringAsync();
+            JObject reverseGeocodingObj = JObject.Parse(responseBody1);
+
+            string postCode = (string)reverseGeocodingObj["address"]["postcode"];
+
+
+
+
+            var httpClient = new HttpClient();
+            var url = "http://api.openweathermap.org/data/2.5/weather?q="+ postCode + ",pl&units=metric&APPID=41270c91174b3fd8bdae41229160b95d";
+            HttpResponseMessage response = await httpClient.GetAsync(url);
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+            JObject o = JObject.Parse(responseBody);
+
+            Weather_Data weather = new Weather_Data();
+            weather.City = (string)o["name"];
+            weather.Temp = (double)o["main"]["temp"];
+            weather.Temp_Min = (double)o["main"]["temp_min"];
+            weather.Temp_Max = (double)o["main"]["temp_max"];
+            weather.Description = (string)o["weather"][0]["description"];
+
+            model.details = weather;
+
 
             //var httpClient = new HttpClient();
             //string Coordinates = model.UserLatitude + "," + model.UserLongitude + ":" + model.PairLatitude + "," + model.UserLongitude + ":53.4072518,18.4455253";
@@ -128,7 +204,7 @@ namespace DateApp.Controllers
             //JObject o = JObject.Parse(responseBody);
 
             //RoutingDetails details = new RoutingDetails();
-            
+
             //int d=(int)o["routes"][0]["summary"]["lengthInMeters"];
             //string d1 = (string)o["routes"][0]["summary"]["arrivalTime"];
             //string d2 = (string)o["routes"][0]["summary"]["departureTime"];
@@ -140,8 +216,8 @@ namespace DateApp.Controllers
             //details.travelTimeInSeconds = ChangeToMinutes(d3);
 
             //model.details = details;
-                    
-                                                  
+
+
             return View("StaticRoute", model);
         }
 
