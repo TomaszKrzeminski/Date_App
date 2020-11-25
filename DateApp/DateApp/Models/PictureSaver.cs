@@ -15,6 +15,14 @@ namespace DateApp.Models
         PhotoPath3
     }
 
+
+    public enum PictureTypeEvent
+    {       
+        PhotoPath1,
+        PhotoPath2,
+        PhotoPath3
+    }
+
     public abstract class PictureSaver
     {
         protected PictureSaver picture;

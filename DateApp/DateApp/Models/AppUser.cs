@@ -125,6 +125,7 @@ namespace DateApp.Models
         [Required]
         public string EventName { get; set; }
         [Required]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy HH:MM}")]
         public DateTime Date { get; set; }
         [Required]
         public string ZipCode { get; set; }

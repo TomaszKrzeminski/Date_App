@@ -8,29 +8,84 @@
 
 
 <div class="container">
-    <div class="row">
-        <div class="col-lg-4">
 
-        </div>
-        <div class="col-lg-4">
-            <h2>Dodaj Wydarzenie</h2>
-            <form asp-action="AddEvent" method="post">
+   
 
+        <div class="row">
+            <div class="col-lg-4">
                 <div class="row">
-                    <div class="btn-group">
-                        <label class="font-weight-bold" asp-for="Event.City">Miasto</label>
+                    <div style="min-height:100px; " class="col-lg-12 form-group">
+                        <h5>Zdjęcie 1</h5>
+                        <a href="#">
+                          
+                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath1 alt="">
+
+                          
+
+
+                        </a>
+                    </div>
+                    <div style="min-height:100px; " class="col-lg-12 form-group">
+                        <h5>Zdjęcie 2</h5>
+                        <a href="#">
+                           
+                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath2 alt="">
+                           
+                        </a>
+                    </div>
+                    <div style="min-height:100px; " class="col-lg-12 form-group">
+                        <h5>Zdjęcie 3</h5>
+                        <a href="#">
+                           
+                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath3 alt="">
+                           
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-4">            
+                
+                <div class="row">
+                    <div style="min-height:50px; " class="col-lg-12 form-group">
+                        <label class="font-weight-bold" asp-for="Event.EventName">Nazwa</label>
+                        <input class="form-control" asp-for="Event.EventName" />
+                    </div>
+                    <div style="min-height:50px; " class="col-lg-12 form-group">
+                        <label class="font-weight-bold" asp-for="Event.ZipCode">Kod Pocztowy</label>
+                        <input id="ZipCode" class="form-control" asp-for="Event.ZipCode" />
+                    </div>
+
+                    <div style="min-height:50px; " class="col-lg-12 form-group">
+                        <label class="font-weight-bold">Miasto</label>
                         <input class="form-control" asp-for="Event.City" />
                     </div>
-                    <div class="btn-group">
+                    <div style="min-height:50px; " class="col-lg-12 form-group">
+                        <label class="font-weight-bold" asp-for="Event.Date">Data</label>
+                        <input class="form-control" value=@Model.Event.Date.ToString() />
+                    </div>
+                    <div style="min-height:50px; " class="col-lg-12 form-group">
+                        <label class="font-weight-bold" asp-for="Event.Date">Godzina</label>
+                        <input class="form-control" value=@Model.Event.Date.ToShortTimeString() />
+                    </div>
+                    <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.Description">Opis</label>
                         <input class="form-control" asp-for="Event.Description" />
                     </div>
-                   
+                    <div style="min-height:50px; " class="col-lg-12 form-group">
+                        <input id="Latitude" type="hidden" class="form-control" asp-for="Event.Latitude" />
+                        <input id="Longitude" type="hidden" class="form-control" asp-for="Event.Longitude" />
+                    </div>
                 </div>
+                                                         
 
+
+            </div>
+            <div class="col-lg-4">
 
                 <div class="row">
-                    <div class="col-lg-6 col-md-6 ">
+                    <div style="min-height:100px; " class="col-lg-12 form-group">
+
                         <a href="#">
                             <video width="320" height="240" controls>
                                 <source src="~/Videos/testvideofile.mp4" type="video/mp4">
@@ -38,90 +93,31 @@
                                 Your browser does not support the video tag.
                             </video>
 
-                            @if (Model.Event.FilePath != "/AppPictures/photo.png")
-                            {
-                                <img alt="0" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-                            }
-                            else
-                            {
-                                <img alt="0" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-                            }
+                          
 
 
                         </a>
 
 
-                        <a href="#">
-                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath1 alt="">
-
-                            @if (Model.Event.PhotoPath1 == "/AppPictures/photo.png")
-                            {
-                                <img alt="0" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-                            }
-                            else
-                            {
-                                <img alt="0" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-                            }
 
 
-                        </a>
                     </div>
-                    <div class="col-lg-6 col-md-6 ">
-                        <a href="#">
-                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath2 alt="">
-                            @if (Model.Event.PhotoPath2 != "/AppPictures/photo.png")
-                            {
-                                <img alt="1" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-                            }
-                            else
-                            {
-                                <img alt="1" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-                            }
-                        </a>
-                    </div>
-                    <div class="col-lg-6 col-md-6 ">
-                        <a href="#">
-                            <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath3 alt="">
-                            @if (Model.Event.PhotoPath3 != "/AppPictures/photo.png")
-                            {
-                                <img alt="1" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-                            }
-                            else
-                            {
-                                <img alt="1" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-                            }
-                        </a>
-                    </div>
+
+
 
                 </div>
 
-
-                <button type="submit" class="btn btn-danger form-control">Utwórz</button>
-            </form>
-
-        </div>
-        @*<div class="col-lg-4">
-            @foreach (var item in Model.EventUsers)
-            {
-            <div>
-
-                <a href="#">
-                    <img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath3 alt="">
-                    @if (Model.Event.PhotoPath3 != "/AppPictures/photo.png")
-                    {
-                        <img alt="1" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-                    }
-                    else
-                    {
-                        <img alt="1" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-                    }
-                </a>
-
-
             </div>
-            }
-        </div>*@
-    </div>
+        </div>
 
+
+   
 
 </div>
+
+
+    
+
+
+
+

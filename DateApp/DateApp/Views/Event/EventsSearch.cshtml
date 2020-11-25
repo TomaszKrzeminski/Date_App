@@ -7,63 +7,83 @@
 
 
 
-        <div class="container-fluid">
+<div class="container-fluid">
+    <div style="min-height:50px;"></div>
+    <div class="row">
+
+        <div class="col-lg-4">
             <div class="row">
 
-                <div class="col-lg-4">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <h1>Szukaj Wydarzeń</h1>
-                        </div>
-                    </div>
-                    <form asp-action="ShowEvents" method="post">
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <label class="font-weight-bold" asp-for="ZipCode">Kod Pocztowy</label>
-                            <input class="form-control" asp-for="ZipCode" />
-                        </div>
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <label class="font-weight-bold" asp-for="Distance">Dystans</label>
-                            <input class="form-control" asp-for="Distance" />
-                        </div>
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <label class="font-weight-bold" asp-for="Date">Data</label>
-                            <input class="form-control" asp-for="Date" />
-                        </div>
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <label class="font-weight-bold" asp-for="Name">Nazwa</label>
-                            <input class="form-control" asp-for="Name" />
-                        </div>
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <label class="font-weight-bold" name="CityNames">Miasto 1</label>
-                            <input class="form-control" name="CityNames" />
-                        </div>
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <label class="font-weight-bold" name="CityNames">Miasto 2</label>
-                            <input class="form-control" name="CityNames" />
-                        </div>
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <label class="font-weight-bold" name="CityNames">Miasto 3</label>
-                            <input class="form-control" name="CityNames" />
-                        </div>
-
-
-
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <label class="font-weight-bold" asp-for="UserEvent">Wydarzenia użytkownika</label>
-                            <input class="form-control" asp-for="UserEvent" />
-                        </div>
-                        <div style="min-height:50px; " class="col-lg-12 form-group">
-                            <input type="submit" class="btn btn-danger" value="Szukaj" />
-                        </div>
-                    </form>
+                <div class="col-lg-12">
+                    <h1>Szukaj Wydarzeń</h1>
                 </div>
-                <div class="col-lg-4"> @Html.Partial("ShowEvents", Model.list)</div>
-                <div class="col-lg-4"></div>
-
             </div>
-           
-               
-           
-        </div>
+            <form asp-action="ShowEvents" method="post">
+                @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" asp-for="ZipCode">Kod Pocztowy</label>
+                    <div><span asp-validation-for="ZipCode" class="text-danger"></span></div>
+                    <input class="form-control" asp-for="ZipCode" />
+                </div>
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" asp-for="Distance">Dystans</label>
+                    <div><span asp-validation-for="Distance" class="text-danger"></span></div>
+                    <input class="form-control" asp-for="Distance" />
+                </div>
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" asp-for="Date_From">Data</label>
+                    <div><span asp-validation-for="Date_From" class="text-danger"></span></div>
+                    <input class="form-control" asp-for="Date_From" />
+                </div>
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" asp-for="Date_To">Data</label>
+                    <div><span asp-validation-for="Date_To" class="text-danger"></span></div>
+                    <input class="form-control" asp-for="Date_To" />
+                </div>
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" asp-for="Name">Nazwa</label>
+                    <input class="form-control" asp-for="Name" />
+                </div>
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" name="CityNames">Miasto 1</label>
+                    <input class="form-control" name="CityNames" />
+                </div>
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" name="CityNames">Miasto 2</label>
+                    <input class="form-control" name="CityNames" />
+                </div>
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" name="CityNames">Miasto 3</label>
+                    <input class="form-control" name="CityNames" />
+                </div>
 
-       
+
+
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <label class="font-weight-bold" asp-for="UserEvent">Wydarzenia użytkownika</label>
+                    <input class="form-control" asp-for="UserEvent" />
+                </div>
+                <div style="min-height:50px; " class="col-lg-12 form-group">
+                    <input type="submit" class="btn btn-danger" value="Szukaj" />
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-4">
+            <h2>Wydarzenia </h2>
+            @Html.Partial("ShowEvents", Model.list)
+        </div>
+        <div class="col-lg-4"></div>
+
+    </div>
+
+
+
+</div>
+
+       <script>
+           $(document).ready(
+               function () {
+                   $("input.input-validation-error").closest(".form-group").addClass("has-danger");
+               }
+           );
+       </script>

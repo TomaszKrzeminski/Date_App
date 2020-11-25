@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using DateApp.Models.Attributes;
 
 namespace DateApp.Models
 {
@@ -16,26 +17,33 @@ namespace DateApp.Models
             list = new List<Event>();
             GetListFromDB = false;
             Name = "";
-            Date = DateTime.Now.Date;
-            DaysToEvent = 0;
+            Date_From = DateTime.Now.Date;
+            Date_To = DateTime.Now.Date;
+
             UserEvent = false;
             Distance = 0;
             CityNames = new List<string>();
             ZipCode = "";
 
         }
-
-        public int Distance { get; set; }
-        public string Name { get; set; }
-        public int DaysToEvent { get; set; }
-        [Required]
-        public DateTime Date { get; set; }
-        public bool UserEvent { get; set; }
-        public string UserId { get; set; }
-        public List<Event> list { get; set; }
-        public List<string> CityNames { get; set; }
-        public bool GetListFromDB { get; set; }
+        [Required(ErrorMessage ="Musisz podać kod pocztowy w formacie xx-xxx")]
+        [RegularExpression("^\\d{2}[- ]{0,1}\\d{3}$")]
         public string ZipCode { get; set; }
+        [Range(0,100,ErrorMessage ="Podaj odległość od 0 do 100 km")]
+        public int Distance { get; set; }
+        [FutureDate]
+        [DateLessThan("Date_To")]
+        public DateTime Date_From { get; set; }
+        [FutureDate]
+        [DateLaterThan(("Date_From"))]
+        public DateTime Date_To { get; set; }
+        public string Name { get; set; }
+        public List<string> CityNames { get; set; }
+        public bool UserEvent { get; set; }
+
+        public string UserId { get; set; }
+        public bool GetListFromDB { get; set; }
+        public List<Event> list { get; set; }
         //public List<string> ZipCodesForDistance { get; set; }
 
     }
@@ -129,18 +137,18 @@ namespace DateApp.Models
 
         public override ShowEventViewModel Handle(ShowEventViewModel model)
         {
-            if (model.Date != null)
+            if (model.Date_From != null && model.Date_To != null && model.Date_From.Date <= model.Date_To.Date)
             {
 
                 if (model.GetListFromDB == false)
                 {
-                    model.list = repo.GetEventsByDate(model.Date);
+                    model.list = repo.GetEventsByDate(model.Date_From, model.Date_To);
                     model.GetListFromDB = true;
                     Model = model;
                 }
                 else
                 {
-                    model.list = model.list.Where(e => e.Date == model.Date).ToList();
+                    model.list = model.list.Where(e => e.Date >= model.Date_From && e.Date <= model.Date_To).ToList();
                     Model = model;
                 }
 

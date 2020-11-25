@@ -17,9 +17,10 @@ namespace DateApp.Models
         List<Event> GetEventsByName(string Name);
         List<Event> GetEventsByCities(List<string> list);
         List<Event> GetEventsByCityName(string City);
-        List<Event> GetEventsByDate(DateTime date);
+        List<Event> GetEventsByDate(DateTime From,DateTime To);
         List<Event> GetUserEvents(string Id);
-        bool AddEvent(AddEventViewModel model);
+        Event GetEventById(int Id);
+        int AddEvent(AddEventViewModel model);
         NotificationViewModel GetNotifications(string Id);
         SearchDetails GetUserDetails(string UserId);
         LoginDetails GetLoginDetails();
@@ -30,6 +31,7 @@ namespace DateApp.Models
         Task<bool> CountLogout2(string Id);
         bool ChangeUserDetails(UserDetailsModel model);
         bool AddPicture(string UserId, PictureType type, string FilePath);
+        //int AddPictureEvent(string UserId, PictureType type, string FilePath);
         bool RemovePicture(string UserId, PictureType type);
         string GetPhoneNumber(string Id);
         bool ChangePhoneNumber(string Id, string PhoneNumber);
@@ -2289,8 +2291,16 @@ namespace DateApp.Models
             }
         }
 
-        public bool AddEvent(AddEventViewModel model)
+
+
+
+
+
+
+
+        public int AddEvent(AddEventViewModel model)
         {
+
             try
             {
 
@@ -2303,9 +2313,10 @@ namespace DateApp.Models
 
                 user.EventUser.Add(eventUser);
                 context.SaveChanges();
-                return true;
 
 
+                int Id = eventUser.EventId;
+                return Id;
 
                 //context.Events.Add(model.Event);
                 //context.SaveChanges();
@@ -2313,9 +2324,38 @@ namespace DateApp.Models
             }
             catch (Exception ex)
             {
-                return false;
+                return 0;
             }
         }
+
+        //public bool AddEvent(AddEventViewModel model)
+        //{
+        //    try
+        //    {
+
+        //        AppUser user = model.User;
+        //        Event Event = model.Event;
+
+        //        EventUser eventUser = new EventUser();
+        //        eventUser.Event = Event;
+        //        eventUser.AppUser = user;
+
+        //        user.EventUser.Add(eventUser);
+        //        context.SaveChanges();
+        //        return true;
+
+
+
+        //        //context.Events.Add(model.Event);
+        //        //context.SaveChanges();
+        //        //return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return false;
+        //    }
+        //}
+
 
         public List<Event> GetUserEvents(string Id)
         {
@@ -2388,12 +2428,12 @@ namespace DateApp.Models
             }
         }
 
-        public List<Event> GetEventsByDate(DateTime date)
+        public List<Event> GetEventsByDate(DateTime From,DateTime To)
         {
             List<Event> Events = new List<Event>();
             try
             {
-                Events = context.Events.Include(m => m.EventUser).ThenInclude(me => me.AppUser).Where(x => x.Date.Date == date.Date).ToList();
+                Events = context.Events.Include(m => m.EventUser).ThenInclude(me => me.AppUser).Where(x => x.Date.Date >= From.Date&&x.Date.Date<=To.Date).ToList();
 
                 return Events;
 
@@ -2436,5 +2476,49 @@ namespace DateApp.Models
                 return list;
             }
         }
+
+        public Event GetEventById(int Id)
+        {
+            try
+            {
+                Event Event = context.Events.Find(Id);
+                return Event;
+            }
+            catch(Exception ex)
+            {
+                return new Event() {EventName="Błąd Podczas pobierania" };
+            }
+        }
+
+        //public int AddPictureEvent(string UserId, PictureType type, string FilePath)
+        //{
+
+        //    PictureSaver main = new MainPhoto();
+        //    PictureSaver photo1 = new Photo1();
+        //    PictureSaver photo2 = new Photo2();
+
+
+        //    main.setNumber(photo1);
+        //    photo1.setNumber(photo2);
+
+
+        //    try
+        //    {
+
+
+        //        //SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+        //        //Event data=context.
+        //        //main.ForwardRequest(type, details, FilePath);
+        //        //context.SaveChanges();
+        //        return 0;
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return 0;
+        //    }
+        //}
+
     }
 }

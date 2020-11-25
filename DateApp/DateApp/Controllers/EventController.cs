@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace DateApp.Controllers
 {
@@ -51,28 +53,6 @@ namespace DateApp.Controllers
             return View();
         }
 
-
-
-        //public async Task<IActionResult> ZipCode(string code="86-105")
-        //{
-
-        //    string Key = "3fabbfd0-27e6-11eb-8826-59001fe1a22a";
-
-        //    var httpClient1 = new HttpClient();
-        //    var url1 = "https://app.zipcodebase.com/api/v1/search?apikey=" + Key + "&codes="+code;
-        //    HttpResponseMessage response1 = await httpClient1.GetAsync(url1);
-
-        //    string responseBody1 = await response1.Content.ReadAsStringAsync();
-        //    JObject cityResponse = JObject.Parse(responseBody1);
-
-        //    List <ZipCodeDetails> list = cityResponse["results"]["86-105"].ToObject<List<ZipCodeDetails>>();
-
-        //    List<string> Cities = list.Select(c => c.city).ToList();
-
-
-        //    return View("StaticRoute");
-        //}
-
         [HttpGet]
         public JsonResult ZipCode(string fetch)
         {
@@ -92,7 +72,7 @@ namespace DateApp.Controllers
                 List<JToken> obj = AsyncEnumerable.ToAsyncEnumerable(Object).ToList().Result;
                 JToken elem = obj.First();
                 List<ZipCodeDetails> list = elem.ToObject<List<ZipCodeDetails>>();
-                Cities.AddRange( list.Select(c => c.city).ToList());
+                Cities.AddRange(list.Select(c => c.city).ToList());
             }
             catch (Exception ex)
             {
@@ -101,8 +81,6 @@ namespace DateApp.Controllers
 
             return Json(Cities);
         }
-
-
 
         public List<string> CitiesInRange(string ZipCode = "86-100", int Distance = 10)
         {
@@ -122,7 +100,7 @@ namespace DateApp.Controllers
 
                 List<ZipDistanceDetails> list = cityResponse["results"].ToObject<List<ZipDistanceDetails>>();
 
-                codes.AddRange( list.Select(c => c.code).ToList());
+                codes.AddRange(list.Select(c => c.code).ToList());
             }
             catch (Exception ex)
             {
@@ -134,23 +112,40 @@ namespace DateApp.Controllers
             return codes;
         }
 
-
-
         public IActionResult AddEvent()
         {
             AddEventViewModel model = new AddEventViewModel();
             return View(model);
         }
 
+        [RequestSizeLimit(1024000)]
         [HttpPost]
         public IActionResult AddEvent(AddEventViewModel model)
         {
             if (ModelState.IsValid)
             {
+
+                if (model.PictureFile_1 != null)
+                {
+                    model.Event.PhotoPath1 = AddPictureEvent(model.PictureFile_1).Result;
+                }
+                if (model.PictureFile_2 != null)
+                {
+                    model.Event.PhotoPath2 = AddPictureEvent(model.PictureFile_2).Result;
+                }
+                if (model.PictureFile_3 != null)
+                {
+                    model.Event.PhotoPath3 = AddPictureEvent(model.PictureFile_3).Result;
+                }
+                if(model.MovieFile!=null)
+                {
+                    model.Event.FilePath = AddMovieFileEvent(model.MovieFile).Result;
+                }
+
                 AppUser user = GetUser().Result;
                 model.User = user;
-                repository.AddEvent(model);
-                return RedirectToAction("ShowEvents");
+                int eventId = repository.AddEvent(model);
+                return RedirectToAction("ShowEvent", new { EventId = eventId });
             }
             else
             {
@@ -163,10 +158,9 @@ namespace DateApp.Controllers
         {
 
             EventViewModel model = new EventViewModel();
-
+            model.Event = repository.GetEventById(EventId);
             return View(model);
         }
-
 
         public IActionResult ShowEvents()
         {
@@ -175,26 +169,34 @@ namespace DateApp.Controllers
             return View("EventsSearch", model);
         }
 
-
         [HttpPost]
         public IActionResult ShowEvents(ShowEventViewModel model)
         {
-            string Id = GetUser().Result.Id;
-            model.UserId = Id;
-            NameHandler name = new NameHandler(repository);
-            DateHandler date = new DateHandler(repository);
-            UserHandler user = new UserHandler(repository);
-            CityNameHandler city = new CityNameHandler(repository);
-            ZipCodeHandler zipcode = new ZipCodeHandler(repository);
-            DistanceHandler distance = new DistanceHandler(repository);
 
-            name.SetNext(zipcode).SetNext(distance).SetNext(date).SetNext(city).SetNext(user);
+            if (ModelState.IsValid)
+            {
+                string Id = GetUser().Result.Id;
+                model.UserId = Id;
+                NameHandler name = new NameHandler(repository);
+                DateHandler date = new DateHandler(repository);
+                UserHandler user = new UserHandler(repository);
+                CityNameHandler city = new CityNameHandler(repository);
+                ZipCodeHandler zipcode = new ZipCodeHandler(repository);
+                DistanceHandler distance = new DistanceHandler(repository);
+                name.SetNext(zipcode).SetNext(distance).SetNext(date).SetNext(city).SetNext(user);
+                name.Handle(model);
+                model.list = model.list.Distinct().ToList();
+                return View("EventsSearch", model);
+            }
+            else
+            {
+                return View("EventsSearch", model);
+            }
 
-            name.Handle(model);
 
-            return View("EventsSearch", model);
+
+
         }
-
 
         public IActionResult ShowUserEvents()
         {
@@ -202,9 +204,8 @@ namespace DateApp.Controllers
             List<Event> list = repository.GetUserEvents(Id);
             list = list.Distinct().ToList();
 
-            return View("ShowEvents", list);
+            return View("ShowEvents_View", list);
         }
-
 
         public IActionResult CancelEvent()
         {
@@ -231,5 +232,122 @@ namespace DateApp.Controllers
 
         }
 
+        public PictureType GetPictureType(string PictureNumber)
+        {
+            PictureType type = new PictureType();
+            int number;
+            try
+            {
+                number = Convert.ToInt32(PictureNumber);
+            }
+            catch
+            {
+                number = 0;
+            }
+
+
+            if (number > 3 || number < 0)
+            {
+                number = 0;
+            }
+            else
+            {
+                type = (PictureType)number;
+            }
+
+            return type;
+        }
+
+
+        public async Task<string> AddPictureEvent(IFormFile file)
+        {
+
+            string PathText = "";
+
+            if (file != null)
+            {
+                var uploads = Path.Combine(_environment.WebRootPath, "Images");
+                string FilePath;
+                if (file.Length > 0)
+                {
+
+                    if (Path.GetExtension(file.FileName) == ".jpg")
+                    {
+
+                        PathText = Path.Combine(uploads, file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
+                        {
+                            FilePath = "/Images/" + file.FileName;
+                            await file.CopyToAsync(fileStream);
+                        }
+
+
+                    }
+
+                }
+
+
+                return PathText;
+
+
+
+            }
+            else
+            {
+                return PathText;
+            }
+
+
+        }
+
+
+        public async Task<string> AddMovieFileEvent(IFormFile file)
+        {
+
+            string PathText = "";
+
+            if (file != null)
+            {
+                var uploads = Path.Combine(_environment.WebRootPath, "Videos");
+                string FilePath;
+                if (file.Length > 0)
+                {
+
+                    if (Path.GetExtension(file.FileName) == ".jpg")
+                    {
+
+                        PathText = Path.Combine(uploads, file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
+                        {
+                            FilePath = "/Videos/" + file.FileName;
+                            await file.CopyToAsync(fileStream);
+                        }
+
+
+                    }
+
+                }
+
+
+                return PathText;
+
+
+
+            }
+            else
+            {
+                return PathText;
+            }
+
+
+        }
+
+
+
+
+
     }
+
+
+
 }
