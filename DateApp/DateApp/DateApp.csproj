@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <Compile Include="wwwroot\lib\SignalR\dist\browser\AdminController.cs" />
   </ItemGroup>

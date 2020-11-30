@@ -112,13 +112,29 @@ namespace DateApp.Controllers
             return codes;
         }
 
+
         public IActionResult AddEvent()
         {
             AddEventViewModel model = new AddEventViewModel();
+            model.Event.City = "Brak";
+            model.Event.Description = "Brak";
+            model.Event.EventName = "Brak";
+            model.Event.ZipCode = "86-100";
+            model.Event.PhotoPath1 = "2.jpg";
+            model.Event.PhotoPath2 = "3.jpg";
+            model.Event.PhotoPath3 = "4.jpg";
+            model.Event.Date = DateTime.Now;
+
+
+
+
+
+
+
             return View(model);
         }
 
-        [RequestSizeLimit(1024000)]
+
         [HttpPost]
         public IActionResult AddEvent(AddEventViewModel model)
         {
@@ -137,7 +153,7 @@ namespace DateApp.Controllers
                 {
                     model.Event.PhotoPath3 = AddPictureEvent(model.PictureFile_3).Result;
                 }
-                if(model.MovieFile!=null)
+                if (model.MovieFile != null)
                 {
                     model.Event.FilePath = AddMovieFileEvent(model.MovieFile).Result;
                 }
@@ -161,6 +177,25 @@ namespace DateApp.Controllers
             model.Event = repository.GetEventById(EventId);
             return View(model);
         }
+
+        public IActionResult JoinEvent(int EventId)
+        {
+            AppUser user = GetUser().Result;
+            bool check = repository.JoinEvent(EventId, user.Id);
+
+            if (check)
+            {
+                return RedirectToAction("ShowEvent", new { EventId = EventId });
+            }
+            else
+            {
+                return View("Error", "Nie udało się dołączyć do wydarzenia nieznany błąd");
+            }
+
+
+        }
+
+
 
         public IActionResult ShowEvents()
         {
@@ -261,13 +296,13 @@ namespace DateApp.Controllers
 
         public async Task<string> AddPictureEvent(IFormFile file)
         {
-
+            string FilePath = "";
             string PathText = "";
 
             if (file != null)
             {
                 var uploads = Path.Combine(_environment.WebRootPath, "Images");
-                string FilePath;
+
                 if (file.Length > 0)
                 {
 
@@ -287,14 +322,14 @@ namespace DateApp.Controllers
                 }
 
 
-                return PathText;
+                return FilePath;
 
 
 
             }
             else
             {
-                return PathText;
+                return FilePath;
             }
 
 
@@ -305,15 +340,15 @@ namespace DateApp.Controllers
         {
 
             string PathText = "";
-
+            string FilePath = "";
             if (file != null)
             {
                 var uploads = Path.Combine(_environment.WebRootPath, "Videos");
-                string FilePath;
+
                 if (file.Length > 0)
                 {
 
-                    if (Path.GetExtension(file.FileName) == ".jpg")
+                    if (Path.GetExtension(file.FileName) == ".mp4")
                     {
 
                         PathText = Path.Combine(uploads, file.FileName);
@@ -329,14 +364,14 @@ namespace DateApp.Controllers
                 }
 
 
-                return PathText;
+                return FilePath;
 
 
 
             }
             else
             {
-                return PathText;
+                return FilePath;
             }
 
 

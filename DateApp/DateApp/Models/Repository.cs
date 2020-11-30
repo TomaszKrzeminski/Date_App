@@ -17,7 +17,7 @@ namespace DateApp.Models
         List<Event> GetEventsByName(string Name);
         List<Event> GetEventsByCities(List<string> list);
         List<Event> GetEventsByCityName(string City);
-        List<Event> GetEventsByDate(DateTime From,DateTime To);
+        List<Event> GetEventsByDate(DateTime From, DateTime To);
         List<Event> GetUserEvents(string Id);
         Event GetEventById(int Id);
         int AddEvent(AddEventViewModel model);
@@ -66,7 +66,7 @@ namespace DateApp.Models
         NotificationEmail CheckSuperLikesForNofification(string UserId);
         string GetUserToNotify();
         bool SetNotify(string UserId);
-
+        bool JoinEvent(int EventId, string UserId);
 
     }
 
@@ -2292,12 +2292,6 @@ namespace DateApp.Models
         }
 
 
-
-
-
-
-
-
         public int AddEvent(AddEventViewModel model)
         {
 
@@ -2313,14 +2307,8 @@ namespace DateApp.Models
 
                 user.EventUser.Add(eventUser);
                 context.SaveChanges();
-
-
                 int Id = eventUser.EventId;
                 return Id;
-
-                //context.Events.Add(model.Event);
-                //context.SaveChanges();
-                //return true;
             }
             catch (Exception ex)
             {
@@ -2328,33 +2316,7 @@ namespace DateApp.Models
             }
         }
 
-        //public bool AddEvent(AddEventViewModel model)
-        //{
-        //    try
-        //    {
 
-        //        AppUser user = model.User;
-        //        Event Event = model.Event;
-
-        //        EventUser eventUser = new EventUser();
-        //        eventUser.Event = Event;
-        //        eventUser.AppUser = user;
-
-        //        user.EventUser.Add(eventUser);
-        //        context.SaveChanges();
-        //        return true;
-
-
-
-        //        //context.Events.Add(model.Event);
-        //        //context.SaveChanges();
-        //        //return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return false;
-        //    }
-        //}
 
 
         public List<Event> GetUserEvents(string Id)
@@ -2428,12 +2390,12 @@ namespace DateApp.Models
             }
         }
 
-        public List<Event> GetEventsByDate(DateTime From,DateTime To)
+        public List<Event> GetEventsByDate(DateTime From, DateTime To)
         {
             List<Event> Events = new List<Event>();
             try
             {
-                Events = context.Events.Include(m => m.EventUser).ThenInclude(me => me.AppUser).Where(x => x.Date.Date >= From.Date&&x.Date.Date<=To.Date).ToList();
+                Events = context.Events.Include(m => m.EventUser).ThenInclude(me => me.AppUser).Where(x => x.Date.Date >= From.Date && x.Date.Date <= To.Date).ToList();
 
                 return Events;
 
@@ -2481,44 +2443,43 @@ namespace DateApp.Models
         {
             try
             {
-                Event Event = context.Events.Find(Id);
+                Event Event = context.Events.Include(x => x.EventUser).ThenInclude(m => m.AppUser).Where(x => x.EventId == Id).First();
                 return Event;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return new Event() {EventName="Błąd Podczas pobierania" };
+                return new Event() { EventName = "Błąd Podczas pobierania" };
             }
         }
 
-        //public int AddPictureEvent(string UserId, PictureType type, string FilePath)
-        //{
-
-        //    PictureSaver main = new MainPhoto();
-        //    PictureSaver photo1 = new Photo1();
-        //    PictureSaver photo2 = new Photo2();
-
-
-        //    main.setNumber(photo1);
-        //    photo1.setNumber(photo2);
+        public bool JoinEvent(int EventId, string UserId)
+        {
+            try
+            {
+                AppUser user = context.Users.Find(UserId);
+                Event Event = context.Events.Include(x => x.EventUser).ThenInclude(y => y.AppUser).Where(x => x.EventId == EventId).First();
 
 
-        //    try
-        //    {
+                if (Event.EventUser.ToList().Any(x => x.AppUser.Id == UserId))
+                {
+                    return false;
+                }
+                else
+                {
+                    EventUser eventUser = new EventUser();
+                    eventUser.Event = Event;
+                    eventUser.AppUser = user;
 
+                    Event.EventUser.Add(eventUser);
+                    context.SaveChanges();
+                    return true;
+                }
 
-        //        //SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
-        //        //Event data=context.
-        //        //main.ForwardRequest(type, details, FilePath);
-        //        //context.SaveChanges();
-        //        return 0;
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return 0;
-        //    }
-        //}
-
+            }
+            catch (Exception Ex)
+            {
+                return false;
+            }
+        }
     }
 }

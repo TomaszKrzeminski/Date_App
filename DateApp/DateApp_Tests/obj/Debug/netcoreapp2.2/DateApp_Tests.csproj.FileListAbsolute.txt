@@ -8,6 +8,7 @@ C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\bin\Debug\netcoreapp2.2\Da
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\bin\Debug\netcoreapp2.2\DateApp_Tests.dll
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\bin\Debug\netcoreapp2.2\DateApp_Tests.pdb
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\bin\Debug\netcoreapp2.2\DateApp.dll
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\bin\Debug\netcoreapp2.2\DateApp.pdb
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.csprojAssemblyReference.cache
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.csproj.CoreCompileInputs.cache
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.AssemblyInfoInputs.cache

@@ -18,7 +18,7 @@ using Quartz;
 using System.Collections.Specialized;
 using Quartz.Impl;
 using DateApp.Jobs;
-
+using Microsoft.AspNetCore.Http.Features;
 
 namespace DateApp
 {
@@ -39,6 +39,10 @@ namespace DateApp
 
         public void ConfigureServices(IServiceCollection services)
         {
+                               
+
+
+
             //
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             //
