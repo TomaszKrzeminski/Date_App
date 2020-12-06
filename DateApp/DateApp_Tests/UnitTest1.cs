@@ -2787,6 +2787,277 @@ namespace Tests
 
     }
 
+    public class EventControllerTests
+    {
+
+        async Task<AppUser> GetUserX()
+        {
+            return new AppUser() { Id = "Id1", UserName = "Test User" };
+        }
+
+        private List<AppUser> _users = new List<AppUser>()
+         {
+      new AppUser(){UserName="User1",Id="Id1" } ,
+      new AppUser(){UserName="User2",Id="Id2" }
+         };
+
+
+        [Test]
+        public void ShowEvents_Returns_Empty_Model()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+            Mock<IRepository> repo = new Mock<IRepository>();
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object);
+
+
+                         ViewResult model=(ViewResult)controller.ShowEvents();
+            ShowEventViewModel eventModel = (ShowEventViewModel)model.Model;
+            ShowEventViewModel expected = new ShowEventViewModel();
+            Assert.AreEqual(expected.Date_From, eventModel.Date_From);
+            Assert.AreEqual("EventsSearch", model.ViewName);
+
+        }
+
+        [Test]
+        public void ShowEvent_Returns_Event_With_Id()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+            Mock<IRepository> repo = new Mock<IRepository>();
+            Event Event = new Event();
+            Event.EventId = 66;
+            repo.Setup(x => x.GetEventById(66)).Returns(Event);
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object);
+            ViewResult model = (ViewResult)controller.ShowEvent(66);
+            EventViewModel eventModel = (EventViewModel)model.Model;
+            Assert.AreEqual(Event.EventId, eventModel.Event.EventId);
+
+
+        }
+
+        [Test]
+        public void AddEvent_Returns_Model()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+            Mock<IRepository> repo = new Mock<IRepository>();            
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object);
+            ViewResult model = (ViewResult)controller.AddEvent();
+            AddEventViewModel eventModel = (AddEventViewModel)model.Model;
+            Assert.AreEqual("Brak", eventModel.Event.City);
+
+
+        }
+
+        [Test]
+        public void JoinEvent_Return_View_Error_When_Join_Doesnt_Occur()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(x => x.JoinEvent(1, "UserId")).Returns(false);
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object,GetUserX);
+            ViewResult model = (ViewResult)controller.JoinEvent(66);
+
+            string text = (string)model.Model;
+            Assert.AreEqual("Nie udało się dołączyć do wydarzenia nieznany błąd", text);
+            Assert.AreEqual("Error", model.ViewName);
+
+        }
+
+        [Test]
+        public void JoinEvent_Redirects_To_ShowEvent_When_Join_Is_Successful()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(x => x.JoinEvent(1, "Id1")).Returns(true);
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX);
+            RedirectToActionResult model = controller.JoinEvent(1) as RedirectToActionResult;
+            Assert.AreEqual(model.ActionName, "ShowEvent");
+
+
+        }
+
+        [Test]
+        public void ShowUserEvents_Returns_List()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+            Mock<IRepository> repo = new Mock<IRepository>();
+            List<Event> list = new List<Event>();
+            list.Add(new Event() { EventName = "1" });
+            list.Add(new Event() { EventName = "2" });
+            list.Add(new Event() { EventName = "3" });
+            list.Add(new Event() { EventName = "4" });
+
+            repo.Setup(x => x.GetUserEvents( "Id1")).Returns(list);
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX);
+            ViewResult model = controller.ShowUserEvents() as ViewResult;
+            List<Event> list2 = (List<Event>)model.Model;
+            Assert.AreEqual("1", list2[0].EventName);
+            Assert.AreEqual("3", list2[2].EventName);
+            Assert.AreEqual("4", list2[3].EventName);
+
+
+
+        }        
+
+          [Test]
+        public void CancelEvent_Returns_List()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+            Mock<IRepository> repo = new Mock<IRepository>();
+            List<Event> list = new List<Event>();
+            list.Add(new Event() { EventName = "1" });
+            list.Add(new Event() { EventName = "2" });
+            list.Add(new Event() { EventName = "3" });
+            list.Add(new Event() { EventName = "4" });
+
+            repo.Setup(x => x.GetUserEvents("Id1")).Returns(list);
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX);
+            ViewResult model = controller.CancelEvent() as ViewResult;
+            List<Event> list2 = (List<Event>)model.Model;
+            Assert.AreEqual("1", list2[0].EventName);
+            Assert.AreEqual("3", list2[2].EventName);
+            Assert.AreEqual("4", list2[3].EventName);
+
+
+
+        }
+
+        [Test]
+        public void When_CancelEvent_Isnt_Successful_Action_Returns_View_Error()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+            Mock<IRepository> repo = new Mock<IRepository>();     
+
+            repo.Setup(x => x.CancelEvent(1)).Returns(true);
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX);
+            ViewResult model = controller.CancelEvent(2) as ViewResult;
+            Assert.AreEqual(model.ViewName, "Error");
+            Assert.AreEqual(model.Model, "Nie udało się usunąć wydarzenia");
+        }
+
+        [Test]
+        public void When_CancelEvent_Is_Successful_Action_Redirects()
+        {
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(x => x.CancelEvent(1)).Returns(true);
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX);
+            RedirectToActionResult model = controller.CancelEvent(1) as RedirectToActionResult;
+            Assert.AreEqual(model.ActionName, "EventActions");           
+        }
+
+        [TestCase("-1",PictureType.MainPhotoPath)]
+        [TestCase("0", PictureType.MainPhotoPath)]        
+        [TestCase("4", PictureType.MainPhotoPath)]
+        [TestCase("5", PictureType.MainPhotoPath)]
+        public void When_Number_Is_Greater_Then__3_Or_Less_Then_0_Action_Returns_MainPhoto_Type(string a, PictureType expected)
+        {
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+            Mock<IRepository> repo = new Mock<IRepository>();
+           
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX);
+            PictureType type = controller.GetPictureType(a);
+            Assert.AreEqual(expected,type);
+        }
+
+        [TestCase("0", PictureType.MainPhotoPath)]
+        [TestCase("1", PictureType.PhotoPath1)]
+        [TestCase("2", PictureType.PhotoPath2)]
+        [TestCase("3", PictureType.PhotoPath3)]
+       public void When_Number_Is_Less_Then__3_And_Greater_Then_0_Action_Returns_PictureType(string a, PictureType expected)
+        {
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(x => x.CancelEvent(1)).Returns(true);
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX);
+            PictureType type = controller.GetPictureType(a);
+            Assert.AreEqual(expected,type);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 
 
 

@@ -139,6 +139,7 @@ namespace DateApp.Models
         public string PhotoPath1 { get; set; }
         public string PhotoPath2 { get; set; }
         public string PhotoPath3 { get; set; }
+        public string OrganizerEmail { get; set; }
         public IList<EventUser> EventUser { get; set; }
     }
 

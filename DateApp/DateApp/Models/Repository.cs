@@ -14,6 +14,7 @@ namespace DateApp.Models
     {
         bool CancelEvent(int EventId);
         List<Event> GetEventsByZipCodes(List<string> ZipCodes);
+        EventsInNeighborhoodViewModel GetEventsInNeighborhood(AppUser user, DateTime time, int Days, string ZipCode);
         List<Event> GetEventsByName(string Name);
         List<Event> GetEventsByCities(List<string> list);
         List<Event> GetEventsByCityName(string City);
@@ -355,6 +356,65 @@ namespace DateApp.Models
             {
                 return false;
             }
+        }
+
+
+        EventsInRangeDates GetWeekRange(DateTime time)
+        {
+            EventsInRangeDates dates = new EventsInRangeDates();
+            dates.From = time;
+            dates.To = time;
+
+            int DayOFWeek = (int)time.DayOfWeek;
+
+            if (DayOFWeek == 0)
+            {
+                dates.From.AddDays(-6);
+                dates.To.AddDays(0);
+            }
+
+            int AddDays = 7 - DayOFWeek;
+            int SubtractDays = -(DayOFWeek - 1);
+
+
+            dates.To = dates.To.AddDays(AddDays);
+            dates.From = dates.From.AddDays(SubtractDays);
+
+            return dates;
+        }
+
+
+
+
+        public EventsInNeighborhoodViewModel GetEventsInNeighborhood(AppUser user, DateTime time, int Days, string ZipCode)
+        {
+            EventsInNeighborhoodViewModel model = new EventsInNeighborhoodViewModel();
+            model.PostCode = ZipCode;
+            DateTime To = time.AddDays(Days);
+            model.Date = time;
+            model.Days = Days;
+
+            EventsInRangeDates dates = GetWeekRange(time);
+
+            try
+            {
+                model.listEventsInDays = context.Events.Where(x => x.ZipCode == ZipCode && (x.Date.Date >= time.Date && x.Date.Date <= To.Date)).OrderBy(x=>x.Date).ToList();
+                model.listEventsInWeek = context.Events.Where(x => x.ZipCode == ZipCode && (x.Date.Date >= dates.From.Date && x.Date.Date <= dates.To.Date)).OrderBy(x=>x.Date).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                return model;
+            }
+
+
+
+
+
+
+
+
+
         }
 
         public bool ChangePhoneNumber(string Id, string PhoneNumber)
@@ -2109,7 +2169,6 @@ namespace DateApp.Models
 
         }
 
-
         public NotificationEmail CheckPairsForNofification(string UserId)
         {
             PairNotificationEmail data = null;
@@ -2291,15 +2350,17 @@ namespace DateApp.Models
             }
         }
 
-
         public int AddEvent(AddEventViewModel model)
         {
 
             try
             {
 
+
+
                 AppUser user = model.User;
                 Event Event = model.Event;
+                Event.OrganizerEmail = user.Email;
 
                 EventUser eventUser = new EventUser();
                 eventUser.Event = Event;
@@ -2316,22 +2377,20 @@ namespace DateApp.Models
             }
         }
 
-
-
-
         public List<Event> GetUserEvents(string Id)
         {
             List<Event> list = new List<Event>();
             try
             {
 
-                List<EventUser> listEvents = context.Users.Include(m => m.EventUser).ThenInclude(me => me.Event).Where(u => u.Id == Id).First().EventUser.ToList();
+                //List<EventUser> listEvents = context.Users.Include(m => m.EventUser).ThenInclude(me => me.Event).Where(u => u.Id == Id).Last().EventUser.ToList();
 
-                if (listEvents != null && listEvents.Count() > 0)
-                {
-                    list = listEvents.Select(x => x.Event).ToList();
-                }
-
+                //if (listEvents != null && listEvents.Count() > 0)
+                //{
+                //    list = listEvents.Select(x => x.Event).ToList();
+                //}
+                AppUser user = context.Users.Find(Id);
+                list = context.Events.Where(x => x.OrganizerEmail == user.Email).ToList();
                 return list;
             }
             catch (Exception ex)

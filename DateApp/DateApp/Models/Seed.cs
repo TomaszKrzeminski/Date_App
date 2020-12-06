@@ -291,6 +291,7 @@ namespace UndergroundSound.Models
                     Event.Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
                     Event.Date = time;
                     Event.ZipCode = ZipCode;
+                    Event.OrganizerEmail = UserEmail;
 
                     AppUser user= context.Users.Where(u => u.Email == UserEmail).First();
                    
@@ -367,7 +368,7 @@ namespace UndergroundSound.Models
                 AddNotificationCheckToUser("U11@gmail.com");
                 AddNotificationCheckToUser("U12@gmail.com");
 
-                AddEvents("Wydarzenie 1", "Świecie","86-100" , "53.4072518", "18.4455253", "U2@gmail.com",new DateTime(2020,12,11));
+                AddEvents("Wydarzenie 1", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 11));
                 AddEvents("Wydarzenie 2", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 12));
                 AddEvents("Wydarzenie 3", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 13));
                 AddEvents("Wydarzenie 4", "Chełmno", "86-200", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 14));
@@ -380,10 +381,23 @@ namespace UndergroundSound.Models
                 AddEvents("Wydarzenie 10", "Toruń", "87-100", "53.4072518", "18.4455253", "U3@gmail.com", new DateTime(2020, 12, 13));
                 AddEvents("Wydarzenie 14", "Toruń", "87-100", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 14));
                 AddEvents("Wydarzenie 15", "Toruń", "87-100", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 15));
-                AddEvents("Wydarzenie 16", "Bydgoszcz", "85-000", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 16));
+                AddEvents("Wydarzenie 16", "Bydgoszcz", "85-000", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 6));
                 AddEvents("Wydarzenie 17", "Osie", "86-150", "53.4072518", "18.4455253", "U4@gmail.com", new DateTime(2020, 12, 17));
 
+                AddEvents("Wydarzenie 29.11", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 11, 29));
+                AddEvents("Wydarzenie 30.11", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 11, 30));
+                AddEvents("Wydarzenie 1.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 1));
+                AddEvents("Wydarzenie 2.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 2));
+                AddEvents("Wydarzenie 3.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 3));
+                AddEvents("Wydarzenie 6.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 6));
+                AddEvents("Wydarzenie 7.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 7));
 
+                AddEvents("Wydarzenie 2.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 2));
+                AddEvents("Wydarzenie 3.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 3));
+                AddEvents("Wydarzenie 10.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 10));
+                AddEvents("Wydarzenie 13.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 13));
+                AddEvents("Wydarzenie 14.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 14));
+                AddEvents("Wydarzenie 15.12", "Świecie", "86-100", "53.4072518", "18.4455253", "U2@gmail.com", new DateTime(2020, 12, 15));
 
 
             }
