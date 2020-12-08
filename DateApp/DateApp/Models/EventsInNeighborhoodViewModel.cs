@@ -12,6 +12,10 @@ namespace DateApp.Models
         {
             listEventsInWeek = new List<Event>();
             listEventsInDays = new List<Event>();
+            City = "";
+            PostCode = "";
+            Date = new DateTime();
+            Days = 0;
         }
 
         public List<Event> listEventsInWeek { get; set; }

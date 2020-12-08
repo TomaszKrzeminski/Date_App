@@ -22,13 +22,14 @@ namespace DateApp.Controllers
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
+        private Func<HttpClient> GetClient;
 
 
 
 
 
 
-        public EventController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, Func<Task<AppUser>> GetUser = null)
+        public EventController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, Func<Task<AppUser>> GetUser = null,Func<HttpClient> GetClient=null)
         {
             repository = repo;
             userManager = userMgr;
@@ -42,6 +43,15 @@ namespace DateApp.Controllers
             else
             {
                 this.GetUser = GetUser;
+            }
+
+            if (GetClient == null)
+            {
+                this.GetClient = () =>new HttpClient();
+            }
+            else
+            {
+                this.GetClient = GetClient;
             }
 
         }
@@ -173,7 +183,8 @@ namespace DateApp.Controllers
                 string UserId = user.Id;
                 DateApp.Models.Coordinates c = repository.GetCoordinates(UserId);
                 string key = "YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O";
-                var httpClient1 = new HttpClient();
+                //var httpClient1 = new HttpClient();
+               var httpClient1 = GetClient();
                 var url = "https://api.tomtom.com/search/2/reverseGeocode/" + c.Latitude.ToString().Replace(",", ".") + "%2C" + c.Longitude.ToString().Replace(",", ".") + "+.json?key=" + key;
                 HttpResponseMessage response1 = httpClient1.GetAsync(url).Result;
                 string responseBody1 = response1.Content.ReadAsStringAsync().Result;
@@ -199,7 +210,7 @@ namespace DateApp.Controllers
             try
             {
                 string Key = "3fabbfd0-27e6-11eb-8826-59001fe1a22a";
-                var httpClient1 = new HttpClient();
+                var httpClient1 = GetClient();
                 var url1 = "https://app.zipcodebase.com/api/v1/search?apikey=" + Key + "&codes=" + fetch;
                 HttpResponseMessage response1 = httpClient1.GetAsync(url1).Result;
                 string responseBody1 = response1.Content.ReadAsStringAsync().Result;
@@ -219,35 +230,35 @@ namespace DateApp.Controllers
             return Json(Cities);
         }
 
-        public List<string> CitiesInRange(string ZipCode = "86-100", int Distance = 10)
-        {
+        //public List<string> CitiesInRange(string ZipCode = "86-100", int Distance = 10)
+        //{
 
-            List<string> codes = new List<string>();
-            try
-            {
+        //    List<string> codes = new List<string>();
+        //    try
+        //    {
 
-                string Key = "3fabbfd0-27e6-11eb-8826-59001fe1a22a";
-                var httpClient1 = new HttpClient();
+        //        string Key = "3fabbfd0-27e6-11eb-8826-59001fe1a22a";
+        //        var httpClient1 = GetClient();
 
-                var url = "https://app.zipcodebase.com/api/v1/radius?apikey=" + Key + "&code=" + ZipCode + "&radius=" + Distance + "&country=pl";
-                HttpResponseMessage response1 = httpClient1.GetAsync(url).Result;
-                string responseBody1 = response1.Content.ReadAsStringAsync().Result;
-                JObject cityResponse = JObject.Parse(responseBody1);
+        //        var url = "https://app.zipcodebase.com/api/v1/radius?apikey=" + Key + "&code=" + ZipCode + "&radius=" + Distance + "&country=pl";
+        //        HttpResponseMessage response1 = httpClient1.GetAsync(url).Result;
+        //        string responseBody1 = response1.Content.ReadAsStringAsync().Result;
+        //        JObject cityResponse = JObject.Parse(responseBody1);
 
 
-                List<ZipDistanceDetails> list = cityResponse["results"].ToObject<List<ZipDistanceDetails>>();
+        //        List<ZipDistanceDetails> list = cityResponse["results"].ToObject<List<ZipDistanceDetails>>();
 
-                codes.AddRange(list.Select(c => c.code).ToList());
-            }
-            catch (Exception ex)
-            {
+        //        codes.AddRange(list.Select(c => c.code).ToList());
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-            }
+        //    }
 
-            codes = codes.Distinct().ToList();
+        //    codes = codes.Distinct().ToList();
 
-            return codes;
-        }
+        //    return codes;
+        //}
 
 
 

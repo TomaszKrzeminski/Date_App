@@ -23,6 +23,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Quartz;
+using System.Net.Http;
+using System.Net;
+using Moq.Protected;
+using Newtonsoft.Json.Linq;
 
 namespace Tests
 {
@@ -2790,6 +2794,71 @@ namespace Tests
     public class EventControllerTests
     {
 
+
+        HttpClient GetClientTomTom()
+        {
+            var handlerMock = new Mock<HttpMessageHandler>();
+
+            string json = @"
+
+{'summary':{'queryTime':13,'numResults':1},'addresses':[{'address':{'buildingNumber':'4','streetNumber':'4','routeNumbers':[],'street':'Jana Matejki','streetName':'Jana Matejki','streetNameAndNumber':'Jana Matejki 4','countryCode':'PL','countrySubdivision':'Kujawsko - Pomorskie','countrySecondarySubdivision':'Świecki','municipality':'Świecie','postalCode':'86-100','country':'Polska','countryCodeISO3':'POL','freeformAddress':'Jana Matejki 4, 86 - 100 Świecie','boundingBox':{'northEast':'53.408836,18.413812','southWest':'53.408471,18.413405','entity':'position'},'localName':'Świecie'},'position':'53.408474,18.413416'}]}
+";
+
+
+
+            var response = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(json),
+            };
+
+            handlerMock
+               .Protected()
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync",
+                  ItExpr.IsAny<HttpRequestMessage>(),
+                  ItExpr.IsAny<CancellationToken>())
+               .ReturnsAsync(response);
+            var httpClient = new HttpClient(handlerMock.Object);
+            return httpClient;
+
+
+        }
+
+        HttpClient GetClientZipCode()
+        {
+            var handlerMock = new Mock<HttpMessageHandler>();
+
+            string json = @"
+
+{'query':{'codes':['86 - 100'],'country':null},'results':{'86 - 100':[{'postal_code':'86 - 100','country_code':'PL','latitude':'53.46010000','longitude':'18.53330000','city':'Czapelki','state':'Kujawsko - Pomorskie','state_code':'73','province':'Powiat świecki','province_code':'0414'},{'postal_code':'86 - 100','country_code':'PL','latitude':'53.40830000','longitude':'18.43250000','city':'Świecie','state':'Kujawsko - Pomorskie','state_code':'73','province':'Powiat świecki','province_code':'0414'},{'postal_code':'86 - 100','country_code':'PL','latitude':'53.38360000','longitude':'18.35020000','city':'Wielki Konopat','state':'Kujawsko - Pomorskie','state_code':'73','province':'Powiat świecki','province_code':'0414'}]}}
+
+
+
+";
+
+
+
+            var response = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(json),
+            };
+
+            handlerMock
+               .Protected()
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync",
+                  ItExpr.IsAny<HttpRequestMessage>(),
+                  ItExpr.IsAny<CancellationToken>())
+               .ReturnsAsync(response);
+            var httpClient = new HttpClient(handlerMock.Object);
+            return httpClient;
+
+
+        }
+
+
         async Task<AppUser> GetUserX()
         {
             return new AppUser() { Id = "Id1", UserName = "Test User" };
@@ -3039,15 +3108,104 @@ namespace Tests
             Assert.AreEqual(expected,type);
         }
 
+        [Test]
+        public void EventActions_Returns_Model_When_Result_Is_Successful()
+        {
+            EventsInNeighborhoodViewModel eModel = new EventsInNeighborhoodViewModel();
+            eModel.City = "City";
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+            Coordinates coordinates = new Coordinates();
+            coordinates.Latitude = 53.0;
+            coordinates.Longitude = 18.0;
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(x => x.GetCoordinates("Id1")).Returns(coordinates);
+
+            AppUser user= new AppUser() { Id = "Id1", UserName = "Test User" };
+
+            repo.Setup(x => x.GetEventsInNeighborhood(It.IsAny<AppUser>(),It.IsAny<DateTime>(),10,"86-100")).Returns(eModel);
+
+
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX);
+            ViewResult model = controller.EventActions() as ViewResult;
+            EventsInNeighborhoodViewModel check = (EventsInNeighborhoodViewModel)model.Model;
+            Assert.AreEqual(check.City,"City");
+        }
+
+
+        [Test]
+        public void EventActions_Returns_Empty_Model_When_Result_Isnt_Successful()
+        {
+            EventsInNeighborhoodViewModel eModel = new EventsInNeighborhoodViewModel();            
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");            
+            Mock<IRepository> repo = new Mock<IRepository>();
+            repo.Setup(x => x.GetCoordinates("Id1")).Returns(()=>null);
+
+            AppUser user = new AppUser() { Id = "Id1", UserName = "Test User" };
+
+            repo.Setup(x => x.GetEventsInNeighborhood(It.IsAny<AppUser>(), It.IsAny<DateTime>(), 10, "86-100")).Returns(eModel);
+
+
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX, GetClientTomTom);
+            ViewResult model = controller.EventActions() as ViewResult;
+            EventsInNeighborhoodViewModel check = (EventsInNeighborhoodViewModel)model.Model;
+            Assert.AreEqual(check.City, "");
+            Assert.AreEqual(check.Days, 0);
+
+
+        }
+
+
+        [Test]
+        public void ZipCode_Returns_List_When_Result_Is_Successful()
+        {
+           
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+            Mock<IRepository> repo = new Mock<IRepository>();                       
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX, GetClientZipCode);
+            JsonResult model = controller.ZipCode("86-100") as JsonResult;
+            List<string> list =(List<string>)model.Value;
+
+            Assert.AreEqual(list[0], "Czapelki");
+            Assert.AreEqual(list[2], "Wielki Konopat");
 
 
 
+        }
+
+        [Test]
+        public void If_AddEvent_Model_Inst_Valid_Then_Returns_Model()
+        {
+
+            var userManager = IdentityMocking.MockUserManager<AppUser>(_users);
+            var mockEnvironment = new Mock<IHostingEnvironment>();
+            mockEnvironment
+                .Setup(m => m.EnvironmentName)
+                .Returns("Hosting:UnitTestEnvironment");
+            Mock<IRepository> repo = new Mock<IRepository>();
+            EventController controller = new EventController(repo.Object, userManager.Object, mockEnvironment.Object, GetUserX, GetClientZipCode);
+            AddEventViewModel modelX = new AddEventViewModel();
+            modelX.Event.EventName = "EventName Check";
+            controller.ModelState.AddModelError("Event.ZipCode", "Musisz podać kod pocztowy");
+          ViewResult model = controller.AddEvent(modelX) as ViewResult;
+            AddEventViewModel check = model.Model as AddEventViewModel;
+            Assert.AreEqual(check.Event.EventName, "EventName Check");
+           
 
 
 
-
-
-
+        }
 
 
 
