@@ -311,16 +311,16 @@ namespace DateApp.Models
         }
     }
 
-    class DistanceHandler : AbstractHandler
+
+    public interface ICitiesInRange
     {
+        List<string> CitiesInRange(string ZipCode = "86-100", int Distance = 10);
+
+    }
 
 
-        public DistanceHandler(IRepository repository) : base(repository)
-        {
-
-        }
-
-
+    public class CitiesInRangeClass : ICitiesInRange
+    {
         public List<string> CitiesInRange(string ZipCode = "86-100", int Distance = 10)
         {
 
@@ -350,6 +350,54 @@ namespace DateApp.Models
 
             return codes;
         }
+    }
+
+
+    class DistanceHandler : AbstractHandler
+    {
+
+ ICitiesInRange CitiesInRange;
+        public DistanceHandler(IRepository repository) : base(repository)
+        {
+
+        }
+
+        public DistanceHandler(IRepository repository,ICitiesInRange citiesInRange) : base(repository)
+        {
+            CitiesInRange = citiesInRange;
+        }
+
+       
+
+        //public List<string> CitiesInRange(string ZipCode = "86-100", int Distance = 10)
+        //{
+
+        //    List<string> codes = new List<string>();
+        //    try
+        //    {
+
+        //        string Key = "3fabbfd0-27e6-11eb-8826-59001fe1a22a";
+        //        var httpClient1 = new HttpClient();
+
+        //        var url = "https://app.zipcodebase.com/api/v1/radius?apikey=" + Key + "&code=" + ZipCode + "&radius=" + Distance + "&country=pl";
+        //        HttpResponseMessage response1 = httpClient1.GetAsync(url).Result;
+        //        string responseBody1 = response1.Content.ReadAsStringAsync().Result;
+        //        JObject cityResponse = JObject.Parse(responseBody1);
+
+
+        //        List<ZipDistanceDetails> list = cityResponse["results"].ToObject<List<ZipDistanceDetails>>();
+
+        //        codes.AddRange(list.Select(c => c.code).ToList());
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+
+        //    codes = codes.Distinct().ToList();
+
+        //    return codes;
+        //}
 
 
 
@@ -357,7 +405,7 @@ namespace DateApp.Models
         {
             if (model.Distance != 0 && model.ZipCode != null && model.ZipCode != "")
             {
-                List<string> ZipCodes = CitiesInRange(model.ZipCode, model.Distance);
+                List<string> ZipCodes = CitiesInRange.CitiesInRange(model.ZipCode, model.Distance);
                 if (model.GetListFromDB == false)
                 {
 
@@ -367,14 +415,7 @@ namespace DateApp.Models
                 }
                 else
                 {
-                    //List<Event> ByZipCodes = new List<Event>();
-
-                    //foreach (var ZipCode in ZipCodes)
-                    //{
-                    //    ByZipCodes.AddRange(model.list.Where(x => x.ZipCode == ZipCode).ToList());
-                    //}
-
-                    //model.list = ByZipCodes;
+                   
 
                     model.list = repo.GetEventsByZipCodes(ZipCodes);
                     model.GetListFromDB = true;
@@ -398,40 +439,7 @@ namespace DateApp.Models
 
 
 
-
-
-        //public override List<Event> Handle(ShowEventViewModel model)
-        //{
-        //    if (model.Distance > 0)
-        //    {
-
-        //        if (model.GetListFromDB == false)
-        //        {
-        //            model.list = repo.GetEventsByCities(model.CityNames);
-        //            model.GetListFromDB = true;
-
-        //        }
-        //        else
-        //        {
-        //            List<Event> EventList = new List<Event>();
-
-        //            foreach (var name in model.CityNames)
-        //            {
-        //                EventList.AddRange(model.list.Where(x => x.City == name).ToList());
-        //            }
-
-        //            model.list = EventList;
-        //        }
-
-
-
-        //        return model.list;
-        //    }
-        //    else
-        //    {
-        //        return model.list;
-        //    }
-        //}
+       
     }
 
 

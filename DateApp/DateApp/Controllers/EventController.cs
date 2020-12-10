@@ -16,25 +16,18 @@ namespace DateApp.Controllers
 
     public class EventController : Controller
     {
-
-
         private IRepository repository;
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
         private Func<HttpClient> GetClient;
-
-
-
-
-
-
-        public EventController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, Func<Task<AppUser>> GetUser = null,Func<HttpClient> GetClient=null)
+        private ICitiesInRange citiesInRange;
+        public EventController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, ICitiesInRange citiesRange, Func<Task<AppUser>> GetUser = null,Func<HttpClient> GetClient=null )
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
-
+            this.citiesInRange = citiesRange;
 
             if (GetUser == null)
             {
@@ -54,17 +47,9 @@ namespace DateApp.Controllers
                 this.GetClient = GetClient;
             }
 
+           
+
         }
-
-        //public IActionResult EventsInNeighborhood(int Days=10)
-        //{
-        //    AppUser user = GetUser().Result;
-        //    DateTime Date = DateTime.Now;
-        //    string ZipCode = "86-100";
-        //    EventsInNeighborhoodViewModel model = repository.GetEventsInNeighborhood( user, Date,Days,ZipCode);
-        //    return PartialView(model);
-        //}
-
 
         public IActionResult ShowEvents()
         {
@@ -229,39 +214,7 @@ namespace DateApp.Controllers
 
             return Json(Cities);
         }
-
-        //public List<string> CitiesInRange(string ZipCode = "86-100", int Distance = 10)
-        //{
-
-        //    List<string> codes = new List<string>();
-        //    try
-        //    {
-
-        //        string Key = "3fabbfd0-27e6-11eb-8826-59001fe1a22a";
-        //        var httpClient1 = GetClient();
-
-        //        var url = "https://app.zipcodebase.com/api/v1/radius?apikey=" + Key + "&code=" + ZipCode + "&radius=" + Distance + "&country=pl";
-        //        HttpResponseMessage response1 = httpClient1.GetAsync(url).Result;
-        //        string responseBody1 = response1.Content.ReadAsStringAsync().Result;
-        //        JObject cityResponse = JObject.Parse(responseBody1);
-
-
-        //        List<ZipDistanceDetails> list = cityResponse["results"].ToObject<List<ZipDistanceDetails>>();
-
-        //        codes.AddRange(list.Select(c => c.code).ToList());
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //    }
-
-        //    codes = codes.Distinct().ToList();
-
-        //    return codes;
-        //}
-
-
-
+          
         [HttpPost]
         public IActionResult AddEvent(AddEventViewModel model)
         {
@@ -296,13 +249,7 @@ namespace DateApp.Controllers
             }
 
         }
-
-
-
-
-
-
-
+                                 
         [HttpPost]
         public IActionResult ShowEvents(ShowEventViewModel model)
         {
@@ -316,7 +263,7 @@ namespace DateApp.Controllers
                 UserHandler user = new UserHandler(repository);
                 CityNameHandler city = new CityNameHandler(repository);
                 ZipCodeHandler zipcode = new ZipCodeHandler(repository);
-                DistanceHandler distance = new DistanceHandler(repository);
+                DistanceHandler distance = new DistanceHandler(repository,citiesInRange);
                 name.SetNext(zipcode).SetNext(distance).SetNext(date).SetNext(city).SetNext(user);
                 name.Handle(model);
                 model.list = model.list.Distinct().ToList();
@@ -331,12 +278,6 @@ namespace DateApp.Controllers
 
 
         }
-
-
-
-
-
-
 
         public async Task<string> AddPictureEvent(IFormFile file)
         {

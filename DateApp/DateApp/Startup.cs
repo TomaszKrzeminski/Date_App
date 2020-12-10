@@ -51,6 +51,7 @@ namespace DateApp
 
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
             services.AddTransient<IRepository, Repository>();
+            services.AddTransient<ICitiesInRange, CitiesInRangeClass>();
 
             //Quartz Repo
             services.AddTransient<QuartzContext>();
