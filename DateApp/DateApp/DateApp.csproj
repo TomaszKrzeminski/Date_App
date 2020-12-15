@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Message\" />
+    <Folder Include="wwwroot\ScreenShots\" />
   </ItemGroup>
 
 </Project>

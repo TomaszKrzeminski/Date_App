@@ -12,6 +12,7 @@ namespace DateApp.Models
 
     public interface IRepository
     {
+        bool SetScreenShotAsMainPhoto(string Path, string UserId);
         bool CancelEvent(int EventId);
         List<Event> GetEventsByZipCodes(List<string> ZipCodes);
         EventsInNeighborhoodViewModel GetEventsInNeighborhood(AppUser user, DateTime time, int Days, string ZipCode);
@@ -2536,6 +2537,21 @@ namespace DateApp.Models
 
             }
             catch (Exception Ex)
+            {
+                return false;
+            }
+        }
+
+        public bool SetScreenShotAsMainPhoto(string Path, string UserId)
+        {
+            try
+            {
+                SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+                details.MainPhotoPath = Path;
+                context.SaveChanges();
+                return true;              
+            }
+            catch(Exception ex)
             {
                 return false;
             }
