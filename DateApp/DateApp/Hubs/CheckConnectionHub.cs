@@ -6,6 +6,24 @@ using System.Threading.Tasks;
 
 namespace DateApp.Hubs
 {
+
+    public class VideoConnectionHub:Hub
+    {
+        public Task Send(string UserId, string SenderId,string Message)
+        {
+
+            return Clients.User(UserId).SendAsync("Check", SenderId,Message);
+
+
+
+        }
+    }
+
+
+
+
+
+
     public class CheckConnectionHub : Hub
     {
 

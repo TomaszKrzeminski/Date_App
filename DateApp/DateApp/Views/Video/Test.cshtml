@@ -1,0 +1,42 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+<html>
+<head>
+    
+</head>
+<body>
+    <video id="localVideo" autoplay playsinline controls="false" />
+</body>
+</html>
+
+
+
+
+
+<script>
+
+
+    async function playVideoFromCamera() {
+        try {
+            const constraints = {
+                video: {
+                    cursor: 'never',
+                    displaySurface:  'window'
+                } };
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            const videoElement = document.querySelector('video#localVideo');
+            videoElement.srcObject = stream;
+        } catch (error) {
+            console.error('Error opening video camera.', error);
+        }
+    }
+
+
+    playVideoFromCamera();
+
+
+</script>

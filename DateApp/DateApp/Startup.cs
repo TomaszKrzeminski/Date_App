@@ -111,6 +111,10 @@ namespace DateApp
             app.UseSignalR(config => { config.MapHub<CheckConnectionHub>("/messages2"); });
             ////
             app.UseSignalR(config => { config.MapHub<NotificationHub>("/messages3"); });
+            /////
+            app.UseSignalR(config => { config.MapHub<VideoConnectionHub>("/videos"); });
+            /// 
+            ///
 
             app.Use(async (ext, next) =>
             {
@@ -150,9 +154,21 @@ namespace DateApp
                 }
             });
 
+            /////
 
+            app.Use(async (ext, next) =>
+            {
+                var connectionContext = ext.RequestServices
+                                        .GetRequiredService<IHubContext<VideoConnectionHub>>();
+                //...
 
+                if (next != null)
+                {
+                    await next.Invoke();
+                }
+            });
 
+            /////
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

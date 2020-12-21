@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DateApp.Hubs;
 using DateApp.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DateApp.Controllers
 {
@@ -19,18 +21,18 @@ namespace DateApp.Controllers
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
+        private IHubContext<VideoConnectionHub> connectionContext;
 
 
 
 
 
-
-        public VideoController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, Func<Task<AppUser>> GetUser = null)
+        public VideoController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, IHubContext<VideoConnectionHub> connectionContext, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
-
+            this.connectionContext = connectionContext;
 
             if (GetUser == null)
             {
@@ -47,20 +49,14 @@ namespace DateApp.Controllers
 
         }
 
-
-
-
-
-
-
-
-
-
+        public IActionResult Test()
+        {
+            return View();
+        }
         public IActionResult ScreenShot()
         {
             return View();
         }
-
         public JsonResult Add(string imageData)
         {
             bool check = false;
@@ -119,47 +115,13 @@ namespace DateApp.Controllers
 
 
         }
-
-        //[HttpPost]
-        //public JsonResult Add(string imageData)
-        //{
-        //    bool check = false;
-        //    try
-        //    {
-        //        string UserId = GetUser().Result.Id;
-        //        var folderName = @"ScreenShots/";
-        //        var webRootPath = _environment.WebRootPath;
-        //        var newPath = Path.Combine(webRootPath, folderName);
-        //        string fileNameWitPath = newPath +UserId+ DateTime.Now.ToString().Replace("/", "-").Replace(" ", "- ").Replace(":", "") + ".jpg";
-        //        using (FileStream fs = new FileStream(fileNameWitPath, FileMode.Create))
-        //        {
-        //            using (BinaryWriter bw = new BinaryWriter(fs))
-        //            {
-        //                byte[] data = Convert.FromBase64String(imageData);
-        //                bw.Write(data);
-        //                bw.Close();
-        //            }
-        //        }
-
-        //        check = repository.SetScreenShotAsMainPhoto(fileNameWitPath, UserId);
-
-        //        if(check)
-        //        {
-        //            return new JsonResult("Success");
-        //        }
-        //        else
-        //        {
-        //            return new JsonResult("Error");
-        //        }
-
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        return new JsonResult("Error");
-        //    }
-
-
-        //}    
+        public IActionResult VideoCall(string ReceiverId)
+        {
+            string CallerId = GetUser().Result.Id;
+            VideoCallViewModel model = new VideoCallViewModel(ReceiverId, CallerId);
+            return View(model);
+        }
+       
 
     }
 }
