@@ -9,6 +9,18 @@ namespace DateApp.Hubs
 
     public class VideoConnectionHub:Hub
     {
+
+        public Task GetPeerId(string SenderId, string ReceiverId)
+        {
+            return Clients.User(ReceiverId).SendAsync("SendPeerId", SenderId);
+        }
+
+        public Task SendPeerId(string SenderId, string PeerId)
+        {
+            return Clients.User(SenderId).SendAsync("Get_ReceiverId", PeerId);
+        }
+
+
         public Task Send(string UserId, string SenderId,string Message)
         {
 

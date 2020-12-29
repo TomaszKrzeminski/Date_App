@@ -1,0 +1,309 @@
+﻿@model VideoCallViewModel
+@{
+    ViewData["Title"] = "VideoCallSender";
+    Layout = "_PeerJs";
+}
+
+
+
+
+@{
+    Layout = "_PeerJs";
+}
+
+
+
+<div class="container">
+    <h2>VideoCallSender</h2>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <label>Status</label>
+            <textarea id="status"></textarea>
+        </div>
+        <div class="col-lg-12">
+            <label>ReceiverId</label>
+            <input id="ReceiverId" />
+        </div>
+        <div class="col-lg-12">
+            <label>MyId</label>
+            <textarea id="SenderId"></textarea>
+        </div>
+        <div class="col-lg-12">
+            <label>Message</label>
+            <textarea id="MessageId"></textarea>
+        </div>
+        <div class="col-lg-12">
+            <button id="start">
+                Start
+            </button>
+
+        </div>
+        <div class="col-lg-12">
+            <button class="btn btn-info" id="connect-button1">
+                Połącz1
+            </button>
+
+        </div>
+        <div class="col-lg-12">
+            <button class="btn btn-info" id="connect-button">
+                Połącz
+            </button>
+
+        </div>
+        <div class="col-lg-12">
+            <button id="sendButton">
+                Wyślij
+            </button>
+
+        </div>
+        <div class="col-lg-12">
+            <button id="call">
+                Zadzwoń
+            </button>
+
+        </div>
+    </div>
+    <div>
+        <label>MyVideo</label>
+        <video id="MyVideo"></video>
+    </div>
+    <div>
+        <label>SecondVideo</label>
+        <video id="Second"></video>
+    </div>
+
+
+
+</div>
+
+
+<script>
+
+    function MyVideo() {
+
+        var video = document.getElementById("MyVideo");
+        var constraints = {
+            video: true,
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+            video.srcObject = stream;
+            video.play();
+        }).catch();
+
+
+
+
+
+
+    }
+
+    MyVideo();
+
+    var lastPeerId = null;
+    var peer = null; // own peer object
+    var conn = null;
+    var start = document.getElementById("start");
+    var receiver = document.getElementById("ReceiverId");
+    var message = document.getElementById("MessageId");
+    var sender = document.getElementById("SenderId");
+    var sendButton = document.getElementById("sendButton");
+    var connectButton = document.getElementById("connect-button");
+    var status = document.getElementById("status");
+    var call = document.getElementById("call");
+
+    function initialize() {
+        // Create own peer object with connection to shared PeerJS server
+        peer = new Peer();
+
+        peer.on('open', function (id) {
+            alert(id);
+            // Workaround for peer.reconnect deleting previous id
+            if (peer.id === null) {
+
+                console.log('Received null id from peer open');
+                peer.id = lastPeerId;
+            } else {
+                lastPeerId = peer.id;
+            }
+
+            sender.value = id;
+            console.log('ID: ' + peer.id);
+        });
+        peer.on('connection', function (c) {
+            // Disallow incoming connections
+            c.on('open', function () {
+                c.send("Sender does not accept incoming connections");
+                setTimeout(function () { c.close(); }, 500);
+            });
+
+
+        });
+        peer.on('disconnected', function () {
+            status.innerHTML = "Connection lost. Please reconnect";
+            console.log('Connection lost. Please reconnect');
+
+            // Workaround for peer.reconnect deleting previous id
+            peer.id = lastPeerId;
+            peer._lastServerId = lastPeerId;
+            peer.reconnect();
+        });
+        peer.on('close', function () {
+            conn = null;
+            status.innerHTML = "Connection destroyed. Please refresh";
+            console.log('Connection destroyed');
+        });
+        peer.on('error', function (err) {
+            console.log(err);
+            alert(err + "   błąd");
+            alert('' + err);
+        });
+    };
+    function connection() {
+
+
+                // Close old connection
+                if (conn) {
+                    conn.close();
+                }
+
+                // Create connection to destination peer specified in the input field
+            conn = peer.connect(receiver.value, {
+                    reliable: true
+                });
+
+                conn.on('open', function () {
+                    status.innerHTML = "Connected to: " + conn.peer;
+                    console.log("Connected to: " + conn.peer);
+
+                    // Check URL params for comamnds that should be sent immediately
+
+                    //var command = getUrlParam("command");
+                    //if (command)
+                    //    conn.send(command);
+
+
+                });
+                // Handle incoming data (messages only since this is the signal sender)
+                conn.on('data', function (data) {
+                    alert("<span class=\"peerMsg\">Peer:</span> " + data);
+                });
+            conn.on('close', function () {
+                status.innerHTML = "Connection closed";
+            });
+
+
+
+
+
+
+        }
+    start.addEventListener('click', initialize);
+    connectButton.addEventListener('click', connection);
+    sendButton.addEventListener('click', function () {
+        if (conn && conn.open) {
+            var msg = message.value;
+            message.value = "";
+            conn.send(msg);
+            console.log("Sent: " + msg);
+            alert("<span class=\"selfMsg\">Self: </span> " + msg);
+        } else {
+            console.log('Connection is closed');
+        }
+    });
+    call.addEventListener('click', function () {
+
+        ////
+        var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        getUserMedia({ video: true, audio: true }, function (stream) {
+            var call = peer.call(receiver.value, stream);
+            call.on('stream', function (remoteStream) {
+
+                /////
+                var video = document.getElementById("MyVideo");
+                video.srcObject = stream;
+                video.play();
+              //////
+                alert("Sender Send");
+
+                var video2 = document.getElementById("Second");
+                    video2.srcObject = remoteStream;
+                    video2.play();
+
+
+
+
+
+            });
+        }, function (err) {
+            console.log('Failed to get local stream', err);
+        });
+      
+    });
+
+    /////Signal R
+
+    var connectionV = new signalR.HubConnectionBuilder().withUrl("/videos").build();
+    var ReceiverId =@Html.Raw( Json.Serialize(@Model.ReceiverId));
+    var SenderId =@Html.Raw( Json.Serialize(@Model.CallerId));
+
+
+    connectionV.on("AskReceiver", function (SenderId) {
+
+
+        
+
+    });
+
+
+
+
+    connectionV.on("Get_ReceiverId", function (PeerId) {
+
+        alert("Works");
+        alert(PeerId);
+        document.getElementById("ReceiverId").value = PeerId;
+
+
+    });
+
+
+    connectionV.start().then(
+
+        () => {
+
+
+            alert("Start Connection");
+            //connection3.invoke("Ask_Chat_Users", names, ChatUserId
+            //);
+
+        }
+
+
+    ).catch(function (err) {
+        alert("Błąd w Check Status");
+
+    }).then(() => {
+
+
+    });
+       
+
+
+    document.getElementById("connect-button1").addEventListener("click", function (event) {
+
+        alert("Connect to GetPeerId ");
+
+        connectionV.invoke("GetPeerId",SenderId,ReceiverId).catch(function (err) {
+            return console.error(err.toString());
+        });
+        event.preventDefault();
+    });
+
+
+
+
+
+
+</script>

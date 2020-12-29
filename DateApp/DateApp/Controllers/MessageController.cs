@@ -51,6 +51,7 @@ namespace DateApp.Controllers
         public MessageViewModel SettingMessageView(string ActionMade, string ActivePage, string ReceiverId, string SenderId, SearchDetails Details, bool setLastPage)
         {
             MessageViewModel messageView = new MessageViewModel();
+            messageView.ReceiverId = ReceiverId;
 
             List<Message> MessagesList = repository.GetChat(SenderId, ReceiverId).OrderBy(x => x.Time).ToList();
             int MessagesCount = MessagesList.Count;

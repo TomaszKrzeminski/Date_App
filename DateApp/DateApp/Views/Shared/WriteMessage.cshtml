@@ -29,7 +29,14 @@
                 {
                     <div class="row" style="border:solid">
                         <div class="col-lg-12 text-left">
+                            <form class="Call" asp-action="VideoCallSender" asp-controller="Video" method="get">
+
+                                <input type="hidden" value="@Model.ReceiverId" name="ReceiverId" />
+                                <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">
+                                @*<button type="submit"></button>*@
+                            </form>
                             <h5>@Model.ReceiverName</h5>
+
                         </div>
                         <div class="col-lg-3">
 
@@ -133,9 +140,14 @@
 </div>
 
 <script>
+    $(document).on('click', 'form.Call', function () {
+
+        this.submit();
 
 
-     
-    
+    });
+
+
+
 
 </script>

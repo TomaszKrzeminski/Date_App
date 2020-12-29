@@ -115,13 +115,25 @@ namespace DateApp.Controllers
 
 
         }
-        public IActionResult VideoCall(string ReceiverId)
+        //public IActionResult VideoCall(string ReceiverId)
+        //{
+        //    string CallerId = GetUser().Result.Id;
+        //    VideoCallViewModel model = new VideoCallViewModel(ReceiverId, CallerId);
+        //    return View(model);
+        //}
+        public IActionResult VideoCallSender(string ReceiverId)
         {
             string CallerId = GetUser().Result.Id;
             VideoCallViewModel model = new VideoCallViewModel(ReceiverId, CallerId);
             return View(model);
+            
         }
-       
+        public IActionResult VideoCallReceiver(string ReceiverId)
+        {
+            string CallerId = GetUser().Result.Id;
+            VideoCallViewModel model = new VideoCallViewModel(ReceiverId, CallerId);
+            return View(model);           
+        }
 
     }
 }

@@ -9,4 +9,3 @@ C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfo.cs
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.dll
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.pdb
-C:\Users\tomek\Desktop\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.csprojAssemblyReference.cache
