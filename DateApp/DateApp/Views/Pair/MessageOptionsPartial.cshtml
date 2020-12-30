@@ -9,9 +9,11 @@
     }
 </style>
 
+<div @*style="visibility:hidden" *@>
+    <input id="VideoReceiver" />
+</div>
 
-
-<div @*onuload="con();"*@ class="row">
+<div @*onuload="con();" *@ class="row">
     <div style="min-height:1900px;border-style:solid;" class="col-lg-6">
         <div class="row">
             <div class="col-lg-12" style="min-height:100px;border-style:solid;background-color:#fd267d;">
@@ -50,10 +52,10 @@
                         <div class="col-lg-12">
 
                             @*<form class="Call" asp-action="VideoCallSender" asp-controller="Video" method="get">
-                                <input type="hidden" value="@item.ReceiverId" name="ReceiverId" />
-                                <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">                              
-                            </form>*@
-                          
+                                    <input type="hidden" value="@item.ReceiverId" name="ReceiverId" class="ReceiverId" />
+                                    <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">
+                                </form>*@
+
                             <form class="ChooseReceiver" asp-action="WriteMessage" asp-controller="Message" method="post">
                                 <div>
                                     <label class="font-weight-bold">@item.Name</label>
@@ -65,7 +67,7 @@
                                 <input type="hidden" value="@item.ReceiverId" name="ReceiverId" />
                                 <img border="0" style="border-style:outset" name="Status" class="" src="~/Images/offline2.jpg" width="20" height="20">
                             </form>
-                            
+
                             <hr />
                         </div>
                     </div>
@@ -78,14 +80,19 @@
                     <div class="row">
 
                         <div class="col-lg-12">
+
+
+
                             @*<form class="Call" asp-action="VideoCallSender" asp-controller="Video" method="get">
 
-                                <input type="hidden" value="@item.ReceiverId" name="ReceiverId" />
-                                <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">
-                            </form>*@
-                           
+                                    <input type="hidden" value="@item.ReceiverId" name="ReceiverId" class="ReceiverId" />
+
+                                    <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">
+
+                                </form>*@
                             <form class="ChooseReceiver" asp-action="WriteMessage" asp-controller="Message" method="post">
                                 <div>
+
 
 
                                 </div>
@@ -118,6 +125,100 @@
     </div>
     <div class="col-lg-6"></div>
 </div>
+
+@*<div class="row">
+        <div id="dialog">
+
+
+            <form asp-action="AddPictureAsync" method="post" enctype="multipart/form-data">
+                <div>
+                    <div>
+                        <label>Dzwonię czekaj </label>
+                    </div>
+                    <div>
+                        <img style="width:400px; height:300px;" src="~/AppPictures/calling.jpg" alt="3">
+
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+
+
+        <div id="dialogR">
+
+
+            <form asp-action="AddPictureAsync" method="post" enctype="multipart/form-data">
+                <div>
+                    <div>
+                        <label>Rozmowa przychodząca Odbierz </label>
+                    </div>
+                    <div>
+                        <img style="width:400px; height:300px;" src="~/AppPictures/calling.jpg" alt="3">
+
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </div>*@
+
+
+
+<form id="VideoCallSender" asp-action="VideoCallSender" asp-controller="Video">
+    <input id="ReceiverIdForVideoCaller" name="ReceiverId" value=@Model.ChatUserId />
+</form>
+
+<form id="VideoCallReceiver" asp-action="VideoCallReceiver" asp-controller="Video">
+    <input id="SenderIdForVideoSender" name="ReceiverId"  />
+</form>
+
+
+
+
+
+<div id="dialog">
+
+
+    <form asp-action="VideoS" method="post" enctype="multipart/form-data">
+        <div>
+            <div>
+                <label>Dzwonię czekaj </label>
+            </div>
+            <div>
+                <img style="width:400px; height:300px;" src="~/AppPictures/calling.jpg" alt="3">
+
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+
+<div id="dialogR">
+
+
+    <form asp-action="VideoR" method="post" enctype="multipart/form-data">
+        <div>
+            <div>
+                <label>Rozmowa przychodząca Odbierz </label>
+            </div>
+            <div>
+                <img style="width:400px; height:300px;" src="~/AppPictures/calling.jpg" alt="3">
+
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+
+
+
 
 <script>
 
@@ -256,6 +357,13 @@
         var Id = $(this).find('input[name="ReceiverId"]').val();
         data["ReceiverId"] = Id;
 
+        /////********************************************************************/
+
+        $('#VideoReceiver').val(Id);
+        $('#ReceiverIdForVideoCaller').val(Id);
+        $('#SenderIdForVideoSender').val(Id);
+
+          /////********************************************************************/
 
         $.ajax({
      url: '@Url.Action("WriteMessage", "Message")',
@@ -286,8 +394,8 @@
 
     // $(document).on('click', 'form.Call', function () {
 
-    //     this.submit();     
-  
+    //     this.submit();
+
 
     //});
 
@@ -305,7 +413,11 @@
 
 var data = {};
         var Id = $(this).find('input[name="ReceiverId"]').val();
-        data["ReceiverId"] = Id;
+            data["ReceiverId"] = Id;
+
+
+
+
 
 
         $.ajax({
@@ -563,14 +675,14 @@ var data = {};
     connection3.on("UpdateChatList_Remove", function (SenderId) {
 
 
-       
+
         var list = $('input[name="ReceiverId"]');
 
 
         for (var i = 0; i < ListOnlineUsers.length; i++) {
             if (ListOnlineUsers[i] == SenderId) {
                 ListOnlineUsers[i] = "";
-                                                                                 
+
 
                 for (var j = 0; j < list.length; j++)
                 {
@@ -591,10 +703,10 @@ var data = {};
 
             }
         }
-                                    
+
 
     });
-          
+
 
 
 
@@ -679,7 +791,7 @@ var data = {};
 
      }
  });
-               
+
 
 
 
@@ -713,4 +825,194 @@ var data = {};
 
 
 
+
+
+    //////Signal R VideoChat////////
+
+     var connectionV = new signalR.HubConnectionBuilder().withUrl("/videos").build();
+    @*var ReceiverId =@Html.Raw( Json.Serialize(Model.ChatUserId));*@
+
+
+    connectionV.on("redirectToVideoCallSender", function (ReceiverId) {
+
+        alert("Redirect to Sender");
+        document.getElementById('VideoCallSender').submit();
+
+
+    });
+
+
+
+
+    connectionV.on("askForCall", function (SenderId) {
+
+
+        alert("Open dialog Receive");
+        /////
+       
+        document.getElementById('VideoReceiver').value=SenderId;
+        ////// 
+        alert("Get elem id");
+
+        $("#dialogR").dialog("open");
+
+
+    });
+
+
+    connectionV.start().then(
+
+        () => {
+
+
+
+
+
+        }
+
+
+    ).catch(function (err) {
+        alert("Błąd w Check Status");
+
+    }).then(() => {
+
+
+    });
+
+
+        ////If Call accepted  Redirect to VideoCallSender   else close dialog/////
+
+
+        ////////////
+
+
+
+        $(document).ready(function(){
+
+            $("#dialog").dialog({
+                autoOpen: false,
+                draggable: false,
+                resizable: false,
+                width: 500,
+                height: 600,
+                modal: true,
+                show: 'slideDown',
+                hide: 'slideUp',
+                dialogClass: "no-close",
+                buttons: [
+                    {
+
+                        text: "Anuluj",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+
+
+                    }
+                ]
+            });
+
+            $("#dialogR").dialog({
+                autoOpen: false,
+                draggable: false,
+                resizable: false,
+                width: 500,
+                height: 600,
+                modal: true,
+                show: 'slideDown',
+                hide: 'slideUp',
+                dialogClass: "no-close",
+                buttons: [
+                    {
+                        text: "Odrzuć",
+                        click: function ()
+                        {
+                            $(this).dialog("close");
+                        }
+
+                    }
+                    ,
+                    {
+                        text: "Zaakceptuj",
+                        click: function () {
+
+                            var SenderId =@Html.Raw(Json.Serialize(@Model.ChatUserId));
+                            var ReceiverId = document.getElementById('VideoReceiver').value;
+                            alert("Redirect " + ReceiverId);
+                            connectionV.invoke("RedirectToVideoCallSender",ReceiverId,SenderId);
+
+                            document.getElementById('VideoCallReceiver').submit();
+                        }
+                    }
+                ]
+            });
+
+
+            $(document).on('click', 'form.Video', function ()
+            {
+
+        alert("Open Call");
+
+        var SenderId =@Html.Raw(Json.Serialize(@Model.ChatUserId));
+                var ReceiverId = document.getElementById('VideoReceiver').value;
+        connectionV.invoke("AskForCall", SenderId, ReceiverId);
+        $("#dialog").dialog("open");
+    });
+
+
+
+
+
+
+        });
+
+
+
+
+    ///////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
+
+///////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////

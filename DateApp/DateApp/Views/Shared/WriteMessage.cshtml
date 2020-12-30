@@ -1,4 +1,10 @@
 ﻿@model MessageViewModel
+
+@{
+
+    var Name = Model.ReceiverName;
+}
+
 <div>
     <input id="ReceiverName" type="hidden" value="@Model.UserName" />
     <input id="ReceiverID" type="hidden" value="@Model.message.ReceiverId" />
@@ -29,12 +35,7 @@
                 {
                     <div class="row" style="border:solid">
                         <div class="col-lg-12 text-left">
-                            <form class="Call" asp-action="VideoCallSender" asp-controller="Video" method="get">
 
-                                <input type="hidden" value="@Model.ReceiverId" name="ReceiverId" />
-                                <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">
-                                @*<button type="submit"></button>*@
-                            </form>
                             <h5>@Model.ReceiverName</h5>
 
                         </div>
@@ -63,6 +64,12 @@
 
         <br />
         <div class="col col-lg-12">
+            <form class="Video" method="get">
+
+                <input type="hidden" value="@Model.ReceiverId" name="ReceiverIdVideo" class="ReceiverId" />
+                <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">
+
+            </form>
             <form class="SendMessage" asp-action="SendMessage" asp-controller="Message" method="post">
                 <div>
                     <input id="RId" name="ReceiverId" type="hidden" value="@Model.message.ReceiverId" />
@@ -139,15 +146,135 @@
     }
 </div>
 
-<script>
-    $(document).on('click', 'form.Call', function () {
+@*<form id="VideoCallSender" asp-action="VideoCallSender" asp-controller="Video">
+    <input id="ReceiverIdForVideoCaller" name="ReceiverId" value=@Model.UserId />
+</form>
 
-        this.submit();
+<form id="VideoCallReceiver" asp-action="VideoCallReceiver" asp-controller="Video">
+    <input id="SenderIdForVideoSender" name="ReceiverId" value=@Model.ReceiverId />
+</form>
 
 
+
+
+
+<div id="dialog">
+
+
+    <form asp-action="VideoS" method="post" enctype="multipart/form-data">
+        <div>
+            <div>
+                <label>Dzwonię czekaj </label>
+            </div>
+            <div>
+                <img style="width:400px; height:300px;" src="~/AppPictures/calling.jpg" alt="3">
+
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+
+<div id="dialogR">
+
+
+    <form asp-action="VideoR" method="post" enctype="multipart/form-data">
+        <div>
+            <div>
+                <label>Rozmowa przychodząca Odbierz </label>
+            </div>
+            <div>
+                <img style="width:400px; height:300px;" src="~/AppPictures/calling.jpg" alt="3">
+
+            </div>
+
+        </div>
+
+    </form>
+</div>*@
+
+
+
+
+
+
+@*<script>
+
+
+        $(document).ready(function(){
+
+            $("#dialog").dialog({
+                autoOpen: false,
+                draggable: false,
+                resizable: false,
+                width: 500,
+                height: 600,
+                modal: true,
+                show: 'slideDown',
+                hide: 'slideUp',
+                dialogClass: "no-close",
+                buttons: [
+                    {
+
+                        text: "Anuluj",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+
+
+                    }
+                ]
+            });
+
+            $("#dialogR").dialog({
+                autoOpen: false,
+                draggable: false,
+                resizable: false,
+                width: 500,
+                height: 600,
+                modal: true,
+                show: 'slideDown',
+                hide: 'slideUp',
+                dialogClass: "no-close",
+                buttons: [
+                    {
+                        text: "Odrzuć",
+                        click: function ()
+                        {
+                            $(this).dialog("close");
+                        }
+
+                    }
+                    ,
+                    {
+                        text: "Zaakceptuj",
+                        click: function () {
+                            document.getElementById('VideoCallReceiver').submit();
+                        }
+                    }
+                ]
+            });
+
+
+            $(document).on('click', 'form.Video', function ()
+            {
+
+        alert("Open Call");
+
+        var SenderId =@Html.Raw(Json.Serialize(@Model.UserId));
+        var ReceiverId = $(this).find(".ReceiverId").val();
+        connectionV.invoke("AskForCall", SenderId, ReceiverId);
+        $("#dialog").dialog("open");
     });
 
 
 
 
-</script>
+
+
+        });
+
+
+</script>*@

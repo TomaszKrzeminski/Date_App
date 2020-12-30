@@ -10,6 +10,26 @@ namespace DateApp.Hubs
     public class VideoConnectionHub:Hub
     {
 
+
+        public Task RedirectToVideoCallSender(string SenderId,string ReceiverId)
+        {
+
+            return Clients.User(SenderId).SendAsync("redirectToVideoCallSender", ReceiverId);
+
+        }
+
+
+        public Task AskForCall(string SenderId, string ReceiverId)
+        {
+            return Clients.User(ReceiverId).SendAsync("askForCall", SenderId);
+        }
+
+        public Task AsnwerCall(string SenderId, string ReceiverId)
+        {
+            return Clients.User(ReceiverId).SendAsync("SendPeerId", SenderId);
+        }
+
+
         public Task GetPeerId(string SenderId, string ReceiverId)
         {
             return Clients.User(ReceiverId).SendAsync("SendPeerId", SenderId);
@@ -21,14 +41,7 @@ namespace DateApp.Hubs
         }
 
 
-        public Task Send(string UserId, string SenderId,string Message)
-        {
-
-            return Clients.User(UserId).SendAsync("Check", SenderId,Message);
-
-
-
-        }
+       
     }
 
 
