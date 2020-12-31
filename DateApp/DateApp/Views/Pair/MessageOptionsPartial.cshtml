@@ -126,47 +126,6 @@
     <div class="col-lg-6"></div>
 </div>
 
-@*<div class="row">
-        <div id="dialog">
-
-
-            <form asp-action="AddPictureAsync" method="post" enctype="multipart/form-data">
-                <div>
-                    <div>
-                        <label>Dzwonię czekaj </label>
-                    </div>
-                    <div>
-                        <img style="width:400px; height:300px;" src="~/AppPictures/calling.jpg" alt="3">
-
-                    </div>
-
-                </div>
-
-            </form>
-        </div>
-
-
-        <div id="dialogR">
-
-
-            <form asp-action="AddPictureAsync" method="post" enctype="multipart/form-data">
-                <div>
-                    <div>
-                        <label>Rozmowa przychodząca Odbierz </label>
-                    </div>
-                    <div>
-                        <img style="width:400px; height:300px;" src="~/AppPictures/calling.jpg" alt="3">
-
-                    </div>
-
-                </div>
-
-            </form>
-        </div>
-    </div>*@
-
-
-
 <form id="VideoCallSender" asp-action="VideoCallSender" asp-controller="Video">
     <input id="ReceiverIdForVideoCaller" name="ReceiverId" value=@Model.ChatUserId />
 </form>
@@ -174,10 +133,6 @@
 <form id="VideoCallReceiver" asp-action="VideoCallReceiver" asp-controller="Video">
     <input id="SenderIdForVideoSender" name="ReceiverId"  />
 </form>
-
-
-
-
 
 <div id="dialog">
 
@@ -937,9 +892,15 @@ var data = {};
                         click: function () {
 
                             var SenderId =@Html.Raw(Json.Serialize(@Model.ChatUserId));
-                            var ReceiverId = document.getElementById('VideoReceiver').value;
-                            alert("Redirect " + ReceiverId);
-                            connectionV.invoke("RedirectToVideoCallSender",ReceiverId,SenderId);
+                            ////
+                            //var ReceiverId = document.getElementById('VideoReceiver').value;
+                            /////
+                            var ReceiverIdX = document.getElementById('VideoReceiver').value;
+                            document.getElementById('SenderIdForVideoSender').value = ReceiverIdX;
+                            //////
+
+                            
+                            connectionV.invoke("RedirectToVideoCallSender",ReceiverIdX,SenderId);
 
                             document.getElementById('VideoCallReceiver').submit();
                         }

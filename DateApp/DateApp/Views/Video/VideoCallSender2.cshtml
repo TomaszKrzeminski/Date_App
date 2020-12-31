@@ -214,8 +214,6 @@
     });
     call.addEventListener('click', function () {
 
-
-        alert("Sender Send");
         ////
         var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         getUserMedia({ video: true, audio: true }, function (stream) {
@@ -241,7 +239,7 @@
         }, function (err) {
             console.log('Failed to get local stream', err);
         });
-      
+
     });
 
     /////Signal R
@@ -254,7 +252,7 @@
     connectionV.on("AskReceiver", function (SenderId) {
 
 
-        
+
 
     });
 
@@ -263,7 +261,7 @@
 
     connectionV.on("Get_ReceiverId", function (PeerId) {
 
-        alert("Get_ReceiverId   Works");
+        alert("Works");
         alert(PeerId);
         document.getElementById("ReceiverId").value = PeerId;
 
@@ -290,7 +288,7 @@
 
 
     });
-       
+
 
 
     document.getElementById("connect-button1").addEventListener("click", function (event) {

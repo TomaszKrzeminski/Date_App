@@ -9,7 +9,7 @@
 <div class="container">
 
    
-        <link rel="stylesheet" href="style.css">
+        @*<link rel="stylesheet" href="style.css">*@
    
         <table class="display">
             <tr>
@@ -21,7 +21,7 @@
                     <div id="receiver-id" style="font-weight: bold;" title="Copy this ID to the input on send.html.">ID:</div>
                 </td>
                 <td>
-                    <input type="text" id="sendMessageBox" placeholder="Enter a message..." autofocus="true" />
+                    <input type="text" id="sendMessageBox" placeholder="Enter a message..."  />
                     <button type="button" id="sendButton">Send</button>
                     <button type="button" id="clearMsgsButton">Clear Msgs (Local)</button>
                 </td>
@@ -273,7 +273,7 @@
                     () => {
 
 
-                        alert("Start Connection");
+                        alert("Start Connection SignalR");
                         //connection3.invoke("Ask_Chat_Users", names, ChatUserId
                         //);
 
@@ -298,12 +298,14 @@
                 connectionVideo.on("SendPeerId", function (SenderId)
                 {
 
-                   
+                    alert("Sender Id " + SenderId);
 
                     var PeerId = peer.id;
                     alert("SendPeerId" + PeerId);
-                    connectionVideo.invoke("SendPeerId", ReceiverId, PeerId).catch(function (err) {
+                    connectionVideo.invoke("SendPeerId", SenderId, PeerId).catch(function (err) {
 
+
+                        alert("Błąd w SendPeerId");
 
                     });
 
