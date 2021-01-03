@@ -13,64 +13,83 @@
 
 
 
-<div class="container">
-    <h2>VideoCallSender</h2>
+
+
+
+
+<div class="container-fluid">
 
     <div class="row">
-        <div class="col-lg-12">
-            <label>Status</label>
-            <textarea id="status"></textarea>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="col-lg-12">
+                <h2 class="text-center">VideoCallSender</h2>
+            </div>
+            <div id="TextMessage">
+            </div>
         </div>
+        <div class="col-lg-2"></div>
+    </div>
+    <div class="row">     
         <div class="col-lg-12">
-            <label>ReceiverId</label>
-            <input id="ReceiverId" />
-        </div>
-        <div class="col-lg-12">
-            <label>MyId</label>
-            <textarea id="SenderId"></textarea>
-        </div>
-        <div class="col-lg-12">
-            <label>Message</label>
-            <textarea id="MessageId"></textarea>
-        </div>
-        <div class="col-lg-12">
-            <button id="start">
-                Start
-            </button>
+            <input type="hidden" id="ReceiverId" />
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
 
+            <video id="Second"></video>
+            <video width="160" height="120" id="MyVideo"></video>
         </div>
-        <div class="col-lg-12">
-            <button class="btn btn-info" id="connect-button1">
-                Połącz1
-            </button>
-
-        </div>
-        <div class="col-lg-12">
-            <button class="btn btn-info" id="connect-button">
-                Połącz
-            </button>
-
-        </div>
-        <div class="col-lg-12">
-            <button id="sendButton">
-                Wyślij
-            </button>
-
-        </div>
-        <div class="col-lg-12">
-            <button id="call">
-                Zadzwoń
-            </button>
+        <div class="col-lg-2 float-left">
 
         </div>
     </div>
-    <div>
-        <label>MyVideo</label>
-        <video id="MyVideo"></video>
+
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div>
+            <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div> <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div>
+            <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div>
+            <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div> <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div>
+
+        </div>
+        <div class="col-lg-2 ">
+
+        </div>
     </div>
-    <div>
-        <label>SecondVideo</label>
-        <video id="Second"></video>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+
+            <input type="text" id="sendMessageBox" placeholder="Enter a message..." />
+            <button class="btn btn-warning" type="button" id="sendButton">Send</button>
+            <button class="btn btn-danger" type="button" id="clearMsgsButton">Clear Msgs (Local)</button>
+
+        </div>
+        <div class="col-lg-2 float-left">
+
+        </div>
     </div>
 
 
@@ -101,24 +120,34 @@
 
     MyVideo();
 
+    //var TextMessage = document.getElementById("TextMessage");
     var lastPeerId = null;
     var peer = null; // own peer object
     var conn = null;
-    var start = document.getElementById("start");
+    //var start = document.getElementById("start");
     var receiver = document.getElementById("ReceiverId");
     var message = document.getElementById("MessageId");
-    var sender = document.getElementById("SenderId");
+    //var sender = document.getElementById("SenderId");
     var sendButton = document.getElementById("sendButton");
     var connectButton = document.getElementById("connect-button");
     var status = document.getElementById("status");
-    var call = document.getElementById("call");
+    //var call = document.getElementById("call");
+
+
+    function TextMessages(text)
+    {            
+       TextMessage=  document.getElementById('TextMessage');
+        TextMessage.innerHTML += "<div class=\"col-lg-12\"><h4>..." + text.replace('\^', '\'') + "...</div></h4>";
+    }
+
+
 
     function initialize() {
         // Create own peer object with connection to shared PeerJS server
         peer = new Peer();
-
+        
         peer.on('open', function (id) {
-            alert(id);
+            //alert(id);
             // Workaround for peer.reconnect deleting previous id
             if (peer.id === null) {
 
@@ -128,7 +157,14 @@
                 lastPeerId = peer.id;
             }
 
-            sender.value = id;
+            //alert("My id " + id);
+
+            //sender.value = id;
+
+
+            ///////
+            ConnectToGetPeerId();
+            /////
             console.log('ID: ' + peer.id);
         });
         peer.on('connection', function (c) {
@@ -141,9 +177,9 @@
 
         });
         peer.on('disconnected', function () {
-            status.innerHTML = "Connection lost. Please reconnect";
-            console.log('Connection lost. Please reconnect');
-
+            //status.innerHTML = "Connection lost. Please reconnect";
+            //console.log('Connection lost. Please reconnect');
+            TextMessages("Connection lost. Please reconnect")
             // Workaround for peer.reconnect deleting previous id
             peer.id = lastPeerId;
             peer._lastServerId = lastPeerId;
@@ -151,14 +187,27 @@
         });
         peer.on('close', function () {
             conn = null;
-            status.innerHTML = "Connection destroyed. Please refresh";
-            console.log('Connection destroyed');
+            //status.innerHTML = "Connection destroyed. Please refresh";
+            //console.log('Connection destroyed');
+
+            TextMessages("Connection destroyed. Please refresh");
+
         });
         peer.on('error', function (err) {
-            console.log(err);
-            alert(err + "   błąd");
-            alert('' + err);
+            console.log(err);   alert(err + "   błąd");
+            
         });
+
+
+       
+        
+
+        ////////
+
+       //ConnectToGetPeerId();
+
+//////////
+
     };
     function connection() {
 
@@ -174,48 +223,52 @@
                 });
 
                 conn.on('open', function () {
-                    status.innerHTML = "Connected to: " + conn.peer;
-                    console.log("Connected to: " + conn.peer);
-
-                    // Check URL params for comamnds that should be sent immediately
-
-                    //var command = getUrlParam("command");
-                    //if (command)
-                    //    conn.send(command);
-
-
+                    //status.innerHTML = "Connected to: " + conn.peer;
+                    //console.log("Connected to: " + conn.peer);
+                    // Check URL params for comamnds that should be sent immediately          
+                                                                                          
                 });
                 // Handle incoming data (messages only since this is the signal sender)
-                conn.on('data', function (data) {
+        conn.on('data', function (data) {
+
+            //// Zrobić wysyłanie wiadomości  dodatkowo///
+            
+                //
+
+               
                     alert("<span class=\"peerMsg\">Peer:</span> " + data);
                 });
             conn.on('close', function () {
-                status.innerHTML = "Connection closed";
-            });
+                //status.innerHTML = "Connection closed";
+
+                TextMessages("Connection closed");
+
+        });
+
+        TextMessages("Connection successful !!!!");
+        VideoCall();
+
+    }
+
+    //start.addEventListener('click', initialize);
+    //connectButton.addEventListener('click', connection);
+    //sendButton.addEventListener('click', function () {
+    //    if (conn && conn.open) {
+    //        var msg = message.value;
+    //        message.value = "";
+    //        conn.send(msg);
+    //        console.log("Sent: " + msg);
+    //        alert("<span class=\"selfMsg\">Self: </span> " + msg);
+    //    } else {
+    //        console.log('Connection is closed');
+    //    }
+    //});
 
 
+    function VideoCall() {
 
 
-
-
-        }
-    start.addEventListener('click', initialize);
-    connectButton.addEventListener('click', connection);
-    sendButton.addEventListener('click', function () {
-        if (conn && conn.open) {
-            var msg = message.value;
-            message.value = "";
-            conn.send(msg);
-            console.log("Sent: " + msg);
-            alert("<span class=\"selfMsg\">Self: </span> " + msg);
-        } else {
-            console.log('Connection is closed');
-        }
-    });
-    call.addEventListener('click', function () {
-
-
-        alert("Sender Send");
+       
         ////
         var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         getUserMedia({ video: true, audio: true }, function (stream) {
@@ -226,12 +279,12 @@
                 var video = document.getElementById("MyVideo");
                 video.srcObject = stream;
                 video.play();
-              //////
-                alert("Sender Send");
+                //////
+                
 
                 var video2 = document.getElementById("Second");
-                    video2.srcObject = remoteStream;
-                    video2.play();
+                video2.srcObject = remoteStream;
+                video2.play();
 
 
 
@@ -241,8 +294,42 @@
         }, function (err) {
             console.log('Failed to get local stream', err);
         });
+
+        TextMessages("Starting Video Call");
+    }
+
+
+    //call.addEventListener('click', function () {
+
+
+    //    alert("Sender Send");
+    //    ////
+    //    var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    //    getUserMedia({ video: true, audio: true }, function (stream) {
+    //        var call = peer.call(receiver.value, stream);
+    //        call.on('stream', function (remoteStream) {
+
+    //            /////
+    //            var video = document.getElementById("MyVideo");
+    //            video.srcObject = stream;
+    //            video.play();
+    //          //////
+    //            alert("Sender Send");
+
+    //            var video2 = document.getElementById("Second");
+    //                video2.srcObject = remoteStream;
+    //                video2.play();
+
+
+
+
+
+    //        });
+    //    }, function (err) {
+    //        console.log('Failed to get local stream', err);
+    //    });
       
-    });
+    //});
 
     /////Signal R
 
@@ -251,60 +338,75 @@
     var SenderId =@Html.Raw( Json.Serialize(@Model.CallerId));
 
 
-    connectionV.on("AskReceiver", function (SenderId) {
+
+
 
 
         
 
-    });
+    //});
 
 
 
 
     connectionV.on("Get_ReceiverId", function (PeerId) {
 
-        alert("Get_ReceiverId   Works");
-        alert(PeerId);
+        //alert("Get_ReceiverId   Works");
+        //alert(PeerId);
+
+        TextMessages("Receiver Peer Id : " + PeerId+" successfull received " );
+
         document.getElementById("ReceiverId").value = PeerId;
+        connection();
 
 
     });
 
 
     connectionV.start().then(
+        
+        () => {           
 
-        () => {
-
-
-            alert("Start Connection");
-            //connection3.invoke("Ask_Chat_Users", names, ChatUserId
-            //);
+            initialize();         
 
         }
 
 
     ).catch(function (err) {
-        alert("Błąd w Check Status");
+        alert("Błąd w Check Status"+err);
 
     }).then(() => {
 
+        //ConnectToGetPeerId();
 
     });
        
 
 
-    document.getElementById("connect-button1").addEventListener("click", function (event) {
+    //document.getElementById("connect-button1").addEventListener("click", function (event) {
 
-        alert("Connect to GetPeerId ");
+    //    alert("Connect to GetPeerId ");
 
-        connectionV.invoke("GetPeerId",SenderId,ReceiverId).catch(function (err) {
+    //    connectionV.invoke("GetPeerId",SenderId,ReceiverId).catch(function (err) {
+    //        return console.error(err.toString());
+    //    });
+    //    event.preventDefault();
+    //});
+
+
+    function ConnectToGetPeerId()
+    {       
+
+        TextMessages("My peer Id is :" + peer.id);
+        TextMessages("Getting Peer from Receiver");
+        connectionV.invoke("GetPeerId", SenderId, ReceiverId).catch(function (err) {          
+
             return console.error(err.toString());
         });
-        event.preventDefault();
-    });
+        //event.preventDefault();       
 
 
-
+    }
 
 
 
