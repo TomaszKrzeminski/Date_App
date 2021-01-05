@@ -39,29 +39,8 @@
 
     <div class="row">
         <div class="col-lg-2"></div>
-        <div class="col-lg-8">
-            <div>
-                <div>Wiadomości 1 : Ja</div>
-                <div>Treść</div>
-            </div>
-            <div>
-                <div>Wiadomości 1 : Ja</div>
-                <div>Treść</div>
-            </div> <div>
-                <div>Wiadomości 1 : Ja</div>
-                <div>Treść</div>
-            </div>
-            <div>
-                <div>Wiadomości 1 : Ja</div>
-                <div>Treść</div>
-            </div>
-            <div>
-                <div>Wiadomości 1 : Ja</div>
-                <div>Treść</div>
-            </div> <div>
-                <div>Wiadomości 1 : Ja</div>
-                <div>Treść</div>
-            </div>
+        <div id="Messages" class="col-lg-8">
+           
 
         </div>
         <div class="col-lg-2 ">
@@ -86,61 +65,6 @@
 
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*<div class="container">*@
-
-    @*<table class="display">
-            <tr>
-                <td class="title">Status:</td>
-                <td class="title">Messages:</td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="receiver-id" style="font-weight: bold;" title="Copy this ID to the input on send.html.">ID:</div>
-                </td>
-                <td>
-                    <input type="text" id="sendMessageBox" placeholder="Enter a message..."  />
-                    <button type="button" id="sendButton">Send</button>
-                    <button type="button" id="clearMsgsButton">Clear Msgs (Local)</button>
-                </td>
-            </tr>
-            <tr>
-                <td><div id="status" class="status"></div></td>
-                <td><div class="message" id="message"></div></td>
-            </tr>
-            <tr>
-                <td class="display-box standby" id="standby"><h2>Standby</h2></td>
-                <td class="display-box hidden" id="go"><h2>Go</h2></td>
-            </tr>
-            <tr>
-                <td class="display-box hidden" id="fade"><h2>Fade</h2></td>
-                <td class="display-box hidden" id="off"><h2>All Off</h2></td>
-            </tr>
-        </table>*@
-    @*<div>
-            <label>MyVideo</label>
-            <video id="MyVideo"></video>
-        </div>
-        <div>
-            <label>SecondVideo</label>
-            <video id="Second"></video>
-        </div>*@
-
-
-@*</div>*@
         <script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>
         <script type="text/javascript">
             (function () {
@@ -158,8 +82,9 @@
                 //var offBox = document.getElementById("off");
                 var sendMessageBox = document.getElementById("sendMessageBox");
                 var sendButton = document.getElementById("sendButton");
-                var clearMsgsButton = document.getElementById("clearMsgsButton");
-
+                //var clearMsgsButton = document.getElementById("clearMsgsButton");
+                var Messages = document.getElementById("Messages");
+                var clear = document.getElementById("clearMsgsButton");
                 /**
                  * Create the Peer object for our end of the connection.
                  *
@@ -170,10 +95,18 @@
 
                 function TextMessages(text) {
                     TextMessage = document.getElementById('TextMessage');
-                    TextMessage.innerHTML += "<div class=\"col-lg-12\"><h4>..." + text.replace('\^', '\'') + "...</div></h4>";
+                    TextMessage.innerHTML += "<div class=\"col-lg-12\"><h4>..." + text.replace('\^', '\'') + "...</h4></div>";
                 }
 
+                function AddMessage(type, text) {
+                    if (type == "s") {
+                        Messages.innerHTML += "<div class=\"col-lg-12\"><h5> Ja :" + text + "</h5></div>";
+                    }
+                    else if (type == "r") {
+                        Messages.innerHTML += "<div class=\"col-lg-12\"><h5> Nadawca :" + text + " </h5></div>";
+                    }
 
+                }
 
 
 
@@ -253,37 +186,12 @@
                  * Defines callbacks to handle incoming data and connection events.
                  */
                 function ready() {
-                    conn.on('data', function (data) {
-
+                    conn.on('data', function (data) {                   
+                        
                        
-                        console.log("Data recieved");
-                        var cueString = "<span class=\"cueMsg\">Cue: </span>";
-                        switch (data) {
-                            case 'Go':
-                                go();
-                                addMessage(cueString + data);
-                                break;
-                            case 'Fade':
-                                fade();
-                                addMessage(cueString + data);
-                                break;
-                            case 'Off':
-                                off();
-                                addMessage(cueString + data);
-                                break;
-                            case 'Reset':
-                                reset();
-                                addMessage(cueString + data);
-                                break;
-                            default:
-                                addMessage("<span class=\"peerMsg\">Peer: </span>" + data);
 
+                        AddMessage("r", data);
 
-
-
-
-                                break;
-                        };
                     });
                     conn.on('close', function () {
                         status.innerHTML = "Connection reset<br>Awaiting connection...";
@@ -344,8 +252,8 @@
                 }
 
                 function clearMessages() {
-                    message.innerHTML = "";
-                    addMessage("Msgs cleared");
+                    Messages.innerHTML = "";
+                    TextMessages("Czyszczę czat");
                 }
 
                 // Listen for enter in message box
@@ -361,15 +269,19 @@
                         var msg = sendMessageBox.value;
                         sendMessageBox.value = "";
                         conn.send(msg);
-                        console.log("Sent: " + msg)
-                        addMessage("<span class=\"selfMsg\">Self: </span>" + msg);
+                        console.log("Sent: " + msg);
+
+                       
+                        AddMessage("s", msg);
+
+                        
                     } else {
                         console.log('Connection is closed');
                     }
                 });
 
                 // Clear messages box
-                clearMsgsButton.addEventListener('click', clearMessages);
+                clear.addEventListener('click', clearMessages);
 
 
 

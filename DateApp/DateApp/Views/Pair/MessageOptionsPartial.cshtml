@@ -131,7 +131,7 @@
 </form>
 
 <form id="VideoCallReceiver" asp-action="VideoCallReceiver" asp-controller="Video">
-    <input id="SenderIdForVideoSender" name="ReceiverId"  />
+    <input id="SenderIdForVideoSender" name="ReceiverId" />
 </form>
 
 <div id="dialog">
@@ -496,7 +496,7 @@ var data = {};
 
     connection2.on("UpdateChat_WriteMessage", function (Id) {
 
-        alert("Refresh Chat " + Id);
+
 
         var ReceiverName = $("#ReceiverName").val();
 
@@ -504,7 +504,7 @@ var data = {};
         {
 
 
-            alert("Signal R  Refresh Write Message");
+
 
  var data = {};
 
@@ -521,7 +521,7 @@ var data = {};
              $('input:hidden[name="__RequestVerificationToken"]').val()
      },
             success: function (result) {
-                alert("Write Message from Signal R refresh Users");
+
 
          $("#MessageWritePage").html(result);
 
@@ -585,7 +585,7 @@ var data = {};
                 if (element != null)
                 {
                     element.next('img').attr('src', "/Images/online2.jpg");
-                    alert("Change to online");
+
                 }
 
 
@@ -648,7 +648,7 @@ var data = {};
 
 
 
-                        alert("Remove Sender change status to offline");
+
 
                         xyz.next('img').attr('src', "/Images/offline2.jpg");
                     }
@@ -804,10 +804,10 @@ var data = {};
 
         alert("Open dialog Receive");
         /////
-       
+
         document.getElementById('VideoReceiver').value=SenderId;
-        ////// 
-        alert("Get elem id");
+        //////
+
 
         $("#dialogR").dialog("open");
 
@@ -833,6 +833,45 @@ var data = {};
 
 
     });
+
+
+
+    connectionV.onclose(() => {
+
+
+        //setTimeout(function () {
+        //    connectionV.start();
+        //}, 2000); // Restart connection after 5 seconds.
+
+
+
+        alert("connectionV close connection onclose");
+
+    });
+
+
+
+//    connectionV.Closed += OnDisconnected;
+//function OnDisconnected()
+//    {
+//        Console.WriteLine("    connectionVVV Closed");
+//        var t = _connection.Start()
+
+//        var result = false;
+//        t.ContinueWith(task => {
+//            if (!task.IsFaulted) {
+//                result = true;
+//            }
+//        }).Wait();
+
+//        if (!result) {
+//            OnDisconnected();
+//        }
+//    }
+
+
+
+
 
 
         ////If Call accepted  Redirect to VideoCallSender   else close dialog/////
@@ -892,17 +931,41 @@ var data = {};
                         click: function () {
 
                             var SenderId =@Html.Raw(Json.Serialize(@Model.ChatUserId));
-                            ////
-                            //var ReceiverId = document.getElementById('VideoReceiver').value;
-                            /////
                             var ReceiverIdX = document.getElementById('VideoReceiver').value;
-                            document.getElementById('SenderIdForVideoSender').value = ReceiverIdX;
-                            //////
+                            connectionX = new signalR.HubConnectionBuilder().withUrl("/videos").build();
 
-                            
-                            connectionV.invoke("RedirectToVideoCallSender",ReceiverIdX,SenderId);
+                            connectionX.start(
 
-                            document.getElementById('VideoCallReceiver').submit();
+                                () => { alert("Connection in  Dialog"); }
+
+                            ).then(
+
+
+                                () => {
+
+
+                                    alert("Connection in dialog");
+                                    document.getElementById('SenderIdForVideoSender').value = ReceiverIdX;
+                                    connectionX.invoke("RedirectToVideoCallSender", ReceiverIdX, SenderId);
+                                   
+
+                                }
+
+                            ).then(
+
+                                () => {
+                                    alert("Submit");
+                                    document.getElementById('VideoCallReceiver').submit();
+                                }
+
+                                );
+
+
+
+
+
+
+                           
                         }
                     }
                 ]

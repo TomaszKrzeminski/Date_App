@@ -1,11 +1,108 @@
-﻿<h2>VideoCallReceiver</h2>
+﻿
+@{
+    ViewData["Title"] = "VideoCallReceiver";
+    Layout = "_PeerJs";
+}
 
-<div class="container">
+
+
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="col-lg-12">
+                <h2 class="text-center">VideoCallReceiver</h2>
+            </div>
+            <div id="TextMessage">
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <input type="hidden" id="ReceiverId" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+
+            <video id="Second"></video>
+            <video width="160" height="120" id="MyVideo"></video>
+        </div>
+        <div class="col-lg-2 float-left">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div>
+            <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div> <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div>
+            <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div>
+            <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div> <div>
+                <div>Wiadomości 1 : Ja</div>
+                <div>Treść</div>
+            </div>
+
+        </div>
+        <div class="col-lg-2 ">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+
+            <input type="text" id="sendMessageBox" placeholder="Enter a message..." />
+            <button class="btn btn-warning" type="button" id="sendButton">Send</button>
+            <button class="btn btn-danger" type="button" id="clearMsgsButton">Clear Msgs (Local)</button>
+
+        </div>
+        <div class="col-lg-2 float-left">
+
+        </div>
+    </div>
+    @*<div type="hidden" id="receiver-id" style="font-weight: bold;" title="Copy this ID to the input on send.html.">ID:</div>*@
+
+
+</div>
 
 
 
 
-    <table class="display">
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="container">*@
+
+@*<table class="display">
         <tr>
             <td class="title">Status:</td>
             <td class="title">Messages:</td>
@@ -15,7 +112,7 @@
                 <div id="receiver-id" style="font-weight: bold;" title="Copy this ID to the input on send.html.">ID:</div>
             </td>
             <td>
-                <input type="text" id="sendMessageBox" placeholder="Enter a message..." />
+                <input type="text" id="sendMessageBox" placeholder="Enter a message..."  />
                 <button type="button" id="sendButton">Send</button>
                 <button type="button" id="clearMsgsButton">Clear Msgs (Local)</button>
             </td>
@@ -32,17 +129,20 @@
             <td class="display-box hidden" id="fade"><h2>Fade</h2></td>
             <td class="display-box hidden" id="off"><h2>All Off</h2></td>
         </tr>
-    </table>
-    <div>
+    </table>*@
+@*<div>
         <label>MyVideo</label>
         <video id="MyVideo"></video>
     </div>
     <div>
         <label>SecondVideo</label>
         <video id="Second"></video>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>
-    <script type="text/javascript">
+    </div>*@
+
+
+@*</div>*@
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>
+<script type="text/javascript">
             (function () {
 
                 var lastPeerId = null;
@@ -50,12 +150,12 @@
                 var peerId = null;
                 var conn = null;
                 var recvId = document.getElementById("receiver-id");
-                var status = document.getElementById("status");
+                //var status = document.getElementById("status");
                 var message = document.getElementById("message");
-                var standbyBox = document.getElementById("standby");
-                var goBox = document.getElementById("go");
-                var fadeBox = document.getElementById("fade");
-                var offBox = document.getElementById("off");
+                //var standbyBox = document.getElementById("standby");
+                //var goBox = document.getElementById("go");
+                //var fadeBox = document.getElementById("fade");
+                //var offBox = document.getElementById("off");
                 var sendMessageBox = document.getElementById("sendMessageBox");
                 var sendButton = document.getElementById("sendButton");
                 var clearMsgsButton = document.getElementById("clearMsgsButton");
@@ -66,6 +166,18 @@
                  * Sets up callbacks that handle any events related to our
                  * peer object.
                  */
+
+
+                function TextMessages(text) {
+                    TextMessage = document.getElementById('TextMessage');
+                    TextMessage.innerHTML += "<div class=\"col-lg-12\"><h4>..." + text.replace('\^', '\'') + "...</div></h4>";
+                }
+
+
+
+
+
+
                 function initialize() {
                     // Create own peer object with connection to shared PeerJS server
                     peer = new Peer(null, {
@@ -76,6 +188,9 @@
                         alert(id);
                         // Workaround for peer.reconnect deleting previous id
                         if (peer.id === null) {
+
+                            TextMessages('Received null id from peer open')
+
                             console.log('Received null id from peer open');
                             peer.id = lastPeerId;
                         } else {
@@ -83,7 +198,10 @@
                         }
 
                         console.log('ID: ' + peer.id);
-                        recvId.innerHTML = "ID: " + peer.id;
+                        //recvId.innerHTML = "ID: " + peer.id;
+                        TextMessages("Peer Id is : " + peer.id);
+                        TextMessages("Awaiting connection...");
+
                         status.innerHTML = "Awaiting connection...";
                     });
                     peer.on('connection', function (c) {
@@ -91,6 +209,9 @@
                         if (conn && conn.open) {
                             c.on('open', function () {
                                 c.send("Already connected to another client");
+
+                                "Awaiting connection..."
+
                                 setTimeout(function () { c.close(); }, 500);
                             });
                             return;
@@ -339,7 +460,7 @@
 
 
             })();
-    </script>
+</script>
 
 
 
@@ -376,4 +497,3 @@
 
 
 
-</div>
