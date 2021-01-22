@@ -766,10 +766,10 @@ var data = {};
 
 
 
-    window.onbeforeunload = function () {
-        GoOffline();
-        return 'Czy chcesz na pewno opuścić czat';
-    };
+    //window.onbeforeunload = function () {
+    //    GoOffline();
+    //    return 'Czy chcesz na pewno opuścić czat';
+    //};
 
 
 
@@ -934,6 +934,9 @@ var data = {};
                             var ReceiverIdX = document.getElementById('VideoReceiver').value;
                             connectionX = new signalR.HubConnectionBuilder().withUrl("/videos").build();
 
+                            
+
+                           
                             connectionX.start(
 
                                 () => { alert("Connection in  Dialog"); }
@@ -945,25 +948,22 @@ var data = {};
 
 
                                     alert("Connection in dialog");
-                                    document.getElementById('SenderIdForVideoSender').value = ReceiverIdX;
+                                    document.getElementById('SenderIdForVideoSender').value = ReceiverIdX;                                    
                                     connectionX.invoke("RedirectToVideoCallSender", ReceiverIdX, SenderId);
-                                   
-
-                                }
-
-                            ).then(
-
-                                () => {
                                     alert("Submit");
                                     document.getElementById('VideoCallReceiver').submit();
+
                                 }
 
-                                );
+                            ).catch (err => {
+                                console.log(err);
+                                alert(err);
+                            });
+
+                            
 
 
-
-
-
+                            
 
                            
                         }
