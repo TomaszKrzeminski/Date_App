@@ -1,0 +1,45 @@
+﻿@model  LoggingWarningViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<style type="text/css">
+   h2
+   {
+       color:hotpink;
+
+   }
+   h1
+   {
+       color:deeppink;
+   }
+
+   span
+   {
+       color:red;
+   }
+   
+</style>
+
+
+<div style="height:1024px; background: url(/AppPictures/paris.jpg);" class="container-fluid">
+    <div style="height:200px;" class="row">
+
+    </div>
+    <div class="row">
+        <div class="col-lg-2 "></div>
+        <div class="col-lg-8 ">
+            <h2>Logowanie dla @Model.Email zostało zatrzymane z powodu <span>@Model.Attempts</span>   nieudanych prób</h2>
+            <h1>Proszę spróbować ponownie za <span>@Model.Minutes</span>   minut</h1>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+</script>

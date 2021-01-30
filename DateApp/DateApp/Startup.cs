@@ -63,6 +63,15 @@ namespace DateApp
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             //
 
+            //Invalid logging attemts Brutal Force protection
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            });
+
+
             //services.AddMvc();
             services.AddSignalR();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();                    
