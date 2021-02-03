@@ -22,15 +22,12 @@ namespace DateApp.Controllers
         private Func<Task<AppUser>> GetUser;
 
 
-
-
-
-
         public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
+
 
 
             if (GetUser == null)
@@ -50,49 +47,12 @@ namespace DateApp.Controllers
 
 
 
-
-
-        //public async Task<IActionResult> CalculateRoute(RoutingViewModel model)
-        //{
-
-        //    var httpClient = new HttpClient();
-        //    string Coordinates = model.UserLatitude + "," + model.UserLongitude + ":" + model.PairLatitude + "," + model.UserLongitude;
-        //    string Key = "YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O";
-        //    var url = "https://api.tomtom.com/routing/1/calculateRoute/" + Coordinates + "/json?key=" + Key;
-        //    HttpResponseMessage response = await httpClient.GetAsync(url);
-
-        //    string responseBody = await response.Content.ReadAsStringAsync();
-        //    JObject o = JObject.Parse(responseBody);
-
-        //    RoutingDetails details = new RoutingDetails();
-        //    string distance = (string)o["routes"]["summary"]["lengthInMeters"];
-
-        //    //Weather_JSON_LINQ weather = new Weather_JSON_LINQ();
-        //    //weather.City = (string)o["name"];
-        //    //weather.Temp = (double)o["main"]["temp"];
-        //    //weather.Temp_Min = (double)o["main"]["temp_min"];
-        //    //weather.Temp_Max = (double)o["main"]["temp_max"];
-        //    //weather.Description = (string)o["weather"][0]["description"];
-
-
-
-
-
-
-
-
-
-        //    return PartialView("CalculateRoute", details);
-        //}
-
-
-
-            public string ChangeToMinutes(int seconds)
+        public string ChangeToMinutes(int seconds)
         {
 
-            if(seconds>60)
+            if (seconds > 60)
             {
-                return (seconds / 60).ToString()+ " minutes";
+                return (seconds / 60).ToString() + " minutes";
             }
             else
             {
@@ -103,57 +63,15 @@ namespace DateApp.Controllers
 
         public string ChangeMetersToKM(int meters)
         {
-            if(meters>1000)
+            if (meters > 1000)
             {
-                return (meters / 1000).ToString()+ " km";
+                return (meters / 1000).ToString() + " km";
             }
             else
             {
                 return "less than 1 km";
             }
         }
-
-
-
-        //public async Task<IActionResult> Panel_JSON_LINQ()
-        //{
-
-        //    string ReverseGeocodingKey = "pk.6a0568ea2a60f5218a864c2d9f7e5432";
-
-        //    var httpClient1 = new HttpClient();
-        //    var url1 = "https://us1.locationiq.com/v1/reverse.php?key=" + ReverseGeocodingKey + "&lat=53.411131729515006&lon=18.451571537874628&format=json";
-        //    HttpResponseMessage response1 = await httpClient1.GetAsync(url1);
-
-        //    string responseBody1 = await response1.Content.ReadAsStringAsync();
-        //    JObject reverseGeocodingObj = JObject.Parse(responseBody1);
-
-
-
-
-
-        //    var httpClient = new HttpClient();
-        //    var url = "http://api.openweathermap.org/data/2.5/weather?q=Świecie,pl&units=metric&APPID=41270c91174b3fd8bdae41229160b95d";
-        //    HttpResponseMessage response = await httpClient.GetAsync(url);
-
-        //    string responseBody = await response.Content.ReadAsStringAsync();
-        //    JObject o = JObject.Parse(responseBody);
-
-        //    Weather_Data weather = new Weather_Data();
-        //    weather.City = (string)o["name"];
-        //    weather.Temp = (double)o["main"]["temp"];
-        //    weather.Temp_Min = (double)o["main"]["temp_min"];
-        //    weather.Temp_Max = (double)o["main"]["temp_max"];
-        //    weather.Description = (string)o["weather"][0]["description"];
-
-
-        //    return View(weather);
-        //}
-
-
-
-
-
-
 
 
         public async Task<IActionResult> StaticRoute(RoutingViewModel model)
@@ -166,7 +84,7 @@ namespace DateApp.Controllers
             string ReverseGeocodingKey = "pk.6a0568ea2a60f5218a864c2d9f7e5432";
 
             var httpClient1 = new HttpClient();
-            var url1 = "https://us1.locationiq.com/v1/reverse.php?key=" + ReverseGeocodingKey + "&lat="+model.UserLatitude+"&lon="+model.UserLongitude+"&format=json";
+            var url1 = "https://us1.locationiq.com/v1/reverse.php?key=" + ReverseGeocodingKey + "&lat=" + model.UserLatitude + "&lon=" + model.UserLongitude + "&format=json";
             HttpResponseMessage response1 = await httpClient1.GetAsync(url1);
 
             string responseBody1 = await response1.Content.ReadAsStringAsync();
@@ -178,7 +96,7 @@ namespace DateApp.Controllers
 
 
             var httpClient = new HttpClient();
-            var url = "http://api.openweathermap.org/data/2.5/weather?q="+ postCode + ",pl&units=metric&APPID=41270c91174b3fd8bdae41229160b95d";
+            var url = "http://api.openweathermap.org/data/2.5/weather?q=" + postCode + ",pl&units=metric&APPID=41270c91174b3fd8bdae41229160b95d";
             HttpResponseMessage response = await httpClient.GetAsync(url);
 
             string responseBody = await response.Content.ReadAsStringAsync();
@@ -220,38 +138,6 @@ namespace DateApp.Controllers
 
             return View("StaticRoute", model);
         }
-
-
-
-        //public async Task<IActionResult> StaticRoute(RoutingViewModel model)
-        //{
-
-        //    var httpClient = new HttpClient();
-        //    string Coordinates = model.UserLatitude + "," + model.UserLongitude + ":" + model.PairLatitude + "," + model.UserLongitude;
-        //    string Key = "YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O";
-        //    var url = "https://api.tomtom.com/routing/1/calculateRoute/" + Coordinates + "/xml?key=" + Key;
-        //    XDocument document = XDocument.Load(url);
-
-
-        //    RoutingDetails details = new RoutingDetails();
-
-        //    string obj = document.Element("calculateRouteResponse").Value;
-
-        //    //string distance= document.Element("calculateRouteResponse").Element("route").Element("summary").Element("lengthInMeters").Value;
-        //    //string time= document.Element("route").Element("summary").Attribute("departureTime").Value;
-
-
-
-
-
-
-
-        //    return View("StaticRoute", model);
-        //}
-
-
-
-
 
         public PictureType GetPictureType(string PictureNumber)
         {
@@ -359,6 +245,10 @@ namespace DateApp.Controllers
 
         public IActionResult ChangePhoneNumber()
         {
+            ///xss test
+
+            ////
+
             ChangePhoneNumberView model = new ChangePhoneNumberView();
             string Id = GetUser().Result.Id;
             model.PhoneNumber = repository.GetPhoneNumber(Id);
@@ -369,17 +259,29 @@ namespace DateApp.Controllers
         [HttpPost]
         public IActionResult ChangePhoneNumber(ChangePhoneNumberView model)
         {
+
             bool succes = false;
-            succes = repository.ChangePhoneNumber(model.UserId, model.PhoneNumber);
-            if (succes)
+            if (ModelState.IsValid)
             {
-                return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
+                succes = repository.ChangePhoneNumber(model.UserId, model.PhoneNumber);
+                if (succes)
+                {
+                    return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
+                }
+                else
+                {
+                    string Message = "Zmiana numeru nie powiodła się";
+                    return View("Error", Message);
+                }
             }
             else
             {
-                string Message = "Zmiana numeru nie powiodła się";
-                return View("Error", Message);
+
+                return View(model);
             }
+
+
+
 
 
         }

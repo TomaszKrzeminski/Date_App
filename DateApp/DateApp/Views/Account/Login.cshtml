@@ -1,6 +1,9 @@
 ﻿@model LoginModel
+@using System.Configuration
+@using Microsoft.Extensions.Options
+@inject IOptions<DateApp.Models.ReCaptchaSettings> GoogleRecap
 @{
-    Layout = "_Layout";
+    Layout = "_Layout";   
 }
 
 <style type="text/css">
@@ -23,7 +26,7 @@
         <div class="col-lg-5 col-md-4 col-sm-3"></div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <div asp-validation-summary="All"></div>
-            <form class="for" asp-action="Login" method="Post">
+            <form class="for" asp-action="Login" method="Post" id="demo-form">
                 <div class="form-group">
                     <label class="badge badge-warning" asp-for="Email"></label>
                     <input class="form-control" asp-for="Email" />
@@ -32,16 +35,47 @@
                     <label class="badge badge-warning" asp-for="Password"></label>
                     <input class="form-control" asp-for="Password" />
                 </div>
-                <button class="btn btn-info" type="submit">Zaloguj</button>
+                <input id="Input_Token" asp-for="Token" type="hidden" />
+                <button class="btn btn-info" type="submit">Zaloguj</button>              
+               
                 <a class="btn btn-danger" asp-action="Create" asp-controller="Admin">Zarejestruj</a>
             </form>
+           
         </div>
         <div class="col-lg-5 col-md-4 col-sm-3"></div>
     </div>
 </div>
 
+
 <script>
+   
+        
+    
+        
+
+
     $(document).ready(function () {
+
+      
+
+       
+
+          
+
+            grecaptcha.ready(function () {
+                grecaptcha.execute('6LdRikIaAAAAACEjEtyW1PYRzsCoCJDum3CU3xRV', { action: 'submit' }).then(function (token) {
+                                    
+                    console.log(token);
+                    $('#Input_Token').val(token);
+
+                });
+            });
+        //}
+
+
+
+
+
 
     });
 

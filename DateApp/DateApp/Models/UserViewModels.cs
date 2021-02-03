@@ -8,17 +8,21 @@ namespace DateApp.Models
 {
     public class CreateModel
     {
-        [Required]
+        [Required(ErrorMessage="Podaj Imię")]
+        [RegularExpression(@"^[A-Za-z]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
         public string Name { get; set; }
-
+        [Required(ErrorMessage = "Podaj Nazwisko")]
+        [RegularExpression(@"^[A-Za-z]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
         public string Surname { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Podaj Email")]       
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Wybierz płeć")]
+        [RegularExpression(@"^[A-Za-z]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
         public string Sex { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Podaj datę urodzin")]       
         public DateTime Dateofbirth { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Podaj Miasto")]
+        [RegularExpression(@"^[A-Za-z]*$", ErrorMessage = "Możesz używać tylko  liter")]
         public string City { get; set; }
         [Required]
         public string Password { get; set; }
@@ -34,6 +38,8 @@ namespace DateApp.Models
         [Required]
         [UIHint("password")]
         public string Password { get; set; }
+        [Required]
+        public string Token { get; set; }
     }
 
     public class PanelViewModel
@@ -174,7 +180,9 @@ namespace DateApp.Models
     public class ChangePhoneNumberView
     {
         [Required]
+        [RegularExpression(@"^[2-9]\d{2}-\d{3}-\d{3}$",ErrorMessage ="Zły format podaj numer składający się z 9 liczb xxx-xxx-xxx")]
         public string PhoneNumber { get; set; }
+        [Required]
         public string UserId { get; set; }
 
     }

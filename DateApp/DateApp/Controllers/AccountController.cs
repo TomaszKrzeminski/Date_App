@@ -16,12 +16,14 @@ namespace DateApp.Controllers
         private SignInManager<AppUser> signInManager;
         private IRepository repository;
         private Func<Task<AppUser>> GetUser;
+        private GoogleCaptchaService _service;
 
-        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, IRepository repo, Func<Task<AppUser>> GetUser = null)
+        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, IRepository repo, GoogleCaptchaService service , Func<Task<AppUser>> GetUser = null)
         {
             userManager = userMgr;
             signInManager = signinMgr;
             repository = repo;
+            _service = service;
 
             if (GetUser == null)
             {
@@ -57,6 +59,15 @@ namespace DateApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel details)
         {
+
+            var Verify = _service.RecVer(details.Token);
+
+            if(!Verify.Result.success&&Verify.Result.score<=0.5)
+            {
+                ModelState.AddModelError(string.Empty,"You probobly are a boot");
+            }
+
+
             if (ModelState.IsValid)
             {
                 AppUser user = await userManager.FindByEmailAsync(details.Email);

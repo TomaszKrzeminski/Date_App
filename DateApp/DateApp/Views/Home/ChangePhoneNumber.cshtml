@@ -6,10 +6,11 @@
 
 <div class="container">
     <div class="row">
-        <div class="col col-lg-4"></div>
-        <div class="col col-lg-4">
+        <div class="col col-lg-3"></div>
+        <div class="col col-lg-6">
             <h1 class="text-center">Zmień Numer</h1>
             <form asp-action="ChangePhoneNumber" method="post" asp-controller="Home">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="btn-group">
                     <label class="font-weight-bold" asp-for="PhoneNumber">Numer Telefonu</label>
                     <input  class="form-control" asp-for="PhoneNumber" />
@@ -18,7 +19,7 @@
                 </div>
             </form>
         </div>
-        <div class="col col-lg-4"></div>
+        <div class="col col-lg-3"></div>
     </div>
 </div>
 

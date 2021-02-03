@@ -14,20 +14,24 @@
             <form asp-action="Create" method="post">
                 <div class="form-group">
                     <label asp-for="Name">Imię</label>
+                    <div><span asp-validation-for="Name" class="text-danger"></span></div>
                     <input class="form-control" asp-for="Name" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Surname">Nazwisko</label>
+                    <div><span asp-validation-for="Surname" class="text-danger"></span></div>
                     <input class="form-control" asp-for="Surname" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Email">Email</label>
+                    <div><span asp-validation-for="Email" class="text-danger"></span></div>
                     <input class="form-control" asp-for="Email" />
                 </div>
 
 
                 <div class="form-group">
                     <lablel asp-for="Sex">Płeć</lablel>
+                    <div><span asp-validation-for="Sex" class="text-danger"></span></div>
                     <select class="browser-default custom-select" asp-for="Sex">
                         <option asp-for="Sex" value="Mężczyzna">Mężczyzna</option>
                         <option asp-for="Sex" value="Kobieta">Kobieta</option>
@@ -42,24 +46,27 @@
 
                 <div class="form-group">
                     <label asp-for="Dateofbirth">Data urodzenia</label>
+                    <div><span asp-validation-for="Dateofbirth" class="text-danger"></span></div>
                     <input class="form-control" type="date" asp-for="Dateofbirth" />
                 </div>
                 <div class="form-group">
                     <label asp-for="City">Miasto</label>
+                    <div><span asp-validation-for="City" class="text-danger"></span></div>
                     <input class="form-control" asp-for="City" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Password">Hasło</label>
+                    <div><span asp-validation-for="Password" class="text-danger"></span></div>
                     <input class="form-control" asp-for="Password" />
                 </div>
-             
+
                 <button class="btn btn-warning" type="submit">Utwórz</button>
                 <a class="btn btn-danger" asp-action="Index">Anuluj</a>
 
             </form>
 
         </div>
-       
+
 
     </div>
 
@@ -69,6 +76,14 @@
 
 </div>
 
+<script>
+    $(document).ready(function () {
 
-    
- 
+        $("input.input-validation-error").closest(".form-group").addClass("has-danger");
+
+        
+
+    });
+</script>
+
+

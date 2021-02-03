@@ -57,6 +57,9 @@ namespace DateApp
             services.AddTransient<QuartzContext>();
             services.AddTransient<IRepositoryQuartz, RepositoryQuartz>();
 
+            ///ReCapCaptcha
+            services.Configure<ReCaptchaSettings>(Configuration.GetSection("GoogleReCaptcha"));
+            services.AddTransient<GoogleCaptchaService>();
 
             //EF
             services.AddMvc()

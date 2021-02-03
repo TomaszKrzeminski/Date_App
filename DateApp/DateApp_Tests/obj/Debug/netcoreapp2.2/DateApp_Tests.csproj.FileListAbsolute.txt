@@ -1,0 +1,4 @@
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.csprojAssemblyReference.cache
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.csproj.CoreCompileInputs.cache
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.AssemblyInfoInputs.cache
+C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.AssemblyInfo.cs
