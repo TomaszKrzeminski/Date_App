@@ -180,6 +180,17 @@ namespace DateApp
                 }
             });
 
+            ////xss
+            //app.Use(async (ctx, next) =>
+            //{
+            //    ctx.Response.Headers.Add("Content-Security-Policy",
+            //                             "default-src 'self'; report-uri /cspreport");
+            //    await next();
+            //});
+
+
+
+
             /////
             app.UseMvc(routes =>
             {
