@@ -137,7 +137,7 @@
 
                     </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
-                <form id="DistanceForm" asp-action="SetDistance" asp-controller="Home" method="post">
+                <form id="DistanceForm" asp-action="SetDistance" asp-controller="Home" >
                     <div id="sliderD"></div>
                     <div class="row">
 
@@ -157,7 +157,7 @@
                     <div class="col col-lg-4"><label>Szukam</label></div>
                     <div class="col col-lg-2"></div>
                     <div class="col col-lg-6">
-                        <form asp-action="SetSearchSex" asp-controller="Home">
+                        <form id="SetSearchSex" asp-action="SetSearchSex" asp-controller="Home">
                             <select id="SelectSex" asp-for="SearchSex" class="browser-default custom-select" style="max-width:100px">
 
                                 <option value="Kobieta">Kobieta</option>
@@ -188,13 +188,30 @@
             </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
 
-                <form asp-action="SetShowProfile">
+                <form id="SetShowProfile" asp-action="SetShowProfile" method="post">
                     <label class="switch">
-                        <input type="checkbox" asp-for="ShowProfile" id="inputShowProfile">
-                        <span class="slider"></span>
-                    </label>
+                        <input type="checkbox" asp-for="ShowProfile" class="inputShowProfile">
+                <span class="slider"></span>
+            </label>
+
+                    
+
+
                     <label>Pokaż Profil</label>
                 </form>
+
+
+                @*<form id="SetShowProfile" asp-action="SetShowProfile" method="post">                
+
+                    <input type="checkbox" asp-for="ShowProfile" class="inputShowProfile">
+
+                    <label>Pokaż Profil</label>
+                </form>*@
+
+
+
+
+
 
 
             </div>
@@ -302,13 +319,7 @@
 
 
     ///SearchAge
-
-
-
-
-
-
-
+          
     $("#sliderA").slider({
         value: @Model.SearchAge,
         min: 18,
@@ -318,19 +329,30 @@
                    
             $("#slideinputAge").val(ui.value).change();
         }
-    });
+    });  
 
 
-    $(document).on('change propertychange', '#slideinputAge', function () {
-        $.post("/Home/SetAge",
-            {
-                Age: $('#slideinputAge').val(),
-            }
-            ,
-            function (data, status) {
+    $(document).on('change propertychange', '#slideinputAge', function () {      
 
+
+        var form = $('#AgeForm');
+        var token = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                url: '@Url.Action("SetAge", "Home")',
+               type: "post",
+                data: {
+                    __RequestVerificationToken: token,
+                    Age: $("#slideinputAge").val()
+                },
+                success: function (result) {
+                    
+                   
+                }
             });
+
     });
+
+
           
     //SearchDistance
 
@@ -347,47 +369,107 @@
 
 
     $(document).on('change propertychange', '#slideinputDistance', function () {
-        $.post("/Home/SetDistance",
-            {
-                Distance: $('#slideinputDistance').val(),
-            }
-            ,
-            function (data, status) {
-
+       
+       
+        var form = $('#DistanceForm');
+        var token = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                url: '@Url.Action("SetDistance", "Home")',
+               type: "post",
+                data: {
+                    __RequestVerificationToken: token,
+                    Distance: $("#slideinputDistance").val()
+                },
+                success: function (result) {
+                    
+                   
+                }
             });
     });
 
-    //SelectSex
+
+
+
+
+
+    //SelectSex  
+
 
 
     $('#SelectSex').change(function () {
-        var sex = $("#SelectSex option:selected").text();
-        $.post("/Home/SetSearchSex",
-            {
-                SearchSex: sex,
-
-            }
-            ,
-            function (data, status) {
-
+        var sex = $("#SelectSex option:selected").text();  
+                            
+       
+        var form = $('#SetSearchSex');
+            var token = $('input[name="__RequestVerificationToken"]', form).val();
+            $.ajax({
+                url: '@Url.Action("SetSearchSex", "Home")',
+               type: "post",
+                data: {
+                    __RequestVerificationToken: token,
+                    SearchSex: sex
+                },
+                success: function (result) {
+                   
+                   
+                }
             });
 
+
+
+
     });
+
+
+
 
     //ShowProfile
-    $(document).on('change propertychange', '#inputShowProfile', function () {
-        $.post("/Home/SetShowProfile",
-            {
-                Show: $('#inputShowProfile').val(),
-            }
-            ,
-            function (data, status) {
+    $(document).on('change propertychange', '.inputShowProfile', function ()
+    {
+        var checkShow=false;
 
+        $('input:checkbox.inputShowProfile').each(function ()
+        {
+            
+            if (this.checked)
+            { 
+                var val = $(this).val();
+                checkShow = val;
+            }           
+        });
+
+
+
+       
+            var form = $('#SetShowProfile');
+            var token = $('input[name="__RequestVerificationToken"]', form).val();
+            $.ajax({
+                url: '@Url.Action("SetShowProfile", "Home")',
+               type: "post",
+                data: {
+                    __RequestVerificationToken: token,
+                    Show: checkShow
+                },
+                success: function (result) {
+                    
+                   
+                }
             });
+           
+        
     });
 
 
-   
+    //$(document).on('change propertychange', '#inputShowProfile', function () {
+    //    $.post("/Home/SetShowProfile",
+    //        {
+    //            Show: $('#inputShowProfile').val(),
+    //        }
+    //        ,
+    //        function (data, status) {
+
+    //        });
+    //});
     
 
    

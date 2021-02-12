@@ -38,7 +38,7 @@
 <body>
     <div>
         @*@await  Component.InvokeAsync("NotificationsChecker")*@
-
+        <span class="AntiForge"> @Html.AntiForgeryToken() </span>
         @RenderBody()
     </div>
     <div>

@@ -33,7 +33,7 @@ namespace DateApp.Models
         Task<bool> CountLogout2(string Id);
         bool ChangeUserDetails(UserDetailsModel model);
         bool AddPicture(string UserId, PictureType type, string FilePath);
-        //int AddPictureEvent(string UserId, PictureType type, string FilePath);
+        bool CheckPictureOwner(string Path, string UserId);
         bool RemovePicture(string UserId, PictureType type);
         string GetPhoneNumber(string Id);
         bool ChangePhoneNumber(string Id, string PhoneNumber);
@@ -592,10 +592,10 @@ namespace DateApp.Models
         public bool RemovePicture(string UserId, PictureType type)
         {
 
-            PictureRemover main = new MainPhotoRemove();
-            PictureRemover photo1 = new Photo1Remove();
-            PictureRemover photo2 = new Photo2Remove();
-            PictureRemover photo3 = new Photo3Remove();
+            PictureRemover main = new MainPhotoRemove(Environment);
+            PictureRemover photo1 = new Photo1Remove(Environment);
+            PictureRemover photo2 = new Photo2Remove(Environment);
+            PictureRemover photo3 = new Photo3Remove(Environment);
 
             main.setNumber(photo1);
             photo1.setNumber(photo2);
@@ -2552,6 +2552,30 @@ namespace DateApp.Models
                 return true;              
             }
             catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool CheckPictureOwner(string Path, string UserId)
+        {
+
+            List<string> PathsList = new List<string>();
+            string PathCheck = "/Home/GetPicture/" + Path;
+
+            try
+            {
+                SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
+                PathsList.Add(details.MainPhotoPath);
+                PathsList.Add(details.PhotoPath1);
+                PathsList.Add(details.PhotoPath2);
+                PathsList.Add(details.PhotoPath3);
+               
+                bool check = PathsList.Any(x => x == PathCheck);
+
+                return check;
+            }
+            catch (Exception ex)
             {
                 return false;
             }

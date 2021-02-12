@@ -24,6 +24,12 @@ namespace DateApp
 {
     public class Startup
     {
+        /// CORS
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        /// 
+
+
+
         private IScheduler _quartzScheduler;
         public Startup(IConfiguration configruation)
         {
@@ -39,7 +45,17 @@ namespace DateApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-                               
+            //CORS policy
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "_myAllowSpecificOrigins",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://example.com",
+                                            "http://www.contoso.com");
+                    });
+            });
 
 
 
@@ -187,11 +203,19 @@ namespace DateApp
             //                             "default-src 'self'; report-uri /cspreport");
             //    await next();
             //});
-
-
-
-
             /////
+            ///
+
+
+            ///CORS
+            app.UseCors(MyAllowSpecificOrigins);
+            ///
+
+
+
+
+
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

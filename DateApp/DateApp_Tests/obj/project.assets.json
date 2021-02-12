@@ -15981,11 +15981,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tomek\\Desktop\\Date_App\\DateApp\\DateApp_Tests\\DateApp_Tests.csproj",
+      "projectUniqueName": "D:\\Pulpit\\Date_App\\DateApp\\DateApp_Tests\\DateApp_Tests.csproj",
       "projectName": "DateApp_Tests",
-      "projectPath": "C:\\Users\\tomek\\Desktop\\Date_App\\DateApp\\DateApp_Tests\\DateApp_Tests.csproj",
+      "projectPath": "D:\\Pulpit\\Date_App\\DateApp\\DateApp_Tests\\DateApp_Tests.csproj",
       "packagesPath": "C:\\Users\\tomek\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tomek\\Desktop\\Date_App\\DateApp\\DateApp_Tests\\obj\\",
+      "outputPath": "D:\\Pulpit\\Date_App\\DateApp\\DateApp_Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -16004,8 +16004,8 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "C:\\Users\\tomek\\Desktop\\Date_App\\DateApp\\DateApp\\DateApp.csproj": {
-              "projectPath": "C:\\Users\\tomek\\Desktop\\Date_App\\DateApp\\DateApp\\DateApp.csproj"
+            "D:\\Pulpit\\Date_App\\DateApp\\DateApp\\DateApp.csproj": {
+              "projectPath": "D:\\Pulpit\\Date_App\\DateApp\\DateApp\\DateApp.csproj"
             }
           }
         }

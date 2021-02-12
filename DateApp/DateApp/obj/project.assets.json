@@ -14923,11 +14923,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tomek\\Desktop\\Date_App\\DateApp\\DateApp\\DateApp.csproj",
+      "projectUniqueName": "D:\\Pulpit\\Date_App\\DateApp\\DateApp\\DateApp.csproj",
       "projectName": "DateApp",
-      "projectPath": "C:\\Users\\tomek\\Desktop\\Date_App\\DateApp\\DateApp\\DateApp.csproj",
+      "projectPath": "D:\\Pulpit\\Date_App\\DateApp\\DateApp\\DateApp.csproj",
       "packagesPath": "C:\\Users\\tomek\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tomek\\Desktop\\Date_App\\DateApp\\DateApp\\obj\\",
+      "outputPath": "D:\\Pulpit\\Date_App\\DateApp\\DateApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

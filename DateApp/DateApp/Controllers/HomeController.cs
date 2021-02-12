@@ -5,15 +5,18 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using DateApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGeneration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DateApp.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private IRepository repository;
@@ -39,12 +42,7 @@ namespace DateApp.Controllers
                 this.GetUser = GetUser;
             }
 
-
-
-
-
         }
-
 
 
         public string ChangeToMinutes(int seconds)
@@ -77,10 +75,6 @@ namespace DateApp.Controllers
         public async Task<IActionResult> StaticRoute(RoutingViewModel model)
         {
 
-
-
-
-
             string ReverseGeocodingKey = "pk.6a0568ea2a60f5218a864c2d9f7e5432";
 
             var httpClient1 = new HttpClient();
@@ -91,10 +85,6 @@ namespace DateApp.Controllers
             JObject reverseGeocodingObj = JObject.Parse(responseBody1);
 
             string postCode = (string)reverseGeocodingObj["address"]["postcode"];
-
-
-
-
             var httpClient = new HttpClient();
             var url = "http://api.openweathermap.org/data/2.5/weather?q=" + postCode + ",pl&units=metric&APPID=41270c91174b3fd8bdae41229160b95d";
             HttpResponseMessage response = await httpClient.GetAsync(url);
@@ -110,30 +100,6 @@ namespace DateApp.Controllers
             weather.Description = (string)o["weather"][0]["description"];
 
             model.details = weather;
-
-
-            //var httpClient = new HttpClient();
-            //string Coordinates = model.UserLatitude + "," + model.UserLongitude + ":" + model.PairLatitude + "," + model.UserLongitude + ":53.4072518,18.4455253";
-            //string Key = "YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O";
-            //var url = "https://api.tomtom.com/routing/1/calculateRoute/" + Coordinates + "/json?key=" + Key;
-            //HttpResponseMessage response = await httpClient.GetAsync(url);
-
-            //string responseBody = await response.Content.ReadAsStringAsync();
-            //JObject o = JObject.Parse(responseBody);
-
-            //RoutingDetails details = new RoutingDetails();
-
-            //int d=(int)o["routes"][0]["summary"]["lengthInMeters"];
-            //string d1 = (string)o["routes"][0]["summary"]["arrivalTime"];
-            //string d2 = (string)o["routes"][0]["summary"]["departureTime"];
-            //int d3 = (int)o["routes"][0]["summary"]["travelTimeInSeconds"];
-
-            //details.Distance = ChangeMetersToKM(d);
-            //details.arrivalTime = d1;
-            //details.departureTime = d2;
-            //details.travelTimeInSeconds = ChangeToMinutes(d3);
-
-            //model.details = details;
 
 
             return View("StaticRoute", model);
@@ -166,6 +132,7 @@ namespace DateApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult SetShowProfile(bool Show)
         {
             //string Id = userManager.GetUserId(HttpContext.User);
@@ -182,8 +149,9 @@ namespace DateApp.Controllers
             }
 
         }
-
+        [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult SetAge(int Age)
         {
             string Id = GetUser().Result.Id;
@@ -199,8 +167,9 @@ namespace DateApp.Controllers
             }
 
         }
-
+        [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult SetDistance(int Distance)
         {
             string Id = GetUser().Result.Id;
@@ -218,8 +187,9 @@ namespace DateApp.Controllers
 
         }
 
-
+        [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult SetSearchSex(string SearchSex)
         {
             string Id = GetUser().Result.Id;
@@ -242,7 +212,7 @@ namespace DateApp.Controllers
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult ChangePhoneNumber()
         {
             ///xss test
@@ -255,8 +225,9 @@ namespace DateApp.Controllers
             model.UserId = Id;
             return View(model);
         }
-
+        [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ChangePhoneNumber(ChangePhoneNumberView model)
         {
 
@@ -294,7 +265,7 @@ namespace DateApp.Controllers
 
 
 
-
+        [Authorize]
         public IActionResult Panel()
         {
 
@@ -320,8 +291,9 @@ namespace DateApp.Controllers
             return View(model);
         }
 
-
+        [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult PictureAdder(UserDetailsModel model)
         {
             bool success = repository.ChangeUserDetails(model);
@@ -338,7 +310,9 @@ namespace DateApp.Controllers
         }
 
 
+        [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RemovePicture(string Number)
         {
 
@@ -355,6 +329,7 @@ namespace DateApp.Controllers
 
             if (success)
             {
+
                 return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
             }
             else
@@ -367,8 +342,7 @@ namespace DateApp.Controllers
         }
 
 
-        //Dodać sprawdzenie czy plik jpg
-
+        //[ValidateAntiForgeryToken]
         //[HttpPost]
         //public async Task<IActionResult> AddPictureAsync(IFormFile file, string PictureNumber)
         //{
@@ -386,6 +360,8 @@ namespace DateApp.Controllers
 
         //            if (Path.GetExtension(file.FileName) == ".jpg")
         //            {
+
+        //                string PathText = Path.Combine(uploads, file.FileName);
         //                using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
         //                {
         //                    FilePath = "/Images/" + file.FileName;
@@ -425,8 +401,8 @@ namespace DateApp.Controllers
 
         //}
 
-
-
+        [Authorize]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> AddPictureAsync(IFormFile file, string PictureNumber)
         {
@@ -437,7 +413,7 @@ namespace DateApp.Controllers
 
             if (file != null)
             {
-                var uploads = Path.Combine(_environment.WebRootPath, "Images");
+                var uploads = Path.Combine(_environment.ContentRootPath, "UserImages");
                 string FilePath;
                 if (file.Length > 0)
                 {
@@ -448,7 +424,7 @@ namespace DateApp.Controllers
                         string PathText = Path.Combine(uploads, file.FileName);
                         using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
                         {
-                            FilePath = "/Images/" + file.FileName;
+                            FilePath = "/Home/GetPicture/" + file.FileName;
                             await file.CopyToAsync(fileStream);
                         }
                         string Id = GetUser().Result.Id;
@@ -489,6 +465,43 @@ namespace DateApp.Controllers
 
 
 
+
+
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetPicture(string id)
+        {
+            string UserId = GetUser().Result.Id;
+            string uploads = Path.Combine(_environment.WebRootPath, "AppPictures");
+            string text = Path.Combine(uploads, "photo.png");
+            var image = System.IO.File.OpenRead(text);
+
+            if (repository.CheckPictureOwner(id, UserId))
+            {
+                uploads = Path.Combine(_environment.ContentRootPath, "UserImages");
+                text = Path.Combine(uploads, id);
+                image = System.IO.File.OpenRead(text);
+            }
+
+            return File(image, "image/jpeg");
+        }
+
+
+
+
+        //public IActionResult Test_CORS()
+        //{
+        //    return View();
+        //}
+
+
+        //public JsonResult GetData()
+        //{
+        //    Weather_Data wd = new Weather_Data() { Temp = 100, Temp_Max = 101, Temp_Min = 60, Description = "Jakiś tam opis" };
+        //    string stringjson = JsonConvert.SerializeObject(wd);
+        //    return Json(stringjson);
+        //}
 
 
 

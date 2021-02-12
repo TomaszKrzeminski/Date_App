@@ -3,10 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="Controllers\AdminController.cs" />
+    <Content Include="UserImages\test.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Message\" />
+    <Folder Include="wwwroot\Images\" />
     <Folder Include="wwwroot\ScreenShots\" />
   </ItemGroup>
 
