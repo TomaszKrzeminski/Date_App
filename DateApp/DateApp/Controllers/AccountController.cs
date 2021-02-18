@@ -62,10 +62,14 @@ namespace DateApp.Controllers
 
             var Verify = _service.RecVer(details.Token);
 
-            if(!Verify.Result.success&&Verify.Result.score<=0.5)
-            {
-                ModelState.AddModelError(string.Empty,"You probobly are a boot");
-            }
+
+            /////turn on Capchat ///////////////////////////
+
+
+            //if(!Verify.Result.success&&Verify.Result.score<=0.5)
+            //{
+            //    ModelState.AddModelError(string.Empty,"You probobly are a boot");
+            //}
 
 
             if (ModelState.IsValid)

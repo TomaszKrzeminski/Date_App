@@ -22,7 +22,7 @@ namespace DateApp.Controllers
         private Func<Task<AppUser>> GetUser;
         private Func<HttpClient> GetClient;
         private ICitiesInRange citiesInRange;
-        public EventController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, ICitiesInRange citiesRange, Func<Task<AppUser>> GetUser = null,Func<HttpClient> GetClient=null )
+        public EventController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, ICitiesInRange citiesRange, Func<Task<AppUser>> GetUser = null, Func<HttpClient> GetClient = null)
         {
             repository = repo;
             userManager = userMgr;
@@ -40,14 +40,14 @@ namespace DateApp.Controllers
 
             if (GetClient == null)
             {
-                this.GetClient = () =>new HttpClient();
+                this.GetClient = () => new HttpClient();
             }
             else
             {
                 this.GetClient = GetClient;
             }
 
-           
+
 
         }
 
@@ -118,16 +118,30 @@ namespace DateApp.Controllers
         public IActionResult CancelEvent(int EventId)
         {
 
-            bool check = repository.CancelEvent(EventId);
+            //check if user has that event
 
-            if (check)
+            string ID = GetUser().Result.Id;
+            bool check1 = repository.CheckIfEventBelongsToUser(EventId, ID);
+
+            if (check1)
             {
-                return RedirectToAction("EventActions");
+
+                bool check = repository.CancelEvent(EventId);
+
+                if (check)
+                {
+                    return RedirectToAction("EventActions");
+                }
+                else
+                {
+                    return View("Error", "Nie udało się usunąć wydarzenia");
+                }
             }
             else
-            {
+            {                
                 return View("Error", "Nie udało się usunąć wydarzenia");
             }
+
 
 
         }
@@ -169,7 +183,7 @@ namespace DateApp.Controllers
                 DateApp.Models.Coordinates c = repository.GetCoordinates(UserId);
                 string key = "YKCJ1ZeW4GdxXOmONZi4UoSKOKpOTT4O";
                 //var httpClient1 = new HttpClient();
-               var httpClient1 = GetClient();
+                var httpClient1 = GetClient();
                 var url = "https://api.tomtom.com/search/2/reverseGeocode/" + c.Latitude.ToString().Replace(",", ".") + "%2C" + c.Longitude.ToString().Replace(",", ".") + "+.json?key=" + key;
                 HttpResponseMessage response1 = httpClient1.GetAsync(url).Result;
                 string responseBody1 = response1.Content.ReadAsStringAsync().Result;
@@ -214,7 +228,7 @@ namespace DateApp.Controllers
 
             return Json(Cities);
         }
-          
+
         [HttpPost]
         public IActionResult AddEvent(AddEventViewModel model)
         {
@@ -249,7 +263,7 @@ namespace DateApp.Controllers
             }
 
         }
-                                 
+
         [HttpPost]
         public IActionResult ShowEvents(ShowEventViewModel model)
         {
@@ -263,7 +277,7 @@ namespace DateApp.Controllers
                 UserHandler user = new UserHandler(repository);
                 CityNameHandler city = new CityNameHandler(repository);
                 ZipCodeHandler zipcode = new ZipCodeHandler(repository);
-                DistanceHandler distance = new DistanceHandler(repository,citiesInRange);
+                DistanceHandler distance = new DistanceHandler(repository, citiesInRange);
                 name.SetNext(zipcode).SetNext(distance).SetNext(date).SetNext(city).SetNext(user);
                 name.Handle(model);
                 model.list = model.list.Distinct().ToList();

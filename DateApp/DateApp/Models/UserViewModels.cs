@@ -38,7 +38,7 @@ namespace DateApp.Models
         [Required]
         [UIHint("password")]
         public string Password { get; set; }
-        [Required]
+        //[Required]
         public string Token { get; set; }
     }
 

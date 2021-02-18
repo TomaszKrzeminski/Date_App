@@ -14,6 +14,7 @@ namespace DateApp.Models
     {
         bool SetScreenShotAsMainPhoto(string Path, string UserId);
         bool CancelEvent(int EventId);
+        bool CheckIfEventBelongsToUser(int EventId, string UserId);
         List<Event> GetEventsByZipCodes(List<string> ZipCodes);
         EventsInNeighborhoodViewModel GetEventsInNeighborhood(AppUser user, DateTime time, int Days, string ZipCode);
         List<Event> GetEventsByName(string Name);
@@ -399,8 +400,8 @@ namespace DateApp.Models
 
             try
             {
-                model.listEventsInDays = context.Events.Where(x => x.ZipCode == ZipCode && (x.Date.Date >= time.Date && x.Date.Date <= To.Date)).OrderBy(x=>x.Date).ToList();
-                model.listEventsInWeek = context.Events.Where(x => x.ZipCode == ZipCode && (x.Date.Date >= dates.From.Date && x.Date.Date <= dates.To.Date)).OrderBy(x=>x.Date).ToList();
+                model.listEventsInDays = context.Events.Where(x => x.ZipCode == ZipCode && (x.Date.Date >= time.Date && x.Date.Date <= To.Date)).OrderBy(x => x.Date).ToList();
+                model.listEventsInWeek = context.Events.Where(x => x.ZipCode == ZipCode && (x.Date.Date >= dates.From.Date && x.Date.Date <= dates.To.Date)).OrderBy(x => x.Date).ToList();
                 return model;
             }
             catch (Exception ex)
@@ -2549,9 +2550,9 @@ namespace DateApp.Models
                 SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
                 details.MainPhotoPath = Path;
                 context.SaveChanges();
-                return true;              
+                return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -2570,8 +2571,30 @@ namespace DateApp.Models
                 PathsList.Add(details.PhotoPath1);
                 PathsList.Add(details.PhotoPath2);
                 PathsList.Add(details.PhotoPath3);
-               
+
                 bool check = PathsList.Any(x => x == PathCheck);
+
+                return check;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool CheckIfEventBelongsToUser(int EventId, string UserId)
+        {
+            try
+            {
+                bool check = false;
+                Event e = context.Events.Where(x => x.EventId == EventId).First();
+                AppUser user = context.Users.Find(UserId);
+                if(e.OrganizerEmail==user.Email)
+                {
+                    check = true;
+                }
+                
+
 
                 return check;
             }
