@@ -15,6 +15,8 @@ namespace DateApp.Models
         bool SetScreenShotAsMainPhoto(string Path, string UserId);
         bool CancelEvent(int EventId);
         bool CheckIfEventBelongsToUser(int EventId, string UserId);
+        bool CheckIfEventPictureBelongsToUser(string picturePath, string UserId);
+        bool CheckIfEventMovieBelongsToUser(string moviePath, string UserId);
         List<Event> GetEventsByZipCodes(List<string> ZipCodes);
         EventsInNeighborhoodViewModel GetEventsInNeighborhood(AppUser user, DateTime time, int Days, string ZipCode);
         List<Event> GetEventsByName(string Name);
@@ -2594,6 +2596,58 @@ namespace DateApp.Models
                     check = true;
                 }
                 
+
+
+                return check;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool CheckIfEventPictureBelongsToUser(string picturePath, string UserId)
+        {
+            try
+            {
+                bool check = false;
+
+                picturePath = "/Event/GetPictureEvent/" + picturePath;
+
+
+                Event e = context.Events.Where(x => x.PhotoPath1 == picturePath || x.PhotoPath2 == picturePath || x.PhotoPath3 == picturePath).First();
+                AppUser user = context.Users.Find(UserId);
+                if (e!=null&&e.OrganizerEmail == user.Email)
+                {
+                    check = true;
+                }
+
+
+
+                return check;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool CheckIfEventMovieBelongsToUser(string moviePath, string UserId)
+        {
+            try
+            {
+                bool check = false;
+
+
+                moviePath = "/Event/GetMovieEvent/" + moviePath;
+
+                Event e = context.Events.Where(x => x.FilePath==moviePath).First();
+                AppUser user = context.Users.Find(UserId);
+                if (e != null && e.OrganizerEmail == user.Email)
+                {
+                    check = true;
+                }
+
 
 
                 return check;

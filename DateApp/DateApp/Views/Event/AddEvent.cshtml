@@ -7,69 +7,48 @@
 
 
 
-<div class="container">  
+<div class="container">
 
     <form asp-action="AddEvent" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-lg-12 text-center">
 
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-4">
                 <div class="row">
                     <div style="min-height:100px; " class="col-lg-12 form-group">
                         <h5>Zdjęcie 1</h5>
-                        <a href="#">
+                        
                             <div>
-                                <input class="required error"  type="file" name="PictureFile_1" @*multiple*@ />
+                                <input class="required error" type="file" id="F3" name="PictureFile_1" />
                                 <input style="display:none" name="PicturePath_1" value="1" />
+                                <div><span asp-validation-for="PictureFile_1"></span></div>
                             </div>
-                            @*<img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath1 alt="">*@
-
-                            @*@if (Model.Event.PhotoPath1 != "/AppPictures/photo.png")
-                            {
-                                <img alt="1" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-                            }
-                            else
-                            {
-                                <img alt="1" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-                            }*@
-
-
-                        </a>
+                        
                     </div>
                     <div style="min-height:100px; " class="col-lg-12 form-group">
                         <h5>Zdjęcie 2</h5>
-                        <a href="#">
+                       
                             <div>
-                                <input class="required error" id="F3" type="file" name="PictureFile_2" @*multiple*@ />
+                                <input class="required error"   id="F3" type="file" name="PictureFile_2" />
                                 <input style="display:none" name="PicturePath_2" value="2" />
+                                <div><span asp-validation-for="PictureFile_2"></span></div>
+
                             </div>
-                            @*<img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath2 alt="">*@
-                            @*@if (Model.Event.PhotoPath2 != "/AppPictures/photo.png")
-                            {
-                                <img alt="2" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-                            }
-                            else
-                            {
-                                <img alt="2" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-                            }*@
-                        </a>
+                        
                     </div>
                     <div style="min-height:100px; " class="col-lg-12 form-group">
                         <h5>Zdjęcie 3</h5>
-                        <a href="#">
+                       
                             <div>
-                                <input  class="required error" id="F3" type="file" name="PictureFile_3" @*multiple*@ />
-                                <input  style="display:none" name="PicturePath_3" value="3" />
+                                <input class="required error"  id="F3" type="file" name="PictureFile_3"  />
+                                <input style="display:none" name="PicturePath_3" value="3" />
+                                <div><span asp-validation-for="PictureFile_3"></span></div>
+
                             </div>
-                            @*<img class="imageR  img-thumbnail" src=@Model.Event.PhotoPath3 alt="">*@
-                            @*@if (Model.Event.PhotoPath3 != "/AppPictures/photo.png")
-                            {
-                                <img alt="3" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-                            }
-                            else
-                            {
-                                <img alt="3" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-                            }*@
-                        </a>
+                      
                     </div>
 
                 </div>
@@ -82,23 +61,28 @@
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.EventName">Nazwa</label>
                         <input class="form-control" asp-for="Event.EventName" />
+                        <div><span asp-validation-for="Event.EventName"></span></div>
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.ZipCode">Kod Pocztowy</label>
                         <input id="ZipCode" class="form-control" asp-for="Event.ZipCode" />
+                        <div><span asp-validation-for="Event.ZipCode"></span></div>
                     </div>
 
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold">Miasto</label>
                         <select asp-for="Event.City" id="City"></select>
+                        <div><span asp-validation-for="Event.City"></span></div>
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.Date">Data</label>
-                        <input  class="form-control" asp-for="Event.Date" />
+                        <input class="form-control" asp-for="Event.Date" />
+                        <div><span asp-validation-for="Event.Date"></span></div>
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.Description">Opis</label>
                         <input class="form-control" asp-for="Event.Description" />
+                        <div><span asp-validation-for="Event.Description"></span></div>
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <input id="Latitude" type="hidden" class="form-control" asp-for="Event.Latitude" />
@@ -113,173 +97,129 @@
 
             </div>
             <div class="col-lg-4">
-
                 <div class="row">
                     <div style="min-height:100px; " class="col-lg-12 form-group">
                         <h3>Dodaj plik wideo mp4</h3>
                         <div>
-                            <input class="required error" type="file" name="MovieFile" @*multiple*@ />
+                            <input class="required error"  type="file" name="MovieFile"/>
                             <input style="display:none" name="MovieFile" value="4" />
+                            <div><span asp-validation-for="MovieFile"></span></div>
                         </div>
-
-
-                        @*<a href="#">
-             <video width="320" height="240" controls>
-                 <source src="~/Videos/testvideofile.mp4" type="video/mp4">
-                 <source src="movie.ogg" type="video/ogg">
-                 Your browser does not support the video tag.
-             </video>
-
-           @if (Model.Event.FilePath != "/AppPictures/photo.png")
-             {
-                 <img alt="4" class="Remove img-thumbnail" src="~/AppPictures/remove.png">
-             }
-             else
-             {
-                 <img alt="4" class="iconAction img-thumbnail" src="~/AppPictures/add.jpg">
-             }
-
-
-        </a>*@
-
-
-
-
                     </div>
-
-
-
                 </div>
-
             </div>
         </div>
 
 
     </form>
-   
+
 </div>
 
-    
-
-
-
-
-    <script>
-
-        $(document).ready(
-
-
-            function ()
-            {
-
-
-
-                $("#ZipCode").on('focusout', function () {
-                    $.ajax({
-                        url: "/Event/ZipCode",
-                        type: "GET",
-                        dataType: "json",
-                        data: { fetch: $("#ZipCode").val() },
-                        success: function (Cities) {
-
-                            $.each(Cities, function (i) {
-
-                                var optionhtml = '<option asp-for="Event.City" value="' +
-                                    Cities[i] + '">' + Cities[i] + '</option>';
-                                $("#City").append(optionhtml);
-                            });
 
 
 
 
 
-                        },
-                    });
+<script>
+
+    $(document).ready(
+
+
+        function () {
+
+
+
+            $("#ZipCode").on('focusout', function () {
+                $.ajax({
+                    url: "/Event/ZipCode",
+                    type: "GET",
+                    dataType: "json",
+                    data: { fetch: $("#ZipCode").val() },
+                    success: function (Cities) {
+
+                        $.each(Cities, function (i) {
+
+                            var optionhtml = '<option asp-for="Event.City" value="' +
+                                Cities[i] + '">' + Cities[i] + '</option>';
+                            $("#City").append(optionhtml);
+                        });
+
+
+
+
+
+                    },
                 });
-
-                //function getLocation() {
-                //    if (navigator.geolocation) {
-                //        navigator.geolocation.getCurrentPosition(setPosition);
-                //    } else {
-                //        x.innerHTML = "Geolocation is not supported by this browser.";
-                //    }
-                //}
+            });
 
 
-                //function setPosition(position) {
-                //    $("#Latitude").val(position.coords.latitude);
-                //    $("#Longitude").val(position.coords.longitude);
-                //}
 
+            $('#PictureAddForm').validate({
 
-                //getLocation();
+                errorPlacement: function (error, element) {
+                    error.insertBefore(element);
+                }
 
-                $('#PictureAddForm').validate({
+            });
 
-                    errorPlacement: function (error, element) {
-                        error.insertBefore(element);
-                    }
+            $("#dialog").dialog({
+                autoOpen: false,
+                draggable: false,
+                resizable: false,
+                width: 500,
+                height: 400,
+                modal: true,
+                show: 'slideDown',
+                hide: 'slideUp',
+                dialogClass: "no-close",
+                buttons: [
+                    {
 
-                });
-
-                $("#dialog").dialog({
-                    autoOpen: false,
-                    draggable: false,
-                    resizable: false,
-                    width: 500,
-                    height: 400,
-                    modal: true,
-                    show: 'slideDown',
-                    hide: 'slideUp',
-                    dialogClass: "no-close",
-                    buttons: [
-                        {
-
-                            text: "Anuluj",
-                            click: function () {
-                                $(this).dialog("close");
-                            }
-
-
-                        },
-                        {
-
-                            text: "Potwierdź",
-                            click: function () {
-                                var x = $("#choose").val();
-                                $("#P3").val(x);
-                                var y = $("#PictureNumber").val();
-                                $("#F3").val(y);
-                            }
+                        text: "Anuluj",
+                        click: function () {
+                            $(this).dialog("close");
                         }
-                    ]
-                });
+
+
+                    },
+                    {
+
+                        text: "Potwierdź",
+                        click: function () {
+                            var x = $("#choose").val();
+                            $("#P3").val(x);
+                            var y = $("#PictureNumber").val();
+                            $("#F3").val(y);
+                        }
+                    }
+                ]
+            });
 
 
 
-                $(".iconAction").click(function () {
+            $(".iconAction").click(function () {
 
-                    var numb = $(this).attr("alt");
+                var numb = $(this).attr("alt");
 
-                    $("#PictureNumber").val(numb);
-                    $("#dialog").dialog("open");
-                });
-
-
-                $(".Remove").click(function () {
+                $("#PictureNumber").val(numb);
+                $("#dialog").dialog("open");
+            });
 
 
-                    var numb = $(this).attr("alt");
-                    $("#RemovePicture").val(numb);
-                    $("#RemoveForm").submit();
-
-                });
-
-            }
+            $(".Remove").click(function () {
 
 
+                var numb = $(this).attr("alt");
+                $("#RemovePicture").val(numb);
+                $("#RemoveForm").submit();
 
-        );
+            });
+
+        }
 
 
-    </script>
+
+    );
+
+
+</script>

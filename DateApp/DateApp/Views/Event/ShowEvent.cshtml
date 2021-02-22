@@ -49,28 +49,28 @@
                 <div class="row">
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.EventName">Nazwa</label>
-                        <input class="form-control" asp-for="Event.EventName" />
+                        <input class="form-control" asp-for="Event.EventName" readonly />
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.ZipCode">Kod Pocztowy</label>
-                        <input id="ZipCode" class="form-control" asp-for="Event.ZipCode" />
+                        <input id="ZipCode" class="form-control" asp-for="Event.ZipCode" readonly/>
                     </div>
 
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold">Miasto</label>
-                        <input class="form-control" asp-for="Event.City" />
+                        <input class="form-control" asp-for="Event.City" readonly/>
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.Date">Data</label>
-                        <input class="form-control" value=@Model.Event.Date.ToString() />
+                        <input class="form-control" value=@Model.Event.Date.ToString()  readonly/>
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.Date">Godzina</label>
-                        <input class="form-control" value=@Model.Event.Date.ToShortTimeString() />
+                        <input class="form-control" value=@Model.Event.Date.ToShortTimeString()  readonly/>
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <label class="font-weight-bold" asp-for="Event.Description">Opis</label>
-                        <input class="form-control" asp-for="Event.Description" />
+                        <input class="form-control" asp-for="Event.Description" readonly/>
                     </div>
                     <div style="min-height:50px; " class="col-lg-12 form-group">
                         <input id="Latitude" type="hidden" class="form-control" asp-for="Event.Latitude" />

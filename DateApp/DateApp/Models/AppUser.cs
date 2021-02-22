@@ -122,18 +122,19 @@ namespace DateApp.Models
 
 
         public int EventId { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Podaj nazwę")]
         public string EventName { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Podaj Datę")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy HH:MM}")]
         public DateTime Date { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Podaj kod")]
         public string ZipCode { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Podaj nazwę miasta")]
         public string City { get; set; }
 
         public string Latitude { get; set; }
         public string Longitude { get; set; }
+        [Required(ErrorMessage ="Podaj opis")]
         public string Description { get; set; }
         public string FilePath { get; set; }
         public string PhotoPath1 { get; set; }

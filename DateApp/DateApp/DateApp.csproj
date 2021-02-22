@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Folder Include="EventImages\" />
-    <Folder Include="MovieImages\" />
+    <Folder Include="EventMovies\" />
     <Folder Include="Views\Message\" />
     <Folder Include="wwwroot\Images\" />
     <Folder Include="wwwroot\ScreenShots\" />
