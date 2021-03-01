@@ -246,7 +246,8 @@ namespace DateApp.Controllers
                 AppUser user = new AppUser()
                 {
                     Age = age,
-                    UserName = model.Name,
+                    FirstName=model.Name,
+                    UserName = model.Email,
                     Surname = model.Surname,
                     Sex = model.Sex,
                     City = model.City,

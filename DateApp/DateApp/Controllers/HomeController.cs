@@ -281,7 +281,7 @@ namespace DateApp.Controllers
 
             UserDetailsModel detailsmodel = new UserDetailsModel() { DetailsId = details.Id, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = Id };
 
-            UserSettingsModel settingsmodel = new UserSettingsModel() { MainPhotoPath = details.MainPhotoPath, Name = details.User.UserName, Surname = details.User.Surname, Likes = details.Likes, SuperLikes = details.SuperLikes, Email = details.User.Email, PhoneNumber = details.User.PhoneNumber ?? "Update", Localization = details.CityOfResidence, SearchAge = details.SearchAge, Distance = details.SearchDistance, SearchSex = details.SearchSex ?? "Male", ShowProfile = details.ShowProfile };
+            UserSettingsModel settingsmodel = new UserSettingsModel() { MainPhotoPath = details.MainPhotoPath, Name = details.User.FirstName, Surname = details.User.Surname, Likes = details.Likes, SuperLikes = details.SuperLikes, Email = details.User.Email, PhoneNumber = details.User.PhoneNumber ?? "Update", Localization = details.CityOfResidence, SearchAge = details.SearchAge, Distance = details.SearchDistance, SearchSex = details.SearchSex ?? "Male", ShowProfile = details.ShowProfile };
             settingsmodel.Coordinates.Latitude = coordinates.Latitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
             settingsmodel.Coordinates.Longitude = coordinates.Longitude.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
             settingsmodel.SetSex(details.User);
@@ -338,68 +338,10 @@ namespace DateApp.Controllers
                 return View("Error", Message);
             }
 
-
         }
 
 
-        //[ValidateAntiForgeryToken]
-        //[HttpPost]
-        //public async Task<IActionResult> AddPictureAsync(IFormFile file, string PictureNumber)
-        //{
-        //    string Message = "Dodanie zdjęcia nie powiodło się !!!";
-
-
-        //    bool success = false;
-
-        //    if (file != null)
-        //    {
-        //        var uploads = Path.Combine(_environment.WebRootPath, "Images");
-        //        string FilePath;
-        //        if (file.Length > 0)
-        //        {
-
-        //            if (Path.GetExtension(file.FileName) == ".jpg")
-        //            {
-
-        //                string PathText = Path.Combine(uploads, file.FileName);
-        //                using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
-        //                {
-        //                    FilePath = "/Images/" + file.FileName;
-        //                    await file.CopyToAsync(fileStream);
-        //                }
-        //                string Id = GetUser().Result.Id;
-        //                PictureType type = GetPictureType(PictureNumber);
-        //                success = repository.AddPicture(Id, type, FilePath);
-        //            }
-        //            else
-        //            {
-        //                Message = "Zdjęcie musi być w formacie jpg";
-        //                success = false;
-        //            }
-
-
-
-
-        //        }
-
-
-        //        if (success)
-        //        {
-        //            return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
-        //        }
-        //        else
-        //        {
-
-        //            return View("Error", Message);
-        //        }
-
-
-
-        //    }
-        //    return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
-
-
-        //}
+      
 
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -461,11 +403,7 @@ namespace DateApp.Controllers
 
         }
 
-
-
-
-
-
+                          
 
 
         [Authorize]

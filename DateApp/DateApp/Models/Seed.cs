@@ -94,17 +94,18 @@ namespace UndergroundSound.Models
                     var User = new AppUser(Sex)
                     {
                         Age = age,
-                        UserName = Name,
+                        Email = Email,
+                        FirstName=Name,
                         Surname = Surname,
                         //Sex = Sex,
                         City = City,
                         Dateofbirth = Dateofbirth,
-                        Email = Email,
+                        UserName = Email,
                         EmailConfirmed = false,
                         LockoutEnabled = true,
                         SecurityStamp = Guid.NewGuid().ToString(),
                         NormalizedEmail = Email.ToUpper(),
-                        NormalizedUserName = Name.ToUpper(),
+                        NormalizedUserName = Email.ToUpper(),
                     };
 
                     if (!context.Users.Any(u => u.UserName == User.UserName))
@@ -160,17 +161,18 @@ namespace UndergroundSound.Models
                     var User = new AppUser(Sex)
                     {   
                         Age=age,
-                        UserName =Name,
+                        FirstName =Name,
+                        Email=Email,
                         Surname = Surname,
                         //Sex = Sex,
                         City = City,
                         Dateofbirth =Dateofbirth,
-                        Email = Email,                                               
+                        UserName = Email,                                               
                         EmailConfirmed = false,
                         LockoutEnabled = true,
                         SecurityStamp = Guid.NewGuid().ToString(),
                         NormalizedEmail = Email.ToUpper(),
-                        NormalizedUserName = Name.ToUpper(),
+                        NormalizedUserName = Email.ToUpper(),
                     };
 
                     if (!context.Users.Any(u => u.UserName == User.UserName))

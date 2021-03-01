@@ -1469,29 +1469,36 @@ namespace DateApp.Models
         {
             try
             {
-                Message message = new Message();
-                message.Checked = false;
-                message.MessageText = Text;
-                message.ReceiverId = ReceiverId;
-                message.SenderId = SenderId;
-                message.Time = DateTime.Now;
 
-                AppUser sender = context.Users.Find(SenderId);
-                AppUser receiver = context.Users.Find(ReceiverId);
+                if (Text != null & Text.Count() > 0)
+                {
+                    Message message = new Message();
+                    message.Checked = false;
+                    message.MessageText = Text;
+                    message.ReceiverId = ReceiverId;
+                    message.SenderId = SenderId;
+                    message.Time = DateTime.Now;
 
-                MessageUser S = new MessageUser();
-                S.AppUser = sender;
-                S.Message = message;
+                    AppUser sender = context.Users.Find(SenderId);
+                    AppUser receiver = context.Users.Find(ReceiverId);
 
-                MessageUser R = new MessageUser();
-                R.AppUser = receiver;
-                R.Message = message;
+                    MessageUser S = new MessageUser();
+                    S.AppUser = sender;
+                    S.Message = message;
 
-                sender.MessageUser.Add(S);
-                receiver.MessageUser.Add(R);
-                context.SaveChanges();
+                    MessageUser R = new MessageUser();
+                    R.AppUser = receiver;
+                    R.Message = message;
 
-                return true;
+                    sender.MessageUser.Add(S);
+                    receiver.MessageUser.Add(R);
+                    context.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+
             }
             catch (Exception ex)
             {
@@ -2591,11 +2598,11 @@ namespace DateApp.Models
                 bool check = false;
                 Event e = context.Events.Where(x => x.EventId == EventId).First();
                 AppUser user = context.Users.Find(UserId);
-                if(e.OrganizerEmail==user.Email)
+                if (e.OrganizerEmail == user.Email)
                 {
                     check = true;
                 }
-                
+
 
 
                 return check;
@@ -2617,7 +2624,7 @@ namespace DateApp.Models
 
                 Event e = context.Events.Where(x => x.PhotoPath1 == picturePath || x.PhotoPath2 == picturePath || x.PhotoPath3 == picturePath).First();
                 AppUser user = context.Users.Find(UserId);
-                if (e!=null&&e.OrganizerEmail == user.Email)
+                if (e != null && e.OrganizerEmail == user.Email)
                 {
                     check = true;
                 }
@@ -2641,7 +2648,7 @@ namespace DateApp.Models
 
                 moviePath = "/Event/GetMovieEvent/" + moviePath;
 
-                Event e = context.Events.Where(x => x.FilePath==moviePath).First();
+                Event e = context.Events.Where(x => x.FilePath == moviePath).First();
                 AppUser user = context.Users.Find(UserId);
                 if (e != null && e.OrganizerEmail == user.Email)
                 {

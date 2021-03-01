@@ -164,6 +164,7 @@ namespace DateApp.Models
 
         public CoordinatesString Coordinates { get; set; }
         public string Name { get; set; }
+        public string FirstName { get; set; }
         public string Surname { get; set; }
         public string MainPhotoPath { get; set; }
         public int Likes { get; set; }
