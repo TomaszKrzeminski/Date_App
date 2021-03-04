@@ -126,13 +126,22 @@
     <div class="col-lg-6"></div>
 </div>
 
-<form id="VideoCallSender" asp-action="VideoCallSender" asp-controller="Video">
-    <input id="ReceiverIdForVideoCaller" name="ReceiverId" value=@Model.ChatUserId />
-</form>
 
-<form id="VideoCallReceiver" asp-action="VideoCallReceiver" asp-controller="Video">
-    <input id="SenderIdForVideoSender" name="ReceiverId" />
-</form>
+<div style="display:none">
+    <form id="VideoCallSender" asp-action="VideoCallSender" asp-controller="Video">
+        <input id="ReceiverIdForVideoCaller" name="ReceiverId" value=@Model.ChatUserId />
+    </form>
+
+    <form id="VideoCallReceiver" asp-action="VideoCallReceiver" asp-controller="Video">
+        <input id="SenderIdForVideoSender" name="ReceiverId" />
+    </form>
+
+</div>
+
+
+
+
+
 
 <div id="dialog">
 
@@ -301,9 +310,7 @@
 
 
     });
-   ////
-
-    ///// //////
+  
 
     ///Write Message
     $(document).on('click', 'form.ChooseReceiver', function () {
@@ -1021,22 +1028,3 @@ var data = {};
 
 </script>
 
-///////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///////

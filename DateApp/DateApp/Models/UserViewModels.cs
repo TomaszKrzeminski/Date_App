@@ -9,20 +9,20 @@ namespace DateApp.Models
     public class CreateModel
     {
         [Required(ErrorMessage="Podaj Imię")]
-        [RegularExpression(@"^[A-Za-z]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
+        [RegularExpression(@"^[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", ErrorMessage = "Możesz używać tylko  liter")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Podaj Nazwisko")]
-        [RegularExpression(@"^[A-Za-z]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
+        [RegularExpression(@"^[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
         public string Surname { get; set; }
         [Required(ErrorMessage = "Podaj Email")]       
         public string Email { get; set; }
         [Required(ErrorMessage = "Wybierz płeć")]
-        [RegularExpression(@"^[A-Za-z]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
+        [RegularExpression(@"^[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
         public string Sex { get; set; }
         [Required(ErrorMessage = "Podaj datę urodzin")]       
         public DateTime Dateofbirth { get; set; }
         [Required(ErrorMessage = "Podaj Miasto")]
-        [RegularExpression(@"^[A-Za-z]*$", ErrorMessage = "Możesz używać tylko  liter")]
+        [RegularExpression(@"^[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", ErrorMessage = "Możesz używać tylko  liter")]
         public string City { get; set; }
         [Required]
         public string Password { get; set; }
