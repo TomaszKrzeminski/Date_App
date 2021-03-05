@@ -1,0 +1,19 @@
+﻿@model ChangePasswordResultView
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    
+</head>
+<body>
+    <h1>@Model.Message</h1>
+    <a asp-action="@Model.RedirectAction" asp-controller="@Model.RedirectController">@Model.RedirectValue</a>
+
+
+</body>
+</html>

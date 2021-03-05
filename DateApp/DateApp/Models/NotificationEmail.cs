@@ -703,7 +703,31 @@ namespace DateApp.Models
                 return smtpClient;
             }
         }
-        
+
+
+
+        public class SetSmtpClient2
+        {
+            public SmtpClient SetClient()
+            {
+                var builder = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json");
+                var config = builder.Build();
+
+                SmtpClient smtpClient = new SmtpClient(config["Data:Smtp:Host"])
+                {
+                    Port = int.Parse(config["Data:Smtp:Port"]),
+                    Credentials = new NetworkCredential(config["Data:Smtp:Username"], config["Data:Smtp:Password"]),
+                    EnableSsl = true,
+                };
+
+                return smtpClient;
+            }
+        }
+
+
+
+
         public interface ISetLinkedResource
         {
 

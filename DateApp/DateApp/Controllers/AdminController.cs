@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DateApp.Models;
+using DateApp.Models.DateApp.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +39,193 @@ namespace DateApp.Controllers
 
         }
 
+
+
+        public ActionResult ResetPassword()
+        {
+            ResetPasswordViewModel model = new ResetPasswordViewModel();
+
+            return View(model);
+        }
+
+
+        public string MakeHtmlMessage(string Email, string link)
+        {
+
+
+
+            string body = string.Format(@"
+
+
+   <div>
+<h1>Zresetuj konto na DateApp " + Email + @"  </h1>
+</div>
+<div>
+<p> kliknij w ten link </p>
+" + link + @"
+</div>
+
+
+");
+
+            return body;
+
+        }
+
+        public bool SendResetEmail(AppUser user, string link)
+        {
+            try
+            {
+                string body = MakeHtmlMessage(user.Email, link);
+                MailMessage newMail = new MailMessage
+                {
+                    From = new MailAddress("DateApp@gmail.com"),
+                    Subject = "Resetowanie hasła w DateApp " + DateTime.Now.ToShortDateString(),
+                    Body = body,
+                    IsBodyHtml = true,
+                };
+                var view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                newMail.To.Add(user.Email);
+                SetSmtpClient2 Client = new SetSmtpClient2();
+                SmtpClient client = Client.SetClient();
+
+
+                using (client)
+                {
+
+                    client.Send(newMail);
+
+
+                }
+
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        [HttpPost]
+        public ActionResult ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                AppUser user = userManager.FindByNameAsync(model.UserName).Result;
+
+
+                //if (user == null || !(userManager.
+                //      IsEmailConfirmedAsync(user).Result))
+                if (user == null)
+                {
+                    model.Message = "Wystąpił błąd podczas resetowania twojego hasła!";
+                    return View(model);
+                }
+
+                var token = userManager.GeneratePasswordResetTokenAsync(user).Result;
+
+                var resetLink = Url.Action("ChangePassword",
+                                "Admin", new { token = token },
+                                 protocol: HttpContext.Request.Scheme);
+
+                bool check = SendResetEmail(user, resetLink);
+
+                if (check)
+                {
+                    model.Message = "Link do resetowania hasła został wysłany na Twój Email";
+
+                    return View(model);
+                }
+                else
+                {
+                    return View(model);
+                }
+
+            }
+            else
+            {
+                return View(model);
+            }
+
+        }
+
+        [HttpGet]
+        public ActionResult ChangePassword(string Token)
+        {
+            ResetPasswordViewModel model = new ResetPasswordViewModel();
+            model.Token = Token;
+            return View(model);
+        }
+
+
+
+
+
+
+
+        [HttpPost]
+        public ActionResult ChangePassword(ResetPasswordViewModel model)
+        {
+
+            List<string> passwordErrors = new List<string>();
+
+            var validators = userManager.PasswordValidators;
+
+            foreach (var validator in validators)
+            {
+                var result = validator.ValidateAsync(userManager, null, model.Password);
+
+                if (!result.Result.Succeeded)
+                {
+                    foreach (var error in result.Result.Errors)
+                    {
+                        //passwordErrors.Add(error.Description);
+                        ModelState.AddModelError("Password", error.Description);
+                    }
+                }
+            }
+
+          
+
+            if (ModelState.IsValid)
+            {
+                AppUser user = userManager.FindByNameAsync(model.UserName).Result;
+
+                IdentityResult result = userManager.ResetPasswordAsync(user, model.Token, model.Password).Result;
+                if (result.Succeeded)
+                {
+                    ChangePasswordResultView Vmodel = new ChangePasswordResultView();
+                    Vmodel.Message = "Reset hasła zakończony sukcesem";
+                    Vmodel.RedirectAction = "Login";
+                    Vmodel.RedirectController = "Account";
+                    Vmodel.RedirectValue = "Powróć do  strony logowania";
+                    return View("MessageView", Vmodel);
+                }
+                else
+                {
+                    ChangePasswordResultView Vmodel = new ChangePasswordResultView();
+                    Vmodel.Message = "Reset hasła zakończony niepowodzeniem";
+                    Vmodel.RedirectAction = "Login";
+                    Vmodel.RedirectController = "Account";
+                    Vmodel.RedirectValue = "Powróć do  strony logowania";
+                    return View("MessageView", Vmodel);
+                }
+            }
+            else
+            {
+                return View(model);
+            }
+
+
+
+
+        }
+
+
+
         public PictureType GetPictureType(string PictureNumber)
         {
             PictureType type = new PictureType();
@@ -65,7 +254,7 @@ namespace DateApp.Controllers
 
 
 
-        
+
 
 
 
@@ -113,9 +302,9 @@ namespace DateApp.Controllers
 
             bool check = repository.AddLikesByAdmin(model.UserId, model.LikesToAdd);
 
-            if(model.LikesToAdd<=0)
+            if (model.LikesToAdd <= 0)
             {
-                ModelState.AddModelError(nameof(model.LikesToAdd),"Podaj liczbę lików");
+                ModelState.AddModelError(nameof(model.LikesToAdd), "Podaj liczbę lików");
                 return View(model);
             }
 
@@ -134,7 +323,7 @@ namespace DateApp.Controllers
 
 
         }
-        
+
 
         public IActionResult RemovePhoto(string id)
         {
@@ -154,25 +343,25 @@ namespace DateApp.Controllers
         [HttpPost]
         public IActionResult RemovePicture(RemovePictureViewModel model)
         {
-            bool success = false;     
-           
-               
-                PictureType type = GetPictureType(model.Number);
-                success = repository.RemovePicture(model.UserId, type);           
+            bool success = false;
+
+
+            PictureType type = GetPictureType(model.Number);
+            success = repository.RemovePicture(model.UserId, type);
 
 
             if (success)
             {
-                return RedirectToRoute(new { controller = "Admin", action = "RemovePhoto"   ,id=model.UserId });
+                return RedirectToRoute(new { controller = "Admin", action = "RemovePhoto", id = model.UserId });
             }
             else
             {
-                return View("Error","Nie udało się usunąć zdjęcia ");
+                return View("Error", "Nie udało się usunąć zdjęcia ");
             }
 
 
         }
-               
+
         public ActionResult SearchUser(string term)
         {
 
@@ -197,25 +386,25 @@ namespace DateApp.Controllers
             //                  .Select(r => new { id = r.ProductID, label = r.ProductName, name = "ProductNameID" }).ToArray();
             return Ok(Emails);
         }
-        
+
         [HttpPost]
         public ActionResult SelectUser(string term)
         {
-             SelectUserViewModel model = new SelectUserViewModel();
-            if (term==null)
+            SelectUserViewModel model = new SelectUserViewModel();
+            if (term == null)
             {
                 ModelState.AddModelError(nameof(term), "Musisz wybrać użytkownika");
-                
+
                 return View("AdministrationPanel", model);
             }
-           
+
             AppUser user = userManager.FindByEmailAsync(term).Result;
             model.user = user;
 
             return View("AdministrationPanel", model);
 
         }
-               
+
         public ActionResult Create()
         {
             CreateModel create = new CreateModel();
@@ -223,7 +412,7 @@ namespace DateApp.Controllers
             create.Sex = "";
             return View(create);
         }
-               
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateModel model)
         {
@@ -240,20 +429,20 @@ namespace DateApp.Controllers
             if (ModelState.IsValid)
             {
 
-              string  SecurityStamp = Guid.NewGuid().ToString();
+                string SecurityStamp = Guid.NewGuid().ToString();
 
 
                 AppUser user = new AppUser()
                 {
                     Age = age,
-                    FirstName=model.Name,
+                    FirstName = model.Name,
                     UserName = model.Email,
                     Surname = model.Surname,
                     Sex = model.Sex,
                     City = model.City,
                     Dateofbirth = model.Dateofbirth,
                     Email = model.Email,
-                    SecurityStamp=SecurityStamp
+                    SecurityStamp = SecurityStamp
                 };
 
                 IdentityResult result = await userManager.CreateAsync(user, model.Password);
@@ -291,7 +480,7 @@ namespace DateApp.Controllers
 
             return View(model);
         }
-                     
+
         [HttpPost]
         public async Task<IActionResult> Delete()
         {
@@ -328,7 +517,7 @@ namespace DateApp.Controllers
 
 
         }
-                          
+
         public IActionResult Index()
         {
             return View(userManager.Users);
