@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using DateApp.Models;
+using DateApp.Models.DateApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +20,7 @@ namespace DateApp.Controllers
         private Func<Task<AppUser>> GetUser;
         private GoogleCaptchaService _service;
 
-        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, IRepository repo, GoogleCaptchaService service , Func<Task<AppUser>> GetUser = null)
+        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, IRepository repo, GoogleCaptchaService service, Func<Task<AppUser>> GetUser = null)
         {
             userManager = userMgr;
             signInManager = signinMgr;
@@ -54,6 +56,132 @@ namespace DateApp.Controllers
             return View();
         }
 
+        public string MakeHtmlMessage(string Email, string link)
+        {
+
+
+
+            string body = string.Format(@"
+
+
+   <div>
+<h1>Potwierdź konto na DateApp " + Email + @"  </h1>
+</div>
+<div>
+<p> kliknij w ten link </p>
+" + link + @"
+</div>
+
+
+");
+
+            return body;
+
+        }
+
+        public bool SendConfirmEmail(AppUser user, string link)
+        {
+            try
+            {
+                string body = MakeHtmlMessage(user.Email, link);
+                MailMessage newMail = new MailMessage
+                {
+                    From = new MailAddress("DateApp@gmail.com"),
+                    Subject = "Potwierdzenie konta w DateApp " + DateTime.Now.ToShortDateString(),
+                    Body = body,
+                    IsBodyHtml = true,
+                };
+                var view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                newMail.To.Add(user.Email);
+                SetSmtpClient2 Client = new SetSmtpClient2();
+                SmtpClient client = Client.SetClient();
+
+
+                using (client)
+                {
+
+                    client.Send(newMail);
+
+
+                }
+
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+
+        public void ConfirmEmail(AppUser user)
+        {
+
+
+            var token = userManager.GenerateEmailConfirmationTokenAsync(user).Result;
+
+            var confirmLink = Url.Action("ConfirmAccount",
+                            "Account", new { token = token, Email = user.Email },
+                             protocol: HttpContext.Request.Scheme);
+
+            SendConfirmEmail(user, confirmLink);
+
+
+        }
+
+        [HttpGet]
+        public ActionResult ConfirmAccount(string Token, string Email)
+        {
+
+
+            if (Token != null && Email != null)
+            {
+
+                try
+                {
+                    AppUser user = userManager.FindByEmailAsync(Email).Result;
+                    IdentityResult result = userManager.
+                                ConfirmEmailAsync(user, Token).Result;
+
+
+                    bool check = result.Succeeded;
+                    if (check)
+                    {
+                      IdentityResult r1=  userManager.RemoveFromRoleAsync(user, "NewUser").Result;
+                        IdentityResult r2 = userManager.AddToRoleAsync(user, "UserRole").Result;
+                        return View("EmailConfirmation");
+                    }
+                   
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    return View("Error", "Twój email nie został potwierdzony");
+                }
+
+
+
+
+            }
+
+
+            return View("Error", "Twój email nie został potwierdzony");
+
+
+        }
+
+
+
+
+
+
+
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -78,8 +206,7 @@ namespace DateApp.Controllers
                 if (user != null)
                 {
                     await signInManager.SignOutAsync();
-                    ///Brutal Force prevention set 4 parameter to true 
-                    ///Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, details.Password, false, true);
+
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, details.Password, false, true);
                     if (result.Succeeded)
                     {
@@ -88,6 +215,13 @@ namespace DateApp.Controllers
                         {
                             return RedirectToRoute(new { controller = "Admin", action = "AdministrationPanel" });
                         }
+
+                        if (userManager.IsInRoleAsync(user, "NewUser").Result)
+                        {
+                            ConfirmEmail(user);
+                            return View("Error", "Musisz potwierdzić swój email sprawdz go i kliknij w załączony link");
+                        }
+
 
                         repository.CountLogin(user.Id);
 
@@ -105,11 +239,11 @@ namespace DateApp.Controllers
 
                             TimeZoneInfo timezone = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"); //this timezone has an offset of +01:00:00 on this date
 
-                           
+
                             DateTimeOffset T = TimeZoneInfo.ConvertTime(time2, timezone);
 
 
-                            if (T>time3)
+                            if (T > time3)
                             {
                                 TimeSpan M = T - time3;
                                 return View("Warning", new LoggingWarningViewModel(user.Email, M.Minutes, 3));

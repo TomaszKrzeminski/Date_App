@@ -9,6 +9,7 @@ using DateApp.Models.DateApp.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DateApp.Controllers
@@ -19,12 +20,13 @@ namespace DateApp.Controllers
         private UserManager<AppUser> userManager;
         public IRepository repository;
         private Func<Task<AppUser>> GetUser;
+        private UserStore<AppUser> UserStore;
 
         public AdminController(IRepository repository, UserManager<AppUser> usrMgr, Func<Task<AppUser>> GetUser = null)
         {
             this.repository = repository;
             userManager = usrMgr;
-
+           
             if (GetUser == null)
             {
                 this.GetUser = () => userManager.GetUserAsync(HttpContext.User);
@@ -188,7 +190,7 @@ namespace DateApp.Controllers
                 }
             }
 
-          
+
 
             if (ModelState.IsValid)
             {
@@ -452,17 +454,16 @@ namespace DateApp.Controllers
                 ///
 
 
+
                 ///
 
                 Claim claim = new Claim(ClaimTypes.NameIdentifier, user.Id);
                 await userManager.AddClaimAsync(user, claim);
 
+                ///// New user without role
+                await userManager.AddToRoleAsync(user, "NewUser");               
 
-
-
-
-
-
+                ////
                 if (result.Succeeded)
                 {
                     return RedirectToRoute(new { controller = "Account", action = "Login", Id = "MyId" });

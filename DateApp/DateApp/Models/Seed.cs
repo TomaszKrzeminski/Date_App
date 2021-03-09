@@ -58,9 +58,13 @@ namespace UndergroundSound.Models
 
                         roleStore.CreateAsync(new IdentityRole { Name = "UserRole", NormalizedName = "UserRole" });
                     }
-                   
 
-                   
+
+                    if (!context.Roles.Any(r => r.Name == "NewUser"))
+                    {
+
+                        roleStore.CreateAsync(new IdentityRole { Name = "NewUser", NormalizedName = "NewUser" });
+                    }
 
 
 
