@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace DateApp.Controllers
 {
@@ -23,13 +24,14 @@ namespace DateApp.Controllers
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
+        private IConfiguration configuration;
 
-
-        public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, Func<Task<AppUser>> GetUser = null)
+        public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,IConfiguration configuration, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
+            this.configuration = configuration;
 
 
 
@@ -72,10 +74,56 @@ namespace DateApp.Controllers
         }
 
 
+        //public async Task<IActionResult> StaticRoute(RoutingViewModel model)
+        //{
+
+
+        //    string x= configuration.GetValue<string>("ApiOpenWeather");
+        //    string y= configuration.GetValue<string>("US1");
+
+        //    string ReverseGeocodingKey = "pk.6a0568ea2a60f5218a864c2d9f7e5432";
+
+        //    var httpClient1 = new HttpClient();
+        //    var url1 = "https://us1.locationiq.com/v1/reverse.php?key=" + ReverseGeocodingKey + "&lat=" + model.UserLatitude + "&lon=" + model.UserLongitude + "&format=json";
+        //    HttpResponseMessage response1 = await httpClient1.GetAsync(url1);
+
+        //    string responseBody1 = await response1.Content.ReadAsStringAsync();
+        //    JObject reverseGeocodingObj = JObject.Parse(responseBody1);
+
+        //    string postCode = (string)reverseGeocodingObj["address"]["postcode"];
+        //    var httpClient = new HttpClient();
+
+        //    string OpenWeatherKey = "";
+
+
+        //    var url = "http://api.openweathermap.org/data/2.5/weather?q=" + postCode + ",pl&units=metric&APPID=41270c91174b3fd8bdae41229160b95d";
+        //    HttpResponseMessage response = await httpClient.GetAsync(url);
+
+        //    string responseBody = await response.Content.ReadAsStringAsync();
+        //    JObject o = JObject.Parse(responseBody);
+
+        //    Weather_Data weather = new Weather_Data();
+        //    weather.City = (string)o["name"];
+        //    weather.Temp = (double)o["main"]["temp"];
+        //    weather.Temp_Min = (double)o["main"]["temp_min"];
+        //    weather.Temp_Max = (double)o["main"]["temp_max"];
+        //    weather.Description = (string)o["weather"][0]["description"];
+
+        //    model.details = weather;
+
+
+        //    return View("StaticRoute", model);
+        //}
+
+
+
         public async Task<IActionResult> StaticRoute(RoutingViewModel model)
         {
 
-            string ReverseGeocodingKey = "pk.6a0568ea2a60f5218a864c2d9f7e5432";
+            string TomTomKey= configuration.GetValue<string>("TomTomKey");
+            ViewBag.TomTomkey = TomTomKey; 
+            string  ReverseGeocodingKey= configuration.GetValue<string>("ApiOpenWeather");
+            string OpenWeatherKey = configuration.GetValue<string>("US1");          
 
             var httpClient1 = new HttpClient();
             var url1 = "https://us1.locationiq.com/v1/reverse.php?key=" + ReverseGeocodingKey + "&lat=" + model.UserLatitude + "&lon=" + model.UserLongitude + "&format=json";
@@ -85,8 +133,10 @@ namespace DateApp.Controllers
             JObject reverseGeocodingObj = JObject.Parse(responseBody1);
 
             string postCode = (string)reverseGeocodingObj["address"]["postcode"];
-            var httpClient = new HttpClient();
-            var url = "http://api.openweathermap.org/data/2.5/weather?q=" + postCode + ",pl&units=metric&APPID=41270c91174b3fd8bdae41229160b95d";
+            var httpClient = new HttpClient();        
+
+
+            var url = "http://api.openweathermap.org/data/2.5/weather?q=" + postCode + ",pl&units=metric&APPID="+OpenWeatherKey;
             HttpResponseMessage response = await httpClient.GetAsync(url);
 
             string responseBody = await response.Content.ReadAsStringAsync();
@@ -104,6 +154,17 @@ namespace DateApp.Controllers
 
             return View("StaticRoute", model);
         }
+
+
+
+
+
+
+
+
+
+
+
 
         public PictureType GetPictureType(string PictureNumber)
         {
