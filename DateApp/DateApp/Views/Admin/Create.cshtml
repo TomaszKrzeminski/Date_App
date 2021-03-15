@@ -59,6 +59,10 @@
                     <div><span asp-validation-for="Password" class="text-danger"></span></div>
                     <input class="form-control" asp-for="Password" />
                 </div>
+                <div style="display:none;">
+                    <input id="Latitude"  asp-for="Latitude" />
+                    <input id="Longitude"  asp-for="Longitude" />
+                </div>
 
                 <button class="btn btn-warning" type="submit">Utwórz</button>
                 <a class="btn btn-danger" asp-action="Index">Anuluj</a>
@@ -81,9 +85,37 @@
 
         $("input.input-validation-error").closest(".form-group").addClass("has-danger");
 
-        
+
 
     });
+</script>
+
+<div style="display:none">
+    <form asp-action="Coordinates" asp-controller="Pair" method="Post">
+        <input type="hidden" id="Longitude" name="Longitude" />
+        <input type="hidden" id="Langitude" name="Langitude" />
+    </form>
+</div>
+
+<script>
+    var x = document.getElementById("Geo");
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        document.getElementById('Latitude').value  = position.coords.latitude;
+        document.getElementById('Longitude').value = position.coords.longitude;      
+               
+    }
+
+
+    getLocation();
+
 </script>
 
 

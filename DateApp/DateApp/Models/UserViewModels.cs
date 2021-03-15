@@ -27,6 +27,9 @@ namespace DateApp.Models
         [Required]
         public string Password { get; set; }
 
+        public string Latitude { get; set; }
+
+        public string Longitude { get; set; }
 
     }
 

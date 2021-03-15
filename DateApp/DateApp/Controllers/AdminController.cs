@@ -26,7 +26,7 @@ namespace DateApp.Controllers
         {
             this.repository = repository;
             userManager = usrMgr;
-           
+
             if (GetUser == null)
             {
                 this.GetUser = () => userManager.GetUserAsync(HttpContext.User);
@@ -415,6 +415,22 @@ namespace DateApp.Controllers
             return View(create);
         }
 
+
+        public double getValue(string value)
+        {
+            try
+            {
+                return double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateModel model)
         {
@@ -461,11 +477,25 @@ namespace DateApp.Controllers
                 await userManager.AddClaimAsync(user, claim);
 
                 ///// New user without role
-                await userManager.AddToRoleAsync(user, "NewUser");               
+                await userManager.AddToRoleAsync(user, "NewUser");
 
                 ////
                 if (result.Succeeded)
                 {
+
+                    try
+                    {
+                        string Id = user.Id;
+                        double La = getValue(model.Latitude);
+                        double Lon = getValue(model.Longitude);
+                        bool check = repository.SaveCoordinates(Id, Lon, La);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+
                     return RedirectToRoute(new { controller = "Account", action = "Login", Id = "MyId" });
                 }
                 else
