@@ -14,13 +14,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DateApp.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
 
         private UserManager<AppUser> userManager;
         public IRepository repository;
         private Func<Task<AppUser>> GetUser;
-        private UserStore<AppUser> UserStore;
+        //private UserStore<AppUser> UserStore;
 
         public AdminController(IRepository repository, UserManager<AppUser> usrMgr, Func<Task<AppUser>> GetUser = null)
         {
@@ -35,13 +36,8 @@ namespace DateApp.Controllers
             {
                 this.GetUser = GetUser;
             }
-
-
-
-
+                                 
         }
-
-
 
         public ActionResult ResetPassword()
         {
@@ -49,8 +45,7 @@ namespace DateApp.Controllers
 
             return View(model);
         }
-
-
+        
         public string MakeHtmlMessage(string Email, string link)
         {
 
@@ -154,6 +149,7 @@ namespace DateApp.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult ChangePassword(string Token)
         {
@@ -161,12 +157,6 @@ namespace DateApp.Controllers
             model.Token = Token;
             return View(model);
         }
-
-
-
-
-
-
 
         [HttpPost]
         public ActionResult ChangePassword(ResetPasswordViewModel model)
@@ -226,8 +216,6 @@ namespace DateApp.Controllers
 
         }
 
-
-
         public PictureType GetPictureType(string PictureNumber)
         {
             PictureType type = new PictureType();
@@ -254,19 +242,14 @@ namespace DateApp.Controllers
             return type;
         }
 
-
-
-
-
-
-
+        [Authorize(Roles = "Administrator")]
         public IActionResult AdministrationPanel()
         {
             SelectUserViewModel model = new SelectUserViewModel();
 
             return View(model);
         }
-
+        [Authorize(Roles = "Administrator")]
         public IActionResult RemoveUser(string id)
         {
 
@@ -283,7 +266,7 @@ namespace DateApp.Controllers
 
 
         }
-
+        [Authorize(Roles = "Administrator")]
         public IActionResult AddLikes(string id)
         {
             AppUser user = repository.GetUser(id);
@@ -297,7 +280,7 @@ namespace DateApp.Controllers
 
             return View(model);
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public IActionResult AddLikes(AddLikesViewModel model)
         {
@@ -326,7 +309,7 @@ namespace DateApp.Controllers
 
         }
 
-
+        [Authorize(Roles = "Administrator")]
         public IActionResult RemovePhoto(string id)
         {
             AppUser user = repository.GetUser(id);
@@ -341,7 +324,7 @@ namespace DateApp.Controllers
 
             return View(model);
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public IActionResult RemovePicture(RemovePictureViewModel model)
         {
@@ -363,7 +346,7 @@ namespace DateApp.Controllers
 
 
         }
-
+        [Authorize(Roles = "Administrator")]
         public ActionResult SearchUser(string term)
         {
 
@@ -388,7 +371,7 @@ namespace DateApp.Controllers
             //                  .Select(r => new { id = r.ProductID, label = r.ProductName, name = "ProductNameID" }).ToArray();
             return Ok(Emails);
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public ActionResult SelectUser(string term)
         {
@@ -407,6 +390,7 @@ namespace DateApp.Controllers
 
         }
 
+        [AllowAnonymous]
         public ActionResult Create()
         {
             CreateModel create = new CreateModel();
@@ -414,7 +398,6 @@ namespace DateApp.Controllers
             create.Sex = "";
             return View(create);
         }
-
 
         public double getValue(string value)
         {
@@ -428,9 +411,7 @@ namespace DateApp.Controllers
             }
         }
 
-
-
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(CreateModel model)
         {
@@ -512,46 +493,127 @@ namespace DateApp.Controllers
             return View(model);
         }
 
+        public bool SendResetToken(AppUser user, string link)
+        {
+            try
+            {
+                string body = MakeHtmlMessage(user.Email, link);
+                MailMessage newMail = new MailMessage
+                {
+                    From = new MailAddress("DateApp@gmail.com"),
+                    Subject = "Usuwanie konta w DateApp " + DateTime.Now.ToShortDateString(),
+                    Body = body,
+                    IsBodyHtml = true,
+                };
+                var view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                newMail.To.Add(user.Email);
+                SetSmtpClient2 Client = new SetSmtpClient2();
+                SmtpClient client = Client.SetClient();
+
+
+                using (client)
+                {
+
+                    client.Send(newMail);
+
+
+                }
+
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        //[AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Delete()
+        public ActionResult RemoveUserWithToken1()
         {
 
-            string Id = GetUser().Result.Id;
-            AppUser user = await userManager.FindByIdAsync(Id);
+            AppUser user = GetUser().Result;
 
-            if (user != null)
+            var token = userManager.GenerateUserTokenAsync(
+            user, "RemoveUserTotpTokenProvider", "RemoveUserConfirmation").Result;
+
+
+            var resetLink = Url.Action("RemoveUserWithToken2",
+                                "Admin", new { token = token, UserId = user.Id },
+                                 protocol: HttpContext.Request.Scheme);
+
+            bool check = SendResetToken(user, resetLink);
+
+            string Message = "";
+            if (check)
+            {
+                Message = "Link do usunięcia konta został wysłany na Twój Email";
+                return View("Error", Message);
+            }
+            else
+            {
+                Message = "Coś poszło nie  tak nie udało się wysłać linku  na Twój email spróbuj ponownie później";
+                return View("Error", Message);
+            }
+
+
+
+        }
+
+        [AllowAnonymous]
+        public ActionResult RemoveUserWithToken2(string token, string UserId)
+        {
+            string Message = "";
+            AppUser user = repository.GetUser(UserId);
+            bool isValid = userManager.VerifyUserTokenAsync(user, "RemoveUserTotpTokenProvider", "RemoveUserConfirmation", token).Result;
+            if (isValid)
             {
 
-                //bool removeS = repository.RemoveSearchDetails(Id);
-                //bool removeC = repository.RemoveCoordinates(Id);
-                //bool removeM = repository.RemoveMatchesAll(Id);
-
-
-                //IdentityResult result = await userManager.DeleteAsync(user);
-
-
-                bool result = repository.RemoveUserByAdmin(user.Id);
-
-                if (result)
+                if (user != null)
                 {
-                    return RedirectToAction("Login", "Account", null);
-                }
-                else
-                {
-                    return View("Error", "Błąd nie można usunąć użytkownika");
+                    bool result = repository.RemoveUserByAdmin(user.Id);
+                    if (result)
+                    {
+                        Message = "Twoje konto zostało usunięte pomyślnie";
+                        return View("Error", Message);
+                    }
                 }
 
             }
-
-            return View("Error", "Błąd nie można usunąć użytkownika");
-
-
-
+            Message = "Błąd twoje konto nie zostało usunięte ";
+            return View("Error", Message);
         }
 
-        public IActionResult Index()
-        {
-            return View(userManager.Users);
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> Delete()
+        //{
+
+        //    string Id = GetUser().Result.Id;
+        //    AppUser user = await userManager.FindByIdAsync(Id);
+
+        //    if (user != null)
+        //    {
+
+        //        bool result = repository.RemoveUserByAdmin(user.Id);
+
+        //        if (result)
+        //        {
+        //            return RedirectToAction("Login", "Account", null);
+        //        }
+        //        else
+        //        {
+        //            return View("Error", "Błąd nie można usunąć użytkownika");
+        //        }
+
+        //    }
+
+        //    return View("Error", "Błąd nie można usunąć użytkownika");
+
+        //}
+
+
     }
 }

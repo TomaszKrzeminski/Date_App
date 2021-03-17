@@ -19,6 +19,7 @@ using System.Collections.Specialized;
 using Quartz.Impl;
 using DateApp.Jobs;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DateApp
 {
@@ -40,7 +41,7 @@ namespace DateApp
 
         public IConfiguration Configuration { get; }
 
-       
+
 
 
         public void ConfigureServices(IServiceCollection services)
@@ -59,16 +60,38 @@ namespace DateApp
 
 
 
+
+
+
+
+
+
             //
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             //
 
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
 
-            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+            //services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+
+            //RemoveUser Token
+
+            services.Configure<DataProtectionTokenProviderOptions>(
+           x => x.TokenLifespan = TimeSpan.FromMinutes(30));
+
+
+            services.AddIdentity<AppUser, IdentityRole>()
+           .AddEntityFrameworkStores<AppIdentityDbContext>()
+           .AddDefaultTokenProviders()
+           .AddRemoveUserTotpTokenProvider();
+
+            ///
+
+
+
             services.AddTransient<IRepository, Repository>();
             services.AddTransient<ICitiesInRange, CitiesInRangeClass>();
-           
+
 
             //Quartz Repo
             services.AddTransient<QuartzContext>();
@@ -94,10 +117,10 @@ namespace DateApp
 
             //services.AddMvc();
             services.AddSignalR();
-            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();                    
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
 
-            services.AddTransient<NotificationJob>();            
+            services.AddTransient<NotificationJob>();
             services.AddTransient<INotificationsSheduler, NotificationsSheduler>();
 
             services.AddSingleton(provider => _quartzScheduler);
@@ -130,7 +153,7 @@ namespace DateApp
             app.UseStatusCodePages();
 
 
-           
+
 
 
 

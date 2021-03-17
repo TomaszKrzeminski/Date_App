@@ -217,7 +217,16 @@
             </div>
 
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
-                <form asp-action="Delete" asp-controller="Admin">
+                @*<form asp-action="Delete" asp-controller="Admin">
+            <label class="switch">
+
+            </label>
+
+            <button class="btn btn-danger" type="submit">Usuń Konto</button>
+
+        </form>*@
+
+                <form asp-action="RemoveUserWithToken1" asp-controller="Admin" method="post">
                     <label class="switch">
 
                     </label>
@@ -225,6 +234,8 @@
                     <button class="btn btn-danger" type="submit">Usuń Konto</button>
 
                 </form>
+
+
             </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <form asp-action="Logout" asp-controller="Account">
@@ -242,82 +253,8 @@
 
 <script>
 
-   //StaticRoute
-    //
-    //$(document).on("click", "#StaticRoute", function () {
-
-
-
-        //alert("fuck");
-        //$.post("/Home/StaticRoute",
-        //    {
-        //        Latitude: $('#LatSR').val(),
-        //        Longitude: $('#LonSR').val()
-
-                
-
-        //    }
-        //    ,
-        //    function (data, status) {
-
-        //    });
-
-        @*var data = {};
-        //var Id = $(this).find('input[name="ReceiverId"]').val();
-        data["Latitude"] = "100";
-        data["Longitude"] = "200";
-
-        $.ajax({
-     url: '@Url.Action("StaticRoute", "Home")',
-     type: "post",
-     contentType: 'application/x-www-form-urlencoded',
-     data: data,
-     headers: {
-         RequestVerificationToken:
-             $('input:hidden[name="__RequestVerificationToken"]').val()
-     },
-            success: function (result) {
-
-
-
-                alert("Works");
-                
-
-
-     }
- });*@
-
-
-
-
-    //     $.post("/Home/StaticRoute",
-    //        {
-    //            Latitude: $('#LatSR').val(),
-    //            Longitude: $('#LonSR').val()
-
-
-
-    //        }
-    //        ,
-    //        function (data, status) {
-
-    //        });
-
-
-
-
-
-
-
-    //});
-
-
-
-
-
-
-
-
+   
+          
     ///SearchAge
           
     $("#sliderA").slider({

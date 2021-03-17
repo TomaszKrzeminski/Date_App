@@ -1609,7 +1609,15 @@ namespace DateApp.Models
             try
             {
 
+                //
+                NotificationCheck check = context.NotificationCheck.Where(n => n.AppUserId == Id).FirstOrDefault();
+                if(check!=null)
+                {
+                    context.NotificationCheck.Remove(check);
+                    context.SaveChanges();
+                }
 
+                //
 
 
 
