@@ -8,7 +8,7 @@
     <title>@ViewBag.Title</title>
     <style type="text/css">
     </style>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">*@
 
 
 
@@ -32,12 +32,12 @@
 
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=6LdRikIaAAAAACEjEtyW1PYRzsCoCJDum3CU3xRV"></script>
+    @*<script src="https://www.google.com/recaptcha/api.js?render=6LdRikIaAAAAACEjEtyW1PYRzsCoCJDum3CU3xRV"></script>*@
 
 </head>
 <body>
     <div>
-        @*@await  Component.InvokeAsync("NotificationsChecker")*@
+        @await  Component.InvokeAsync("NotificationsChecker")
         <span class="AntiForge"> @Html.AntiForgeryToken() </span>
         @RenderBody()
     </div>

@@ -42,6 +42,7 @@ namespace DateApp
         public IConfiguration Configuration { get; }
 
 
+        
 
 
         public void ConfigureServices(IServiceCollection services)
@@ -61,6 +62,14 @@ namespace DateApp
 
 
 
+            /// Same Site Flag
+          
+
+
+
+            ////
+
+            // Add the cookie to the response cookie collection
 
 
 
@@ -143,6 +152,12 @@ namespace DateApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppIdentityDbContext context)
         {
+
+            /// same site flag
+            //app.UseCookiePolicy();
+            //app.UseAuthentication();
+            //app.UseSession();
+            ///
 
             _quartzScheduler.JobFactory = new AspnetCoreJobFactory(app.ApplicationServices);
             _quartzScheduler.Start().Wait();

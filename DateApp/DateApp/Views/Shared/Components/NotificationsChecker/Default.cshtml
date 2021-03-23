@@ -1,6 +1,8 @@
 ﻿@model string
 
 
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12" id="Notify">
@@ -11,42 +13,42 @@
 
 
 
-    @*<script>            
-    var interval = 20000;
- setInterval(function() {Update()}, interval);
+@*<script>
+       var interval = 20000;
+    setInterval(function() {Update()}, interval);
 
- function Update(){
-
-
-     var data = {};
-    var UserId =@Html.Raw( Json.Serialize(@Model));
-     data["Id"] = UserId;
+    function Update(){
 
 
-        $.ajax({
-     url: '@Url.Action("CheckNotifty", "Notification")',
-     type: "get",
-     contentType: 'application/x-www-form-urlencoded',
-     data: data,
-     headers: {
-         RequestVerificationToken:
-             $('input:hidden[name="__RequestVerificationToken"]').val()
-     },
-            success: function (result) {
+        var data = {};
+       var UserId =@Html.Raw( Json.Serialize(@Model));
+        data["Id"] = UserId;
 
-         $("#Notify").html(result);
 
-                /// Odśwież statusy
+           $.ajax({
+        url: '@Url.Action("CheckNotifty", "Notification")',
+        type: "get",
+        contentType: 'application/x-www-form-urlencoded',
+        data: data,
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+               success: function (result) {
 
-     }
- });
-               
+            $("#Notify").html(result);
+
+                   /// Odśwież statusy
 
         }
+    });
+
+
+           }
 
 
 
-    </script>*@
+       </script>*@
 
 
 
@@ -87,7 +89,7 @@
 
      }
  });
-               
+
 
         }
 

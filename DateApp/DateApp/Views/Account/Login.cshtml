@@ -2,8 +2,9 @@
 @using System.Configuration
 @using Microsoft.Extensions.Options
 @inject IOptions<DateApp.Models.ReCaptchaSettings> GoogleRecap
+<script src="https://www.google.com/recaptcha/api.js?render=6LdRikIaAAAAACEjEtyW1PYRzsCoCJDum3CU3xRV"></script>
 @{
-    Layout = "_Layout";   
+    Layout = "_Layout";
 }
 
 <style type="text/css">
@@ -44,10 +45,10 @@
                 <div>
                     <a class="btn btn-danger" asp-action="ResetPassword" asp-controller="Admin">Resetuj Hasło</a>
                 </div>
-               
-               
+
+
             </form>
-           
+
         </div>
         <div class="col-lg-5 col-md-4 col-sm-3"></div>
     </div>
@@ -55,28 +56,28 @@
 
 
 <script>
-   
-        
-    
-        
+
+
+
+
 
 
     $(document).ready(function () {
 
-      
 
-       
 
-          
 
-            grecaptcha.ready(function () {
-                grecaptcha.execute('6LdRikIaAAAAACEjEtyW1PYRzsCoCJDum3CU3xRV', { action: 'submit' }).then(function (token) {
-                                    
-                    console.log(token);
-                    $('#Input_Token').val(token);
 
-                });
+
+
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6LdRikIaAAAAACEjEtyW1PYRzsCoCJDum3CU3xRV', { action: 'submit' }).then(function (token) {
+
+                console.log(token);
+                $('#Input_Token').val(token);
+
             });
+        });
         //}
 
 
