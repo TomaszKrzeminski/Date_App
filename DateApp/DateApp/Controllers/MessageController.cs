@@ -22,9 +22,10 @@ namespace DateApp.Controllers
         private int MessagePerPage { get; set; }
         private IHubContext<MessageHub> messageContext;
         private IHubContext<CheckConnectionHub> connectionContext;
+        private IHubContext<NotificationsCheckerHub> notificationchecker;
         private Func<Task<AppUser>> GetUser;
 
-        public MessageController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,IHubContext<MessageHub> messageContext,IHubContext<CheckConnectionHub>connectionContext, Func<Task<AppUser>> GetUser = null)
+        public MessageController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,IHubContext<MessageHub> messageContext,IHubContext<CheckConnectionHub>connectionContext, IHubContext<NotificationsCheckerHub> notificationchecker, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
@@ -32,6 +33,7 @@ namespace DateApp.Controllers
             this.MessagePerPage = 5;
             this.messageContext = messageContext;
             this.connectionContext = connectionContext;
+            this.notificationchecker = notificationchecker;
 
             if (GetUser == null)
             {
@@ -181,7 +183,7 @@ namespace DateApp.Controllers
                 messageContext.Clients.User(ReceiverId).SendAsync("UpdateChat_Users");
                 AppUser user = repository.GetUser(message.SenderId);
                 messageContext.Clients.User(ReceiverId).SendAsync("UpdateChat_WriteMessage",user.Email);
-
+                notificationchecker.Clients.User(ReceiverId).SendAsync("CheckAllNotifications",ReceiverId);
             }
             SearchDetails Details = repository.GetUserDetails(message.ReceiverId);
             string SenderId = GetUser().Result.Id;

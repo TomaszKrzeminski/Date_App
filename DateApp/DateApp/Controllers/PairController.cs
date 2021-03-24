@@ -4,12 +4,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DateApp.Hubs;
 using DateApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json.Linq;
 
 namespace DateApp.Controllers
@@ -21,13 +23,14 @@ namespace DateApp.Controllers
         private UserManager<AppUser> userManager;
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
+        private IHubContext<NotificationsCheckerHub> notificationchecker;
 
-        public PairController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,Func<Task<AppUser>> GetUser = null)
+        public PairController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, IHubContext<NotificationsCheckerHub> notificationchecker, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
-
+            this.notificationchecker = notificationchecker;
 
             if (GetUser == null)
             {
@@ -120,6 +123,14 @@ namespace DateApp.Controllers
 
             MatchAction action = repository.MatchAction2(Id, UserId, Decision);
             MatchView match = repository.GetMatchViews(UserId, "", true).FirstOrDefault();
+
+            if(Decision=="Accept"||Decision=="SuperLike")
+            {
+
+                notificationchecker.Clients.User(Id).SendAsync("CheckAllNotifications", Id);
+
+            }
+
 
             if (match != null && match.PairId != "")
             {

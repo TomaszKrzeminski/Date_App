@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DateApp.Hubs
 {
     [Authorize]
-    public class NotificationHub:Hub
+    public class NotificationHub : Hub
     {
 
         private IHubContext<NotificationHub> notificationContext;
