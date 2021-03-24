@@ -2,21 +2,82 @@
 
 
 
-   
-       
-            <div class="row">
-                
-                <div class="col-lg-3 help"   > @Model.NewMessages    <span>Nowe wiadomości</span>      </div>
-                <div class="col-lg-3 help">  @Model.NewPairs           <span>Nowe Pary</span></div>
-                <div class="col-lg-3 help">  <span>Nowe polubienia za @Model.NewLikes.Days Dni @Model.NewLikes.Hours Godzin @Model.NewLikes.Minutes Minut</span>       </div>
-                <div class="col-lg-3 help" >   <span>Nowe super polubienia za @Model.NewSuperLikes.Days Dni @Model.NewSuperLikes.Hours Godzin @Model.NewSuperLikes.Minutes Minut</span>      </div>
-            </div>
-       <div class="row">
-           <div id="Text" class="col-lg-12">
 
-           </div>
-       </div>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+
+    <div class="collapse navbar-collapse " id="navbarCollapse">
+        <div class="navbar-nav col-lg-3">
+            <a href="#" class="nav-item nav-link active">
+
+                @if (Model.NewMessages > 1)
+                {
+                    <div class="text-center"> @Model.NewMessages <img style="max-width:30px; max-height:30px;" src="~/AppPictures/envelopeclose.png" /> </div>
+                }
+                else
+                {
+                    <div class="text-center">@Model.NewMessages <img style="max-width:30px; max-height:30px;" src="~/AppPictures/evvelopeopen.png" /> </div>
+                }
+
+            </a>
+        </div>
+        <div class="navbar-nav col-lg-3">
+            <a href="#" class="nav-item nav-link active">
+
+                @if (Model.NewPairs > 1)
+                {
+                    <div class="text-center">   @Model.NewPairs  <img style="max-width:40px; max-height:40px;" src="~/AppPictures/coupleNew.png" /> </div>
+                }
+                else
+                {
+                    <div class="text-center">   @Model.NewPairs  <img style="max-width:40px; max-height:40px;" src="~/AppPictures/noCouple.jpg" /> </div>
+                }
+            </a>
+
+        </div>
+        <div class="navbar-nav col-lg-3">
+            <a href="#" class="nav-item nav-link active">
+                @if (Model.NewLikes.Days <= 0 && Model.NewLikes.Hours <= 0 && Model.NewLikes.Minutes <= 0)
+                {
+                    <span>Dostępne Polubienia</span>
+                    <img style="max-width:40px; max-height:40px;" src="~/AppPictures/heart.png" />
+                }
+                else
+                {
+                    <span>Nowe polubienia za @Model.NewLikes.Days Dni @Model.NewLikes.Hours Godzin @Model.NewLikes.Minutes Minut</span>
+                }
+            </a>
+
+        </div>
+        <div class="navbar-nav col-lg-3">
+            <a href="#" class="nav-item nav-link active">
+
+                @if (Model.NewSuperLikes.Days <= 0 && Model.NewSuperLikes.Hours <= 0 && Model.NewSuperLikes.Minutes <= 0)
+                {
+                    <span>Dostępne Super Like</span>
+                    <img style="max-width:40px; max-height:40px;" src="~/AppPictures/star.png" />
+                }
+                else
+                {
+                    <span>Nowe super polubienia za @Model.NewSuperLikes.Days Dni @Model.NewSuperLikes.Hours Godzin @Model.NewSuperLikes.Minutes Minut</span>
+                }
+
+            </a>
+
+        </div>
+
+    </div>
+</nav>
 
 
+@*<div class="row">
 
-         
+             <div class="col-lg-3 help"   >  @Model.NewMessages    <span>Nowe wiadomości</span>      </div>
+             <div class="col-lg-3 help">  @Model.NewPairs           <span>Nowe Pary</span></div>
+             <div class="col-lg-3 help">  <span>Nowe polubienia za @Model.NewLikes.Days Dni @Model.NewLikes.Hours Godzin @Model.NewLikes.Minutes Minut</span>       </div>
+             <div class="col-lg-3 help" >   <span>Nowe super polubienia za @Model.NewSuperLikes.Days Dni @Model.NewSuperLikes.Hours Godzin @Model.NewSuperLikes.Minutes Minut</span>      </div>
+         </div>
+    <div class="row">
+        <div id="Text" class="col-lg-12">
+
+        </div>
+    </div>*@
