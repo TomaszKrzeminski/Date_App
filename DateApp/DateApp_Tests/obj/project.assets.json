@@ -135,24 +135,24 @@
           "lib/netstandard1.6/Microsoft.AI.DependencyCollector.dll": {}
         }
       },
-      "Microsoft.AspNetCore/2.0.4": {
+      "Microsoft.AspNetCore/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Diagnostics": "2.0.3",
-          "Microsoft.AspNetCore.Hosting": "2.0.3",
-          "Microsoft.AspNetCore.Routing": "2.0.3",
-          "Microsoft.AspNetCore.Server.IISIntegration": "2.0.3",
-          "Microsoft.AspNetCore.Server.Kestrel": "2.0.4",
-          "Microsoft.AspNetCore.Server.Kestrel.Https": "2.0.4",
-          "Microsoft.Extensions.Configuration.CommandLine": "2.0.2",
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": "2.0.2",
-          "Microsoft.Extensions.Configuration.FileExtensions": "2.0.2",
-          "Microsoft.Extensions.Configuration.Json": "2.0.2",
-          "Microsoft.Extensions.Configuration.UserSecrets": "2.0.2",
-          "Microsoft.Extensions.Logging": "2.0.2",
-          "Microsoft.Extensions.Logging.Configuration": "2.0.2",
-          "Microsoft.Extensions.Logging.Console": "2.0.2",
-          "Microsoft.Extensions.Logging.Debug": "2.0.2"
+          "Microsoft.AspNetCore.Diagnostics": "2.0.1",
+          "Microsoft.AspNetCore.Hosting": "2.0.1",
+          "Microsoft.AspNetCore.Routing": "2.0.1",
+          "Microsoft.AspNetCore.Server.IISIntegration": "2.0.1",
+          "Microsoft.AspNetCore.Server.Kestrel": "2.0.1",
+          "Microsoft.AspNetCore.Server.Kestrel.Https": "2.0.1",
+          "Microsoft.Extensions.Configuration.CommandLine": "2.0.0",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "2.0.0",
+          "Microsoft.Extensions.Configuration.FileExtensions": "2.0.0",
+          "Microsoft.Extensions.Configuration.Json": "2.0.0",
+          "Microsoft.Extensions.Configuration.UserSecrets": "2.0.0",
+          "Microsoft.Extensions.Logging": "2.0.0",
+          "Microsoft.Extensions.Logging.Configuration": "2.0.0",
+          "Microsoft.Extensions.Logging.Console": "2.0.0",
+          "Microsoft.Extensions.Logging.Debug": "2.0.0"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.dll": {}
@@ -308,7 +308,7 @@
           "lib/netcoreapp2.0/_._": {}
         },
         "build": {
-          "build/netcoreapp2.0/_._": {}
+          "build/netcoreapp2.0/Microsoft.AspNetCore.All.targets": {}
         }
       },
       "Microsoft.AspNetCore.Antiforgery/2.0.3": {
@@ -1124,7 +1124,7 @@
           "Microsoft.AspNetCore.Mvc.RazorPages": "2.0.4"
         },
         "build": {
-          "build/netstandard2.0/_._": {}
+          "build/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.ViewCompilation.targets": {}
         }
       },
       "Microsoft.AspNetCore.Mvc.RazorPages/2.0.4": {
@@ -2217,7 +2217,7 @@
           "lib/netstandard2.0/Microsoft.Extensions.Configuration.UserSecrets.dll": {}
         },
         "build": {
-          "build/netstandard2.0/_._": {}
+          "build/netstandard2.0/Microsoft.Extensions.Configuration.UserSecrets.targets": {}
         }
       },
       "Microsoft.Extensions.Configuration.Xml/2.0.2": {
@@ -5902,6 +5902,7 @@
         "dependencies": {
           "GeoCoordinate.NetCore": "1.0.0.1",
           "MailKit": "2.9.0",
+          "Microsoft.AspNetCore": "2.1.0",
           "Microsoft.AspNetCore.All": "2.0.9",
           "Microsoft.AspNetCore.SignalR": "1.1.0",
           "Microsoft.Data.SqlClient": "2.1.0-preview1.20235.1",
@@ -6061,16 +6062,16 @@
         "microsoft.applicationinsights.dependencycollector.nuspec"
       ]
     },
-    "Microsoft.AspNetCore/2.0.4": {
-      "sha512": "E1a6MEGfLu9FQ2Mafl0zxrATSUsJOYCIhZQsglRlIK86/RhVKSP57lTgDcdlF2zNvk6TYURI1zVPirE+gRWSKA==",
+    "Microsoft.AspNetCore/2.0.1": {
+      "sha512": "12IBPqyTHIAEReaV/JhHsRImbpASKs4SokhHTl/yn5Q6+IHZQtCpOeEaPJrThVgjtnljReGqUlsnFXpx6IQK6g==",
       "type": "package",
-      "path": "microsoft.aspnetcore/2.0.4",
+      "path": "microsoft.aspnetcore/2.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.xml",
-        "microsoft.aspnetcore.2.0.4.nupkg.sha512",
+        "microsoft.aspnetcore.2.0.1.nupkg.sha512",
         "microsoft.aspnetcore.nuspec"
       ]
     },
@@ -15966,6 +15967,8 @@
     ".NETCoreApp,Version=v2.2": [
       "DateApp >= 1.0.0",
       "MailKit >= 2.9.0",
+      "Microsoft.AspNetCore >= 2.0.1",
+      "Microsoft.AspNetCore.All >= 2.0.9",
       "Microsoft.Data.SqlClient >= 2.1.0-preview1.20235.1",
       "Microsoft.NET.Test.Sdk >= 15.9.0",
       "Microsoft.NETCore.App >= 2.2.0",
@@ -16023,6 +16026,14 @@
             "target": "Package",
             "version": "[2.9.0, )"
           },
+          "Microsoft.AspNetCore": {
+            "target": "Package",
+            "version": "[2.0.1, )"
+          },
+          "Microsoft.AspNetCore.All": {
+            "target": "Package",
+            "version": "[2.0.9, )"
+          },
           "Microsoft.Data.SqlClient": {
             "target": "Package",
             "version": "[2.1.0-preview1.20235.1, )"
@@ -16057,5 +16068,25 @@
         "warn": true
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1605",
+      "level": "Error",
+      "message": "Detected package downgrade: Microsoft.AspNetCore from 2.0.4 to 2.0.1. Reference the package directly from the project to select a different version. \r\n DateApp_Tests -> Microsoft.AspNetCore.All 2.0.9 -> Microsoft.AspNetCore (>= 2.0.4) \r\n DateApp_Tests -> Microsoft.AspNetCore (>= 2.0.1)",
+      "libraryId": "Microsoft.AspNetCore",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    },
+    {
+      "code": "NU1605",
+      "level": "Error",
+      "message": "Detected package downgrade: Microsoft.AspNetCore from 2.1.0 to 2.0.1. Reference the package directly from the project to select a different version. \r\n DateApp_Tests -> DateApp -> Microsoft.AspNetCore (>= 2.1.0) \r\n DateApp_Tests -> Microsoft.AspNetCore (>= 2.0.1)",
+      "libraryId": "Microsoft.AspNetCore",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    }
+  ]
 }

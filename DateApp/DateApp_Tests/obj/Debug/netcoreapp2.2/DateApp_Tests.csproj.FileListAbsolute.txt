@@ -16,7 +16,3 @@ C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\bin\Debug\netcoreapp2.2\Da
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.csproj.CopyComplete
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.dll
 C:\Users\tomek\Desktop\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.pdb
-D:\Pulpit\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.csprojAssemblyReference.cache
-D:\Pulpit\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.csproj.CoreCompileInputs.cache
-D:\Pulpit\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.AssemblyInfoInputs.cache
-D:\Pulpit\Date_App\DateApp\DateApp_Tests\obj\Debug\netcoreapp2.2\DateApp_Tests.AssemblyInfo.cs
