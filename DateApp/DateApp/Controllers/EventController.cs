@@ -381,7 +381,8 @@ namespace DateApp.Controllers
             string FilePath = "";
             string PathText = "";
 
-            if (file != null)
+            long size = 20000000;
+            if (file != null&&file.Length<size)
             {
                 var uploads = Path.Combine(_environment.ContentRootPath, "EventImages");
 
@@ -402,19 +403,12 @@ namespace DateApp.Controllers
                     }
 
                 }
-
-
                 return FilePath;
-
-
-
             }
             else
             {
                 return FilePath;
             }
-
-
         }
 
         public async Task<string> AddMovieFileEvent(IFormFile file)
@@ -422,7 +416,10 @@ namespace DateApp.Controllers
 
             string PathText = "";
             string FilePath = "";
-            if (file != null)
+
+            long size = 250000000;
+
+            if (file != null&&file.Length<size)
             {
                 var uploads = Path.Combine(_environment.ContentRootPath, "EventMovies");
 
@@ -443,12 +440,7 @@ namespace DateApp.Controllers
                     }
 
                 }
-
-
                 return FilePath;
-
-
-
             }
             else
             {

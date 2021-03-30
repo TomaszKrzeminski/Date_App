@@ -39,7 +39,7 @@
 
 
      var data = {};
-    @*var UserId =@Html.Raw( Json.Serialize(@Model));*@
+  
      data["Id"] = UserId;
 
 
@@ -74,7 +74,7 @@
       
 
     ).catch(function (err) {
-        alert("Błąd  w Notification checker"+ err);
+        //alert("Błąd  w Notification checker"+ err);
 
     }).then(() => {
 

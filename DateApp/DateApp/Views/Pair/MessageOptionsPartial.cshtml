@@ -16,17 +16,48 @@
 <div @*onuload="con();" *@ class="row">
     <div style="min-height:1900px;border-style:solid;" class="col-lg-6">
         <div class="row">
-            <div class="col-lg-12" style="min-height:100px;border-style:solid;background-color:#fd267d;">
-                <div class="row">
-                    <div class="col-lg-4" style="max-height:80px;max-width:80px;">
-                        <a href='@Url.Action("Panel","Home")'>
-                            <img alt="0" class="img-thumbnail" src=@Model.UserMainPhotoPath>
-                        </a>
+            @*<div class="col-lg-12" style="min-height:100px;border-style:solid;background-color:#fd267d;">
+            <div class="row">
+                <div class="col-lg-4" style="max-height:80px;max-width:80px;">
+                    <a href='@Url.Action("Panel","Home")'>
+                        <img alt="0" class="img-thumbnail" src=@Model.UserMainPhotoPath>
+                    </a>
+                </div>
+                <div class="col-lg-8"> <label>@Model.UserName</label></div>
+            </div>
+
+        </div>*@
+
+
+          
+                <div class="col-lg-12" style="min-height:100px;border-style:solid;background-color:#fd267d;">
+                    <div class="row">
+
+                        <div class="col-lg-6" style="max-height:80px;max-width:80px;">
+                            <a>
+                                <img alt="0" class="img-thumbnail" src=@Model.UserMainPhotoPath>
+                            </a>
+                        </div>
+                        <div class="col-lg-6" style="max-height:80px;max-width:80px;">
+                            <a href='@Url.Action("Panel","Home")'>
+                                <img alt="0" class="img-thumbnail" src=~/AppPictures/home.png>
+                            </a>
+                        </div>
+
                     </div>
-                    <div class="col-lg-8"> <label>@Model.UserName</label></div>
+                    <div style="min-height:80px;" class="row">
+                        <div class="col-lg-12" style="min-height:40px;"></div>
+
+                        <div class="col-lg-6 ">
+                            <h5>@Model.UserName</h5>
+                        </div>
+                        <div class="col-lg-6"></div>
+
+
+                    </div>
                 </div>
 
-            </div>
+           
 
 
         </div>

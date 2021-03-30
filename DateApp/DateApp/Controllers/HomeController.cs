@@ -413,8 +413,9 @@ namespace DateApp.Controllers
 
 
             bool success = false;
+             long size = 20000000;
 
-            if (file != null)
+            if (file != null&&file.Length<size)
             {
                 var uploads = Path.Combine(_environment.ContentRootPath, "UserImages");
                 string FilePath;

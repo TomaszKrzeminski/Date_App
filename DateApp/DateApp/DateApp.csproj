@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <LangVersion>7.2</LangVersion>
+    <UserSecretsId>8ec5093f-b289-4b88-a6f8-ddd0465106d0</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +35,6 @@
     <Folder Include="EventImages\" />
     <Folder Include="EventMovies\" />
     <Folder Include="Views\Message\" />
-    <Folder Include="wwwroot\Images\" />
     <Folder Include="wwwroot\ScreenShots\" />
   </ItemGroup>
 

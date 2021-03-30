@@ -1,46 +1,167 @@
-﻿@model EventsInNeighborhoodViewModel
+﻿
+@model EventsInNeighborhoodViewModel
 @{
     Layout = "~/Views/Shared/_LayoutEvent.cshtml";
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>EventActions</title>
-    
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <br />
+        </div>
+    </div>
+    <div class="row">
+       
+        <div class="col-lg-3">
+
+            <div class="row">
+
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Opcje Wydarzeń</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row"></th>
+                            <td>  <a class="btn btn-success" asp-action="AddEvent" asp-controller="Event">Dodaj </a></td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td>  <a class="btn btn-danger" asp-action="CancelEvent" asp-controller="Event">Usuń</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td>  <a class="btn btn-info" asp-action="ShowUserEvents" asp-controller="Event">Pokaż moje wydarzenia</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td>  <a class="btn btn-info" asp-action="ShowEvents" asp-controller="Event">Szukaj wydarzeń</a></td>
+                        </tr>
+                    </tbody>
+                </table>
 
 
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3" >
-                
-                
-            </div>
-            <div class="col-lg-3">
-
-                <div class="row">
-                    <h1>Opcje Wydarzeń</h1>
-                    <div class="col-lg-12" style="min-height:50px;"> <a class="btn btn-success" asp-action="AddEvent" asp-controller="Event">Dodaj </a></div>
-                    <br />
-                    <div class="col-lg-12" style="min-height:50px;"> <a class="btn btn-danger" asp-action="CancelEvent" asp-controller="Event">Usuń</a></div>
-                    <br />
-                    <div class="col-lg-12" style="min-height:50px;"> <a class="btn btn-info" asp-action="ShowUserEvents" asp-controller="Event">Pokaż moje wydarzenia</a></div>
-                    <div class="col-lg-12" style="min-height:50px;"> <a class="btn btn-info" asp-action="ShowEvents" asp-controller="Event">Szukaj wydarzeń</a></div>
-                </div>
-
-            </div>
-            <div class="col-lg-6">
-
-                @Html.Partial("EventsInNeighborhood", Model)
 
             </div>
 
         </div>
-        
+        <div class="col-lg-6">
+
+            @Html.Partial("EventsInNeighborhood", Model)
+
+        </div>
+        <div class="col-lg-3">
+
+        </div>
     </div>
-</body>
-</html>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@model EventsInNeighborhoodViewModel
+    @{
+        Layout = "~/Views/Shared/_LayoutEvent.cshtml";
+    }
+
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>EventActions</title>
+
+
+
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3" >
+
+
+                </div>
+                <div class="col-lg-3">
+
+                    <div class="row">
+                        <h1>Opcje Wydarzeń</h1>
+                        <div class="col-lg-12" style="min-height:50px;"> <a class="btn btn-success" asp-action="AddEvent" asp-controller="Event">Dodaj </a></div>
+                        <br />
+                        <div class="col-lg-12" style="min-height:50px;"> <a class="btn btn-danger" asp-action="CancelEvent" asp-controller="Event">Usuń</a></div>
+                        <br />
+                        <div class="col-lg-12" style="min-height:50px;"> <a class="btn btn-info" asp-action="ShowUserEvents" asp-controller="Event">Pokaż moje wydarzenia</a></div>
+                        <div class="col-lg-12" style="min-height:50px;"> <a class="btn btn-info" asp-action="ShowEvents" asp-controller="Event">Szukaj wydarzeń</a></div>
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+
+                    @Html.Partial("EventsInNeighborhood", Model)
+
+                </div>
+
+            </div>
+
+        </div>
+    </body>
+    </html>*@
