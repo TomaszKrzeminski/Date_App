@@ -22,3 +22,4 @@ D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfoI
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfo.cs
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.dll
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.pdb
+D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.csprojAssemblyReference.cache

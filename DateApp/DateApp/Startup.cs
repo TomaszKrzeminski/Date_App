@@ -28,21 +28,34 @@ namespace DateApp
         /// CORS
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         /// 
-
+        private IHostingEnvironment env;
 
 
         private IScheduler _quartzScheduler;
-        public Startup(IConfiguration configruation)
+        public Startup(IConfiguration configruation, IHostingEnvironment env)
         {
             Configuration = configruation;
-            _quartzScheduler = ConfigureQuartz();
+            this.env = env;
+
+            if (env.IsDevelopment())
+            {
+                //_quartzScheduler = ConfigureQuartz();
+                _quartzScheduler = ConfigureQuartzProduction();
+            }
+            else
+            {
+                _quartzScheduler = ConfigureQuartzProduction();
+            }
+            //stop quartz 4
+
+            //
 
         }
 
         public IConfiguration Configuration { get; }
 
 
-        
+
 
 
         public void ConfigureServices(IServiceCollection services)
@@ -63,7 +76,7 @@ namespace DateApp
 
 
             /// Same Site Flag
-          
+
 
 
 
@@ -132,7 +145,18 @@ namespace DateApp
             services.AddTransient<NotificationJob>();
             services.AddTransient<INotificationsSheduler, NotificationsSheduler>();
 
-            services.AddSingleton(provider => _quartzScheduler);
+
+
+
+            //stop quartz 1
+            //
+
+            
+                services.AddSingleton(provider => _quartzScheduler);
+            
+
+
+
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 
@@ -141,10 +165,13 @@ namespace DateApp
 
         private void OnShutdown()
         {
-            //shutdown quartz is not shutdown already
-            //if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown();
 
-            if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown(true);
+           
+                if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown(true);
+           
+
+            //stop quartz 2
+            //
 
         }
 
@@ -159,8 +186,16 @@ namespace DateApp
             //app.UseSession();
             ///
 
-            _quartzScheduler.JobFactory = new AspnetCoreJobFactory(app.ApplicationServices);
-            _quartzScheduler.Start().Wait();
+
+            //stop quartz 3
+
+
+
+           
+                _quartzScheduler.JobFactory = new AspnetCoreJobFactory(app.ApplicationServices);
+                _quartzScheduler.Start().Wait();
+          
+
 
 
 
@@ -334,6 +369,45 @@ namespace DateApp
             return scheduler;
 
         }
+
+        public IScheduler ConfigureQuartzProduction()
+        {
+
+            //NameValueCollection props = new NameValueCollection
+            // {
+            //  { "quartz.serializer.type", "json" },             
+            //  };
+
+            NameValueCollection properties = new NameValueCollection
+        {
+            { "quartz.scheduler.instanceName", "RemoteServer" },
+            { "quartz.scheduler.instanceId", "RemoteServer" },
+            { "quartz.jobStore.type", "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz" },
+            { "quartz.jobStore.useProperties", "true" },
+            { "quartz.jobStore.dataSource", "default" },
+            { "quartz.jobStore.tablePrefix", "QRTZ_" },
+            { "quartz.dataSource.default.connectionString",
+              "Server=tcp:dateappserver1.database.windows.net,1433;Initial Catalog=QuartzTest2;Persist Security Info=False;User ID=admin1;Password=Martyna1985@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" },
+            { "quartz.dataSource.default.provider", "SqlServer" },
+            { "quartz.threadPool.threadCount", "1" },
+            { "quartz.serializer.type", "json" },
+        };
+
+
+
+
+
+            StdSchedulerFactory factory = new StdSchedulerFactory(properties);
+            var scheduler = factory.GetScheduler().Result;
+
+            //scheduler.ListenerManager.AddTriggerListener(new TriggerListener());
+            scheduler.ListenerManager.AddJobListener(new JobListener());
+            //scheduler.ListenerManager.AddSchedulerListener(new SchedulerListener());
+            return scheduler;
+
+        }
+
+
 
 
 
