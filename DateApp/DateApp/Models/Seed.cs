@@ -21,11 +21,9 @@ namespace UndergroundSound.Models
 
 
             context.Database.EnsureCreated();
+                       
 
-
-
-
-            void SeedRoles()
+            async void  SeedRoles()
             {
 
 
@@ -33,43 +31,55 @@ namespace UndergroundSound.Models
 
                 try
                 {
-                   
-
-                   
 
 
 
+                    //var roleStore = new RoleStore<IdentityRole>(context);
+
+                    //if (!context.Roles.Any(r => r.Name == "Administrator"))
+                    //{
+
+                    //  await  roleStore.CreateAsync(new IdentityRole { Name = "Administrator", NormalizedName = "Administrator" });
+                    //}
+
+                    //context.SaveChanges();
+
+                    //if (!context.Roles.Any(r => r.Name == "UserRole"))
+                    //{
+
+                    //  await   roleStore.CreateAsync(new IdentityRole { Name = "UserRole", NormalizedName = "UserRole" });
+                    //}
+
+                    //context.SaveChanges();
+                    //if (!context.Roles.Any(r => r.Name == "NewUser"))
+                    //{
+
+                    //  await  roleStore.CreateAsync(new IdentityRole { Name = "NewUser", NormalizedName = "NewUser" });
+                    //}
 
 
+                    //context.SaveChanges();
 
 
                     var roleStore = new RoleStore<IdentityRole>(context);
 
-                    if (!context.Roles.Any(r => r.Name == "Administrator"))
-                    {
-
-                        roleStore.CreateAsync(new IdentityRole { Name = "Administrator", NormalizedName = "Administrator" });
-                    }
-
-
-
-                    if (!context.Roles.Any(r => r.Name == "UserRole"))
-                    {
-
-                        roleStore.CreateAsync(new IdentityRole { Name = "UserRole", NormalizedName = "UserRole" });
-                    }
-
-
                     if (!context.Roles.Any(r => r.Name == "NewUser"))
                     {
 
-                        roleStore.CreateAsync(new IdentityRole { Name = "NewUser", NormalizedName = "NewUser" });
+                        await roleStore.CreateAsync(new IdentityRole { Name = "Administrator", NormalizedName = "Administrator" });                 
+                                    
+
+                        await roleStore.CreateAsync(new IdentityRole { Name = "UserRole", NormalizedName = "UserRole" });                   
+
+                   
+
+                        await roleStore.CreateAsync(new IdentityRole { Name = "NewUser", NormalizedName = "NewUser" });
                     }
 
 
-
-
                     context.SaveChanges();
+
+
 
 
 
@@ -79,12 +89,7 @@ namespace UndergroundSound.Models
 
                 }
             }
-
-
-
-            
-
-
+                                         
             void SeedAdmin(string Name, string Surname, string Sex, string City, string Email, DateTime Dateofbirth)
             {
 
@@ -144,14 +149,7 @@ namespace UndergroundSound.Models
 
 
             }
-
-
-
-
-
-
-
-
+                                                               
             void SeedUser( string Name,string Surname,string Sex,string City,string Email,DateTime Dateofbirth )
             {
 
@@ -212,13 +210,68 @@ namespace UndergroundSound.Models
 
 
             }
+                       
+            void SeedUser2(string Name, string Surname, string Sex, string City, string Email, DateTime Dateofbirth)
+            {
+
+
+                try
+                {
+                    DateTime Now = DateTime.Now;
+                    TimeSpan ts = Now - Dateofbirth;
+                    int age = ts.Days / 365;
+
+                    var User = new AppUser(Sex)
+                    {
+                        Age = age,
+                        FirstName = Name,
+                        Email = Email,
+                        Surname = Surname,
+                        //Sex = Sex,
+                        City = City,
+                        Dateofbirth = Dateofbirth,
+                        UserName = Email,
+                        EmailConfirmed = false,
+                        LockoutEnabled = true,
+                        SecurityStamp = Guid.NewGuid().ToString(),
+                        NormalizedEmail = Email.ToUpper(),
+                        NormalizedUserName = Email.ToUpper(),
+                    };
+
+                    if (!context.Users.Any(u => u.UserName == User.UserName))
+                    {
+                        var password = new PasswordHasher<AppUser>();
+                        var hashed = password.HashPassword(User, "Sekret123@");
+                        User.PasswordHash = hashed;
+                        UserStore<AppUser> userStore;
+
+                        userStore = new UserStore<AppUser>(context);
+
+                        //userStore.CreateAsync(User).Wait();
+                        userStore.CreateAsync(User).Wait();
+                        ////////
+                        Claim claim = new Claim(ClaimTypes.Email, User.Email);
+                        List<Claim> claims = new List<Claim>();
+                        claims.Add(claim);
+                        userStore.AddClaimsAsync(User, claims).Wait();
+                        userStore.AddToRoleAsync(User, "NewUser").Wait();
+
+                    }
+                    context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+
+                }
 
 
 
-          
 
 
 
+            }
+                       
             void AddNotificationCheckToUser(string UserEmail)
             {
 
@@ -258,10 +311,7 @@ namespace UndergroundSound.Models
 
 
             }
-
-
-
-
+                                 
             void AddCoordinatesToUser(string UserEmail,double Latitude,double Longitude)
             {
                 try
@@ -277,13 +327,7 @@ namespace UndergroundSound.Models
 
                 }
             }
-
-
-       
-
-
-
-
+                                                      
         void AddEvents(string EventName,string City,string ZipCode,string Latitude,string Longitude,string UserEmail,DateTime time=new DateTime())
         {
 
@@ -340,7 +384,7 @@ namespace UndergroundSound.Models
                 SeedUser("Weronika", "Rossati", "Kobieta", "Świecie", "U9@gmail.com", new DateTime(1999, 8, 21));
                 SeedUser("Ania", "Przybylska", "Kobieta", "Bydgoszcz", "U10@gmail.com", new DateTime(2001, 8, 21));
                 SeedUser("Karolina", "Świerczyński", "Kobieta", "Świecie", "U11@gmail.com", new DateTime(1950, 8, 21));
-                SeedUser("Kasia", "Przybylska", "Kobieta", "Bydgoszcz", "U12@gmail.com", new DateTime(1992, 8, 21));
+                SeedUser2("Kasia", "Przybylska", "Kobieta", "Bydgoszcz", "U12@gmail.com", new DateTime(1992, 8, 21));
 
 
 

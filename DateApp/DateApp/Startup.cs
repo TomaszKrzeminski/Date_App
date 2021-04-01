@@ -92,7 +92,19 @@ namespace DateApp
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             //
 
-            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
+
+            if (env.IsDevelopment())
+            {
+                string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DateAppDevelopment;Trusted_Connection=True;MultipleActiveResultSets=true";
+                services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionString));
+            }
+            else
+            {
+                services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
+            }
+
+
+
 
             //services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
 
@@ -151,9 +163,9 @@ namespace DateApp
             //stop quartz 1
             //
 
-            
-                services.AddSingleton(provider => _quartzScheduler);
-            
+
+            services.AddSingleton(provider => _quartzScheduler);
+
 
 
 
@@ -166,9 +178,9 @@ namespace DateApp
         private void OnShutdown()
         {
 
-           
-                if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown(true);
-           
+
+            if (!_quartzScheduler.IsShutdown) _quartzScheduler.Shutdown(true);
+
 
             //stop quartz 2
             //
@@ -191,10 +203,10 @@ namespace DateApp
 
 
 
-           
-                _quartzScheduler.JobFactory = new AspnetCoreJobFactory(app.ApplicationServices);
-                _quartzScheduler.Start().Wait();
-          
+
+            _quartzScheduler.JobFactory = new AspnetCoreJobFactory(app.ApplicationServices);
+            _quartzScheduler.Start().Wait();
+
 
 
 
