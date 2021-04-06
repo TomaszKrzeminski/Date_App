@@ -1,0 +1,77 @@
+﻿@model string
+@{
+    ViewData["Title"] = "CheckEventAdding";
+    Layout = "~/Views/Shared/_LayoutEvent.cshtml";
+}
+<style>
+    #ajax-loader {
+        width: 300px;
+        height: 300px;
+    }
+</style>
+
+
+<div id="Message">
+    <div class="row">
+
+        <div class="col-lg-4"></div>
+
+        <div class="col-lg-4 text-center">
+            <h3>Wydarzenie zostało dodane pomyślnie !!!</h3>
+            <a asp-action="ShowEvent" asp-controller="Event" asp-route-EventId=@Model class="btn btn-danger">Twoje Wydarzenie </a>
+        </div>
+
+        <div class="col-lg-4"></div>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div id="ajax-loader"></div>
+
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+
+    $('#Message').hide();
+
+
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        $("#ajax-loader").ajaxLoader({
+            lineWidth: 33,
+            top: {
+                color: "#4b98eb"
+            },
+            bottom: {
+                color: "#377fcc"
+            }
+        });
+    }, false);
+
+
+
+
+    setInterval(function () {
+        $("#ajax-loader").html("");
+        $("#Message").slideDown();
+    }, 3000);
+
+</script>
+
+
+
+

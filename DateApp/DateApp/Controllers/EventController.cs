@@ -234,6 +234,74 @@ namespace DateApp.Controllers
 
 
 
+        //[HttpPost]
+        //public IActionResult AddEvent(AddEventViewModel model)
+        //{
+        //    MovieMP4 mp4 = new MovieMP4();
+        //    PictureJPG jpg = new PictureJPG();
+
+
+        //    if (model.Event.Date != null)
+        //    {
+        //        DateTime now = DateTime.Now;
+        //        TimeSpan span = model.Event.Date - now;
+        //        if (span.Days < 7)
+        //        {
+        //            ModelState.AddModelError("Event.Date", "Możesz dodać wydażenie co najmniej  7 dni wcześniej ");
+        //        }
+
+        //    }
+
+        //    if (!model.CheckExtension(model.PictureFile_1, jpg))
+        //    {
+        //        ModelState.AddModelError("PictureFile_1", "zdjęcie 1 nie jest typu jpg");
+        //    }
+        //    if (!model.CheckExtension(model.PictureFile_2, jpg))
+        //    {
+        //        ModelState.AddModelError("PictureFile_2", "zdjęcie 2 nie jest typu jpg");
+        //    }
+        //    if (!model.CheckExtension(model.PictureFile_3, jpg))
+        //    {
+        //        ModelState.AddModelError("PictureFile_3", "zdjęcie 3 nie jest typu jpg");
+        //    }
+        //    if (!model.CheckExtension(model.MovieFile, mp4))
+        //    {
+        //        ModelState.AddModelError("MovieFile", "film nie jest w formacie mp4");
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        if (model.PictureFile_1 != null)
+        //        {
+        //            model.Event.PhotoPath1 = AddPictureEvent(model.PictureFile_1).Result;
+        //        }
+        //        if (model.PictureFile_2 != null)
+        //        {
+        //            model.Event.PhotoPath2 = AddPictureEvent(model.PictureFile_2).Result;
+        //        }
+        //        if (model.PictureFile_3 != null)
+        //        {
+        //            model.Event.PhotoPath3 = AddPictureEvent(model.PictureFile_3).Result;
+        //        }
+        //        if (model.MovieFile != null)
+        //        {
+        //            model.Event.FilePath = AddMovieFileEvent(model.MovieFile).Result;
+        //        }
+
+        //        AppUser user = GetUser().Result;
+        //        model.User = user;
+        //        int eventId = repository.AddEvent(model);
+        //        return RedirectToAction("ShowEvent", new { EventId = eventId });
+        //    }
+        //    else
+        //    {
+        //        return View(model);
+        //    }
+
+        //}
+
+
         [HttpPost]
         public IActionResult AddEvent(AddEventViewModel model)
         {
@@ -292,7 +360,7 @@ namespace DateApp.Controllers
                 AppUser user = GetUser().Result;
                 model.User = user;
                 int eventId = repository.AddEvent(model);
-                return RedirectToAction("ShowEvent", new { EventId = eventId });
+                return RedirectToAction("CheckEventAdding", new { EventId = eventId });
             }
             else
             {
@@ -300,6 +368,28 @@ namespace DateApp.Controllers
             }
 
         }
+
+
+
+        public IActionResult CheckEventAdding(string EventId)
+        {
+            AppUser user = GetUser().Result;
+            //check if user has Event with that id
+
+
+
+            return View("CheckEventAdding",EventId);
+        }
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         public IActionResult ShowEvents(ShowEventViewModel model)

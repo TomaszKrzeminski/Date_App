@@ -20,7 +20,9 @@ D:\Pulpit\Date_App\DateApp\DateApp
 --file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Email\SendEmailInformations.cshtml
 --file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Email\Test.cshtml
 --file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Event\AddEvent.cshtml
+--file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Event\AddEvent2.cshtml
 --file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Event\CancelEvent.cshtml
+--file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Event\CheckEventAdding.cshtml
 --file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Event\EventActions.cshtml
 --file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Event\EventsSearch.cshtml
 --file=D:\Pulpit\Date_App\DateApp\DateApp\Views\Event\ShowEvent.cshtml

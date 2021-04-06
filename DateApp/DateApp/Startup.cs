@@ -95,8 +95,11 @@ namespace DateApp
 
             if (env.IsDevelopment())
             {
-                string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DateAppDevelopment;Trusted_Connection=True;MultipleActiveResultSets=true";
-                services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionString));
+                //string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DateAppDevelopment;Trusted_Connection=True;MultipleActiveResultSets=true";
+                //services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionString));
+
+                services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
+
             }
             else
             {
