@@ -82,10 +82,7 @@
 
                         <div class="col-lg-12">
 
-                            @*<form class="Call" asp-action="VideoCallSender" asp-controller="Video" method="get">
-                                    <input type="hidden" value="@item.ReceiverId" name="ReceiverId" class="ReceiverId" />
-                                    <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">
-                                </form>*@
+                           
 
                             <form class="ChooseReceiver" asp-action="WriteMessage" asp-controller="Message" method="post">
                                 <div>
@@ -114,13 +111,7 @@
 
 
 
-                            @*<form class="Call" asp-action="VideoCallSender" asp-controller="Video" method="get">
-
-                                    <input type="hidden" value="@item.ReceiverId" name="ReceiverId" class="ReceiverId" />
-
-                                    <img border="0" style="border-style:outset" name="Status" class="" src="~/AppPictures/videoIcon.png" width="30" height="30">
-
-                                </form>*@
+                       
                             <form class="ChooseReceiver" asp-action="WriteMessage" asp-controller="Message" method="post">
                                 <div>
 
@@ -502,7 +493,7 @@ var data = {};
     connection.start().then(
 
     ).catch(function (err) {
-        alert("Błąd  w Refresh Users"+ err);
+        //alert("Błąd  w Refresh Users"+ err);
 
     }).then(() => {
 
@@ -586,7 +577,7 @@ var data = {};
     connection2.start().then(
 
     ).catch(function (err) {
-        alert("Błąd w Chat");
+        //alert("Błąd w Chat");
 
     }).then(() => {
 
@@ -757,7 +748,7 @@ var data = {};
 
 
     ).catch(function (err) {
-        alert("Błąd w Check Status");
+        //alert("Błąd w Check Status");
 
     }).then(() => {
 
@@ -779,7 +770,7 @@ var data = {};
      },
             success: function (result) {
 
-                alert("Close connection");
+                //alert("Close connection");
 
 
      }
@@ -828,7 +819,7 @@ var data = {};
 
     connectionV.on("redirectToVideoCallSender", function (ReceiverId) {
 
-        alert("Redirect to Sender");
+        //alert("Redirect to Sender");
         document.getElementById('VideoCallSender').submit();
 
 
@@ -840,7 +831,7 @@ var data = {};
     connectionV.on("askForCall", function (SenderId) {
 
 
-        alert("Open dialog Receive");
+        //alert("Open dialog Receive");
         /////
 
         document.getElementById('VideoReceiver').value=SenderId;
@@ -865,7 +856,7 @@ var data = {};
 
 
     ).catch(function (err) {
-        alert("Błąd w Check Status");
+        //alert("Błąd w Check Status");
 
     }).then(() => {
 
@@ -883,7 +874,7 @@ var data = {};
 
 
 
-        alert("connectionV close connection onclose");
+        //alert("connectionV close connection onclose");
 
     });
 
@@ -977,7 +968,7 @@ var data = {};
                            
                             connectionX.start(
 
-                                () => { alert("Connection in  Dialog"); }
+                                () => { /*alert("Connection in  Dialog");*/ }
 
                             ).then(
 
@@ -985,10 +976,10 @@ var data = {};
                                 () => {
 
 
-                                    alert("Connection in dialog");
+                                    //alert("Connection in dialog");
                                     document.getElementById('SenderIdForVideoSender').value = ReceiverIdX;                                    
                                     connectionX.invoke("RedirectToVideoCallSender", ReceiverIdX, SenderId);
-                                    alert("Submit");
+                                    //alert("Submit");
                                     document.getElementById('VideoCallReceiver').submit();
 
                                 }
@@ -1013,7 +1004,7 @@ var data = {};
             $(document).on('click', 'form.Video', function ()
             {
 
-        alert("Open Call");
+        //alert("Open Call");
 
         var SenderId =@Html.Raw(Json.Serialize(@Model.ChatUserId));
                 var ReceiverId = document.getElementById('VideoReceiver').value;

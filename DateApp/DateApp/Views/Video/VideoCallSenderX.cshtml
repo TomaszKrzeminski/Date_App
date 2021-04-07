@@ -1,0 +1,434 @@
+﻿@model VideoCallViewModel
+@{
+    ViewData["Title"] = "VideoCallSender";
+    Layout = "_PeerJs";
+}
+
+
+
+
+@{
+    Layout = "_PeerJs";
+}
+
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h6>Dzwonisz do : @Model.CallerEmail</h6>
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+                        <img class="img-thumbnail" style="border-style:outset;max-width:40px;max-height:40px;" src=@Model.CallerPicturePath width="100" height="100">
+                        <button class="btn btn-success" id="ShowMessagesButton">Status</button>
+                    </th>
+                </tr>
+
+            </thead>
+
+
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div id="AdvancedMessages" style="display:"   class="col-lg-8">
+            <div class="col-lg-12">
+                <h2 class="text-center">VideoCallSender</h2>
+            </div>
+            <div id="TextMessage">
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <input type="hidden" id="ReceiverId" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+
+            <video id="Second"></video>
+            <video width="160" height="120" id="MyVideo"></video>
+        </div>
+        <div class="col-lg-2 float-left">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div id="Messages" class="col-lg-8">
+
+
+        </div>
+        <div class="col-lg-2 ">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+
+            <input type="text" id="sendMessageBox" placeholder="Enter a message..." />
+            <button class="btn btn-warning" type="button" id="sendButton">Send</button>
+            <button class="btn btn-danger" type="button" id="clearMsgsButton">Clear Msgs (Local)</button>
+
+        </div>
+        <div class="col-lg-2 float-left">
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<script>
+
+   
+
+    $("#ShowMessagesButton").click(function ()
+    {
+
+        if ($("#AdvancedMessages").is(":hidden")) {
+
+            $("#AdvancedMessages").slideDown();
+
+        } else {
+            $("#AdvancedMessages").slideUp();
+        }
+
+    });
+
+
+
+
+
+        
+   
+   
+
+
+
+    function MyVideo() {
+
+        var video = document.getElementById("MyVideo");
+        var constraints = {
+            video: true,
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+            video.srcObject = stream;
+            video.play();
+        }).catch();
+
+
+        $("#AdvancedMessages").hide();
+
+
+
+    }
+
+    MyVideo();
+
+    //var TextMessage = document.getElementById("TextMessage");
+    var lastPeerId = null;
+    var peer = null; // own peer object
+    var conn = null;
+    //var start = document.getElementById("start");
+    var receiver = document.getElementById("ReceiverId");
+    var message = document.getElementById("MessageId");
+    //var sender = document.getElementById("SenderId");
+    var sendButton = document.getElementById("sendButton");
+    var connectButton = document.getElementById("connect-button");
+    var status = document.getElementById("status");
+    var Messages = document.getElementById("Messages");
+    var textBox = document.getElementById("sendMessageBox");
+    var clear = document.getElementById("clearMsgsButton");
+    //var call = document.getElementById("call");
+
+
+    function TextMessages(text)
+    {
+       TextMessage=  document.getElementById('TextMessage');
+        TextMessage.innerHTML += "<div class=\"col-lg-12\"><h4>..." + text.replace('\^', '\'') + "...</h4></div>";
+    }
+
+
+    function AddMessage(type, text) {
+        if (type == "s") {
+            Messages.innerHTML += "<div class=\"col-lg-12\"><h5> Ja :" + text + "</h5></div>";
+        }
+        else if (type == "r") {
+            Messages.innerHTML += "<div class=\"col-lg-12\"><h5> Nadawca :" + text + " </h5></div>";
+        }
+
+    }
+
+
+    function clearMessages() {
+        Messages.innerHTML = "";
+        AddMessage("Czyszczę czat");
+    }
+
+
+
+
+
+    function initialize() {
+        // Create own peer object with connection to shared PeerJS server
+        peer = new Peer();
+
+        peer.on('open', function (id) {
+            //alert(id);
+            // Workaround for peer.reconnect deleting previous id
+            if (peer.id === null) {
+
+                console.log('Received null id from peer open');
+                peer.id = lastPeerId;
+            } else {
+                lastPeerId = peer.id;
+            }
+
+
+
+            ///////
+            ConnectToGetPeerId();
+            /////
+            console.log('ID: ' + peer.id);
+        });
+        peer.on('connection', function (c) {
+            // Disallow incoming connections
+            c.on('open', function () {
+                c.send("Sender does not accept incoming connections");
+                setTimeout(function () { c.close(); }, 500);
+            });
+
+
+        });
+        peer.on('disconnected', function () {
+            //status.innerHTML = "Connection lost. Please reconnect";
+            //console.log('Connection lost. Please reconnect');
+            TextMessages("Connection lost. Please reconnect")
+            // Workaround for peer.reconnect deleting previous id
+            peer.id = lastPeerId;
+            peer._lastServerId = lastPeerId;
+            peer.reconnect();
+        });
+        peer.on('close', function () {
+            conn = null;
+            //status.innerHTML = "Connection destroyed. Please refresh";
+            //console.log('Connection destroyed');
+
+            TextMessages("Connection destroyed. Please refresh");
+
+        });
+        peer.on('error', function (err) {
+            console.log(err);   alert(err + "   błąd");
+
+        });
+
+
+
+
+
+        ////////
+
+       //ConnectToGetPeerId();
+
+//////////
+
+    };
+    function connection() {
+
+
+                // Close old connection
+                if (conn) {
+                    conn.close();
+                }
+
+                // Create connection to destination peer specified in the input field
+            conn = peer.connect(receiver.value, {
+                    reliable: true
+                });
+
+                conn.on('open', function () {
+                    //status.innerHTML = "Connected to: " + conn.peer;
+                    //console.log("Connected to: " + conn.peer);
+                    // Check URL params for comamnds that should be sent immediately
+
+                });
+                // Handle incoming data (messages only since this is the signal sender)
+        conn.on('data', function (data) {
+
+            AddMessage("r", data);
+
+        });
+
+
+            conn.on('close', function () {
+                //status.innerHTML = "Connection closed";
+
+                TextMessages("Connection closed");
+
+        });
+
+        TextMessages("Connection successful !!!!");
+        VideoCall();
+
+    }
+
+    //start.addEventListener('click', initialize);
+    //connectButton.addEventListener('click', connection);
+    sendButton.addEventListener('click', function () {
+        if (conn && conn.open) {
+            var msg = textBox.value;
+            textBox.value = "";
+            conn.send(msg);
+            console.log("Sent: " + msg);
+            ////
+
+
+
+            AddMessage("s", msg);
+
+        } else {
+
+            TextMessages("Connection is Closed");
+            console.log('Connection is closed');
+        }
+    });
+
+
+
+
+    clear.addEventListener('click', function () {
+
+
+        Messages.innerHTML = "";
+        TextMessages("Wyczyszczono czat");
+
+
+    });
+
+
+
+
+
+
+
+
+    function VideoCall() {
+
+
+
+        ////
+        var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        getUserMedia({ video: true, audio: true }, function (stream) {
+            var call = peer.call(receiver.value, stream);
+            call.on('stream', function (remoteStream) {
+
+                /////
+                var video = document.getElementById("MyVideo");
+                video.srcObject = stream;
+                video.play();
+                //////
+
+
+                var video2 = document.getElementById("Second");
+                video2.srcObject = remoteStream;
+                video2.play();
+
+
+
+
+
+            });
+        }, function (err) {
+            console.log('Failed to get local stream', err);
+        });
+
+        TextMessages("Starting Video Call");
+    }
+
+
+
+
+    /////Signal R
+
+    var connectionV = new signalR.HubConnectionBuilder().withUrl("/videos").build();
+    var ReceiverId =@Html.Raw( Json.Serialize(@Model.ReceiverId));
+    var SenderId =@Html.Raw( Json.Serialize(@Model.CallerId));
+
+
+
+
+    connectionV.on("Get_ReceiverId", function (PeerId) {
+
+
+
+        TextMessages("Receiver Peer Id : " + PeerId+" successfull received " );
+
+        document.getElementById("ReceiverId").value = PeerId;
+        connection();
+
+
+    });
+
+
+    connectionV.start().then(
+
+        () => {
+
+            initialize();
+
+        }
+
+
+    ).catch(function (err) {
+        alert("Błąd w Check Status"+err);
+
+    }).then(() => {
+
+        //ConnectToGetPeerId();
+
+    });
+
+
+
+
+
+
+    function ConnectToGetPeerId()
+    {
+
+        TextMessages("My peer Id is :" + peer.id);
+        TextMessages("Getting Peer from Receiver");
+        connectionV.invoke("GetPeerId", SenderId, ReceiverId).catch(function (err) {
+
+            return console.error(err.toString());
+        });
+        //event.preventDefault();
+
+
+    }
+
+
+
+</script>
