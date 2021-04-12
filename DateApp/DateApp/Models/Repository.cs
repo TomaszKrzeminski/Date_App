@@ -55,6 +55,7 @@ namespace DateApp.Models
         bool RemoveMatch();
         bool ReportUser(string ComplainUserId, string UserToReport, string Reason);
         bool PairCancel(string UserId, string PairId);
+        bool PairChecked(string UserId, string ReceiverId);
         MatchAction MatchAction2(string PairId, string UserId, string Decision);
         Coordinates GetCoordinates(string UserId);
         bool StartChat(string UserId, string ReceiverId);
@@ -1379,6 +1380,49 @@ namespace DateApp.Models
                 return coordinates;
             }
         }
+
+
+        public bool PairChecked(string UserId,string ReceiverId)
+        {
+
+            try
+            {
+                AppUser user = context.Users.Where(u => u.Id == UserId).First();
+
+                AppUser userReceiver = context.Users.Where(u => u.Id == ReceiverId).First();
+
+
+                List<MatchUser> list = context.Users.Include(m => m.MatchUser).ThenInclude(me => me.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
+                Match match = list.Where(u => u.Match.SecondUserId == ReceiverId || u.Match.FirstUserId == ReceiverId).First().Match;
+
+                if (match.FirstUserId == UserId)
+                {
+                    match.NewForFirstUser = false;
+                    context.SaveChanges();
+                }
+                else
+                {
+                    match.NewForSecondUser = false;
+                    context.SaveChanges();
+                }
+
+
+
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+
+                return false;
+            }
+
+        }
+
+
+
+
+
 
         public bool StartChat(string UserId, string ReceiverId)
         {

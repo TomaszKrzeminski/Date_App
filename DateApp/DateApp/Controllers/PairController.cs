@@ -24,13 +24,15 @@ namespace DateApp.Controllers
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
         private IHubContext<NotificationsCheckerHub> notificationchecker;
+        private IHubContext<UpdatePairHub> updatechecker;
 
-        public PairController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, IHubContext<NotificationsCheckerHub> notificationchecker, Func<Task<AppUser>> GetUser = null)
+        public PairController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, IHubContext<NotificationsCheckerHub> notificationchecker, IHubContext<UpdatePairHub> updatechecker, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
             _environment = env;
             this.notificationchecker = notificationchecker;
+            this.updatechecker = updatechecker;
 
             if (GetUser == null)
             {
@@ -124,10 +126,22 @@ namespace DateApp.Controllers
             MatchAction action = repository.MatchAction2(Id, UserId, Decision);
             MatchView match = repository.GetMatchViews(UserId, "", true).FirstOrDefault();
 
-            if(Decision=="Accept"||Decision=="SuperLike")
+            if (Decision == "Accept" || Decision == "SuperLike")
             {
 
                 notificationchecker.Clients.User(Id).SendAsync("CheckAllNotifications", Id);
+
+                bool check = repository.PairChecked(UserId, Id);
+
+
+                if (check)
+                {
+
+                    updatechecker.Clients.User(Id).SendAsync("UpdateMatchesSignal");
+                    updatechecker.Clients.User(UserId).SendAsync("UpdateMatchesSignal");
+                }
+
+
 
             }
 
@@ -190,9 +204,11 @@ namespace DateApp.Controllers
 
             Coordinates pairCoordinates = repository.GetCoordinates(PairId);
             string Id = GetUser().Result.Id;
+            //bool check = repository.PairChecked(Id, PairId);
+
             Coordinates userCoordinates = repository.GetCoordinates(Id);
 
-            RoutingViewModel model = new RoutingViewModel(userCoordinates.Longitude.ToString().Replace(',','.'),userCoordinates.Latitude.ToString().Replace(',', '.'), pairCoordinates.Longitude.ToString().Replace(',', '.'), pairCoordinates.Latitude.ToString().Replace(',', '.'));
+            RoutingViewModel model = new RoutingViewModel(userCoordinates.Longitude.ToString().Replace(',', '.'), userCoordinates.Latitude.ToString().Replace(',', '.'), pairCoordinates.Longitude.ToString().Replace(',', '.'), pairCoordinates.Latitude.ToString().Replace(',', '.'));
             PairDetailsViewModel detailsmodel = new PairDetailsViewModel() { DetailsId = details.Id, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = details.AppUserId, Age = user.Age, Name = user.FirstName, Surname = user.Surname, Email = user.Email, Dateofbirth = user.Dateofbirth, City = user.City, Sex = user.Sex };
             detailsmodel.routingViewModel = model;
             return View("PairDetails", detailsmodel);
@@ -200,7 +216,7 @@ namespace DateApp.Controllers
 
 
 
-       
+
 
 
 
@@ -214,7 +230,7 @@ namespace DateApp.Controllers
             AppUser user = repository.GetUser(Id);
 
             if (select == "Pair")
-             {
+            {
                 List<DateApp.Models.Match> list = repository.GetMatches(Id);
                 bool check = repository.SearchForMatches(Id);
                 PairOptionsViewModel options = new PairOptionsViewModel();
@@ -245,7 +261,7 @@ namespace DateApp.Controllers
                     pair.match.UserId = Id;
                     pair.match.action = new MatchAction("", true, true, false);
                 }
-                
+
                 model = new PairViewModel(pair, options);
                 model.select = select;
             }
@@ -255,7 +271,7 @@ namespace DateApp.Controllers
                 List<Message> listOfMessages = repository.GetAllMessages(Id);
                 listOfMessages = listOfMessages.OrderByDescending(x => x.Time).ToList();
                 ///// Remove Repetings
-                listOfMessages = listOfMessages.Where(y=>y.SenderId!=Id).GroupBy(x =>new { x.SenderId, x.ReceiverId }).Select(y => y.First()).ToList();            
+                listOfMessages = listOfMessages.Where(y => y.SenderId != Id).GroupBy(x => new { x.SenderId, x.ReceiverId }).Select(y => y.First()).ToList();
 
                 /////
 
@@ -263,7 +279,7 @@ namespace DateApp.Controllers
 
                 foreach (var m in listOfMessages)
                 {
-                  SearchDetails Details = repository.GetUserDetails(m.SenderId);                 
+                    SearchDetails Details = repository.GetUserDetails(m.SenderId);
                     string PhotoPath = Details.MainPhotoPath;
                     // check sender/receiver of message and then set name
 
@@ -271,27 +287,27 @@ namespace DateApp.Controllers
 
                     ////
                     string Text = m.MessageText;
-                    string ShortText="";
+                    string ShortText = "";
                     bool Checked = m.Checked;
-                    if(Text!=null&&Text.Count()>0)
+                    if (Text != null && Text.Count() > 0)
                     {
-                      ShortText= Regex.Replace(Text.Split()[0], @"[^0-9a-zA-Z\ ]+", "");
+                        ShortText = Regex.Replace(Text.Split()[0], @"[^0-9a-zA-Z\ ]+", "");
                         ShortText += "...";
                     }
 
 
-                    shortList.Add(new MessageShort(PhotoPath,ShortText,Name,Details.User.Id,Checked));
+                    shortList.Add(new MessageShort(PhotoPath, ShortText, Name, Details.User.Id, Checked));
                 }
                 messagesOptionsView.ChatUserId = Id;
                 messagesOptionsView.list = shortList;
                 messagesOptionsView.UserMainPhotoPath = details.MainPhotoPath;
                 messagesOptionsView.UserName = user.FirstName + " " + user.Surname;
                 ///////
-                
+
                 ////////
 
-                MessageViewModel messageView = new MessageViewModel();      
-                
+                MessageViewModel messageView = new MessageViewModel();
+
 
                 model = new PairViewModel(messageView, messagesOptionsView);
                 model.select = select;

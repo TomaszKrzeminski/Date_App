@@ -95,10 +95,10 @@ namespace DateApp
 
             if (env.IsDevelopment())
             {
-                //string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DateAppDevelopment;Trusted_Connection=True;MultipleActiveResultSets=true";
-                //services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionString));
+                string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DateAppDevelopment;Trusted_Connection=True;MultipleActiveResultSets=true";
+                services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionString));
 
-                services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
+                //services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
 
             }
             else
@@ -224,7 +224,10 @@ namespace DateApp
 
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseSignalR(config =>{config.MapHub<UpdatePairHub>("/updatePair"); }); 
+            ////
             app.UseSignalR(config => { config.MapHub<MessageHub>("/messages"); });
+            ////
             app.UseSignalR(config => { config.MapHub<CheckConnectionHub>("/messages2"); });
             ////
             app.UseSignalR(config => { config.MapHub<NotificationHub>("/messages3"); });
@@ -246,6 +249,22 @@ namespace DateApp
                 }
             });
 
+            /////
+            app.Use(async (ext, next) =>
+            {
+                var connectionContext = ext.RequestServices
+                                        .GetRequiredService<IHubContext<UpdatePairHub>>();
+                //...
+
+                if (next != null)
+                {
+                    await next.Invoke();
+                }
+            });
+
+
+
+            ////
             app.Use(async (ext, next) =>
             {
                 var connectionContext = ext.RequestServices
