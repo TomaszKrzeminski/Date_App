@@ -1,0 +1,752 @@
+﻿@model VideoCallViewModel
+@{
+    ViewData["Title"] = "VideoCallSender";
+    Layout = "_PeerJs";
+}
+
+
+
+
+@{
+    Layout = "_PeerJs";
+}
+
+<style type="text/css">
+    .outer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 60%;
+        height: 60%;
+    }
+
+    .inner {
+        width: 30%;
+        height: 30%;
+        top: 140%;
+        left: 30%;
+        position: relative;
+    }
+
+    .bigger {
+        width: 100%;
+        height: 100%;
+    }
+
+    .smaller {
+        width: 30%;
+        height: 30%;
+    }
+</style>
+
+
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h6>Dzwonisz do : @Model.CallerEmail</h6>
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th class="text-lg-right">
+                        <img class="img-thumbnail" style="border-style:outset;max-width:40px;max-height:40px;" src=@Model.CallerPicturePath width="100" height="100">
+                        <button class="btn btn-success" id="ShowMessagesButton">Status</button>
+                    </th>
+                </tr>
+
+            </thead>
+
+
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div id="AdvancedMessages" class="col-lg-8">
+            <div class="col-lg-12">
+                <h2 class="text-center">VideoCallSender</h2>
+            </div>
+            <div id="TextMessage">
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <input type="hidden" id="ReceiverId" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
+            <video style="max-height:215px; max-width:160px;" id="Second"></video>
+        </div>
+
+        <div class="col-lg-8">
+
+            <video id="MyVideo"></video>
+        </div>
+
+        <div class="col-lg-2 ">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+
+            <table style="max-width:480px;" class="table table-striped table-hover">
+
+                <thead id="Messages">
+
+                </thead>
+            </table>
+        </div>
+
+        <div class="col-lg-2 ">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <textarea class="form-control" id="sendMessageBox" rows="4" placeholder="Wpisz wiadomość..."></textarea>
+
+                </div>
+                <div class="col-lg-6"></div>
+                <div class="col-lg-4">
+                    <button class="btn btn-warning" type="button" id="sendButton">Wyślij</button>
+                    <button class="btn btn-danger" type="button" id="clearMsgsButton">Wyczyść okno wiadomości</button>
+                </div>
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4"></div>
+
+
+
+            </div>
+            <div class="col-lg-2 float-left">
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <table style="display:none;" id="AllMessages">
+
+        <thead>
+
+        </thead>
+    </table>
+
+    ///
+    <div class="col-lg-6">
+        <nav aria-label="...">
+            <ul class="pagination">
+                <li>
+                    <a class="page-link" id="Current"></a>
+                </li>
+                <li class="page-item ">
+                    <a id="Previous" class="page-link " tabindex="-1">Previous</a>
+                </li>
+
+                <li id="change">
+
+                </li>
+
+
+
+
+
+                <li class="page-item">
+                    <a id="Next" class="page-link ">Next</a>
+                </li>
+                <li>
+                    <a class="page-link" id="Total"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+
+
+            $("#ShowMessagesButton").click(function ()
+            {
+
+                if ($("#AdvancedMessages").is(":hidden")) {
+
+                    $("#AdvancedMessages").slideDown();
+
+                } else {
+                    $("#AdvancedMessages").slideUp();
+                }
+
+            });
+
+
+            function MyVideo() {
+
+                var video = document.getElementById("MyVideo");
+                var constraints = {
+                    video: true,
+                };
+
+                navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+                    video.srcObject = stream;
+                    video.play();
+                }).catch();
+
+
+                $("#AdvancedMessages").hide();
+
+
+
+            }
+
+            MyVideo();
+
+            //var TextMessage = document.getElementById("TextMessage");
+            var lastPeerId = null;
+            var peer = null; // own peer object
+            var conn = null;
+            //var start = document.getElementById("start");
+            var receiver = document.getElementById("ReceiverId");
+            var message = document.getElementById("MessageId");
+            //var sender = document.getElementById("SenderId");
+            var sendButton = document.getElementById("sendButton");
+            var connectButton = document.getElementById("connect-button");
+            var status = document.getElementById("status");
+            var Messages = document.getElementById("Messages");
+            var textBox = document.getElementById("sendMessageBox");
+            var clear = document.getElementById("clearMsgsButton");
+            //var call = document.getElementById("call");
+
+
+
+
+        class showMessages {
+
+
+            constructor() {
+                this.pageNumber = 1;
+                this.totalPages = 1;
+                this.pageSize = 4;
+                this.Skip = 0;
+                this.count = 0;
+            }
+
+            skip() {
+
+                this.Skip = ((this.pageNumber - 1) * this.pageSize);
+
+            }
+
+            Count() {
+                this.count = $('#AllMessages tr').length;
+            }
+
+            TotalPages() {
+                this.totalPages = Math.ceil(this.count / this.pageSize);
+            }
+
+            showPageNumber() {
+
+                $('#Current').text(this.totalPages);
+                $('#Total').text(this.totalPages);
+
+
+
+            }
+
+            ShowPages2() {
+
+                var max = Math.ceil(this.count / this.pageSize);
+
+                var table = document.getElementById('AllMessages');
+                var rowsCount = $('#AllMessages tr').length;
+                var pageN = $('#Current').text();
+                ////
+
+                Messages.innerHTML = "";
+
+
+
+
+                var start;
+                var stop;
+                var check = (this.pageSize * pageN);
+
+
+                if (max > pageN) {
+                    start = (this.pageSize * pageN) - 4;
+                    stop = check;
+                }
+                else if (max == pageN && rowsCount == (this.pageSize * pageN)) {
+                    start = (this.pageSize * pageN) - 4;
+                    stop = check;
+                }
+                else {
+                    start = (this.pageSize * pageN) - 4;
+                    stop = rowsCount;
+                }
+
+
+
+
+
+                for (var i = start; i < stop; i += 1) {
+
+
+                    Messages.innerHTML += table.rows[i].innerHTML;
+
+                }
+
+
+
+
+            }
+
+            ShowPages() {
+
+
+                var table = document.getElementById('AllMessages');
+                var rowsCount = $('#AllMessages tr').length;
+                var pageN = $('#Current').text();
+                ////
+
+                Messages.innerHTML = "";
+
+
+                if (rowsCount <= 4) {
+                    Messages.innerHTML += table.rows[0].innerHTML;
+                    Messages.innerHTML += table.rows[1].innerHTML;
+                    Messages.innerHTML += table.rows[2].innerHTML;
+                    Messages.innerHTML += table.rows[3].innerHTML;
+
+                }
+                else {
+
+                    var start = (rowsCount - this.pageSize);
+                    var stop;
+                    var check = (this.pageSize * pageN);
+
+
+                    if (check < (rowsCount - 1)) {
+
+                        stop = check - 2;
+                    }
+                    else {
+
+                        stop = check;
+
+                    }
+
+
+
+                    for (var i = start; i < stop; i += 1) {
+
+
+                        Messages.innerHTML += table.rows[i].innerHTML;
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+        const ShowMessages = new showMessages();
+
+
+        var peerId = null;
+
+        var recvId = document.getElementById("receiver-id");
+
+        //var message = document.getElementById("message");
+
+        //var sendMessageBox = document.getElementById("sendMessageBox");
+        //var sendButton = document.getElementById("sendButton");
+
+        //var Messages = document.getElementById("Messages");
+        //var clear = document.getElementById("clearMsgsButton");
+
+        //var Messages = document.getElementById("Messages");
+        var AllMessages = document.getElementById('AllMessages');
+
+        $('#Previous').click
+            (
+            function () {
+
+                var pageN = parseInt($('#Current').text(), 10);
+                ShowMessages.pageNumber = pageN;
+                if (ShowMessages.pageNumber > 1) {
+
+                    ShowMessages.pageNumber -= 1;
+                    $('#Current').text(ShowMessages.pageNumber);
+                    ShowMessages.ShowPages2();
+
+                }
+
+
+
+
+            }
+
+            );
+        $('#Next').click
+            (
+
+            function () {
+
+                var pageN = parseInt($('#Current').text(), 10);
+                ShowMessages.pageNumber = pageN;
+                if (ShowMessages.pageNumber < ShowMessages.totalPages && ShowMessages.totalPages > 1) {
+
+                    ShowMessages.pageNumber += 1;
+                    $('#Current').text(ShowMessages.pageNumber);
+                    ShowMessages.ShowPages2();
+
+                }
+
+            }
+
+            );
+
+
+
+
+
+
+
+
+
+            function TextMessages(text)
+            {
+               TextMessage=  document.getElementById('TextMessage');
+                TextMessage.innerHTML += "<div class=\"col-lg-12\"><h4>..." + text.replace('\^', '\'') + "...</h4></div>";
+            }
+
+
+            function AddMessage(type, text) {
+
+
+                //if (type == "s") {
+
+                //    Messages.innerHTML += "<tr  class=\"table-active\"     ><th>Ja   </th></tr> <tr> <th> " + text + " </th></tr >";
+                //}
+                //else if (type == "r") {
+                //    Messages.innerHTML += "<tr  class=\"table-active\"    ><th>Nadawca  </th></tr> <tr> <th> " + text + " </th></tr >";
+                //}
+
+                ShowMessages.TotalPages();
+                ShowMessages.showPageNumber();
+
+                if (type == "s") {
+
+                    //Messages.innerHTML += "<tr  class=\"table-active\"     ><th>Ja   </th></tr> <tr> <th> " + text + " </th></tr >";
+                    AllMessages.innerHTML += "<tr  class=\"table-active\"     ><th>Ja   </th></tr> <tr> <th> " + text + " </th></tr >";
+                }
+                else if (type == "r") {
+                    //Messages.innerHTML += "<tr  class=\"table-active\"    ><th>Nadawca  </th></tr> <tr> <th> " + text + " </th></tr >";
+                    AllMessages.innerHTML += "<tr  class=\"table-active\"    ><th>Nadawca  </th></tr> <tr> <th> " + text + " </th></tr >";
+                }
+
+
+
+                ShowMessages.skip();
+                ShowMessages.Count();
+
+                if (ShowMessages.count <= 0) {
+                    ShowMessages.count = 1;
+                }
+
+                ShowMessages.TotalPages();
+
+
+
+                ShowMessages.showPageNumber();
+                ShowMessages.ShowPages();
+
+
+
+
+            }
+
+
+            function clearMessages() {
+                Messages.innerHTML = "";
+                AddMessage("Czyszczę czat");
+            }
+
+
+
+
+
+            function initialize() {
+                // Create own peer object with connection to shared PeerJS server
+                peer = new Peer();
+
+                peer.on('open', function (id) {
+                    //alert(id);
+                    // Workaround for peer.reconnect deleting previous id
+                    if (peer.id === null) {
+
+                        console.log('Received null id from peer open');
+                        peer.id = lastPeerId;
+                    } else {
+                        lastPeerId = peer.id;
+                    }
+
+
+
+                    ///////
+                    ConnectToGetPeerId();
+                    /////
+                    console.log('ID: ' + peer.id);
+                });
+                peer.on('connection', function (c) {
+                    // Disallow incoming connections
+                    c.on('open', function () {
+                        c.send("Sender does not accept incoming connections");
+                        setTimeout(function () { c.close(); }, 500);
+                    });
+
+
+                });
+                peer.on('disconnected', function () {
+                    //status.innerHTML = "Connection lost. Please reconnect";
+                    //console.log('Connection lost. Please reconnect');
+                    TextMessages("Connection lost. Please reconnect")
+                    // Workaround for peer.reconnect deleting previous id
+                    peer.id = lastPeerId;
+                    peer._lastServerId = lastPeerId;
+                    peer.reconnect();
+                });
+                peer.on('close', function () {
+                    conn = null;
+                    //status.innerHTML = "Connection destroyed. Please refresh";
+                    //console.log('Connection destroyed');
+
+                    TextMessages("Connection destroyed. Please refresh");
+
+                });
+                peer.on('error', function (err) {
+                    console.log(err);   alert(err + "   błąd");
+
+                });
+
+
+
+
+
+                ////////
+
+               //ConnectToGetPeerId();
+
+        //////////
+
+            };
+            function connection() {
+
+
+                        // Close old connection
+                        if (conn) {
+                            conn.close();
+                        }
+
+                        // Create connection to destination peer specified in the input field
+                    conn = peer.connect(receiver.value, {
+                            reliable: true
+                        });
+
+                        conn.on('open', function () {
+                            //status.innerHTML = "Connected to: " + conn.peer;
+                            //console.log("Connected to: " + conn.peer);
+                            // Check URL params for comamnds that should be sent immediately
+
+                        });
+                        // Handle incoming data (messages only since this is the signal sender)
+                conn.on('data', function (data) {
+
+                    AddMessage("r", data);
+
+                });
+
+
+                    conn.on('close', function () {
+                        //status.innerHTML = "Connection closed";
+
+                        TextMessages("Connection closed");
+
+                });
+
+                TextMessages("Connection successful !!!!");
+                VideoCall();
+
+            }
+
+            //start.addEventListener('click', initialize);
+            //connectButton.addEventListener('click', connection);
+            sendButton.addEventListener('click', function () {
+                if (conn && conn.open) {
+                    var msg = textBox.value;
+                    textBox.value = "";
+                    conn.send(msg);
+                    console.log("Sent: " + msg);
+                    ////
+
+
+
+                    AddMessage("s", msg);
+
+                } else {
+
+                    TextMessages("Connection is Closed");
+                    console.log('Connection is closed');
+                }
+            });
+
+
+
+
+            clear.addEventListener('click', function () {
+
+
+                Messages.innerHTML = "";
+                TextMessages("Wyczyszczono czat");
+
+
+            });
+
+
+
+
+
+
+
+
+            function VideoCall() {
+
+
+
+                ////
+                var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+                getUserMedia({ video: true, audio: true }, function (stream) {
+                    var call = peer.call(receiver.value, stream);
+                    call.on('stream', function (remoteStream) {
+
+                        /////
+                        var video = document.getElementById("MyVideo");
+                        video.srcObject = stream;
+                        video.play();
+                        //////
+
+
+                        var video2 = document.getElementById("Second");
+                        video2.srcObject = remoteStream;
+                        video2.play();
+
+
+
+
+
+                    });
+                }, function (err) {
+                    console.log('Failed to get local stream', err);
+                });
+
+                TextMessages("Starting Video Call");
+            }
+
+
+
+
+            /////Signal R
+
+            var connectionV = new signalR.HubConnectionBuilder().withUrl("/videos").build();
+            var ReceiverId =@Html.Raw( Json.Serialize(@Model.ReceiverId));
+            var SenderId =@Html.Raw( Json.Serialize(@Model.CallerId));
+
+
+
+
+            connectionV.on("Get_ReceiverId", function (PeerId) {
+
+
+
+                TextMessages("Receiver Peer Id : " + PeerId+" successfull received " );
+
+                document.getElementById("ReceiverId").value = PeerId;
+                connection();
+
+
+            });
+
+
+            connectionV.start().then(
+
+                () => {
+
+                    initialize();
+
+                }
+
+
+            ).catch(function (err) {
+                alert("Błąd w Check Status"+err);
+
+            }).then(() => {
+
+                //ConnectToGetPeerId();
+
+            });
+
+
+
+
+
+
+            function ConnectToGetPeerId()
+            {
+
+                TextMessages("My peer Id is :" + peer.id);
+                TextMessages("Getting Peer from Receiver");
+                connectionV.invoke("GetPeerId", SenderId, ReceiverId).catch(function (err) {
+
+                    return console.error(err.toString());
+                });
+                //event.preventDefault();
+
+
+            }
+
+
+
+    </script>

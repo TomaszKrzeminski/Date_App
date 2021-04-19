@@ -130,7 +130,7 @@ namespace DateApp.Controllers
 
             //
             VideoCallViewModel model = new VideoCallViewModel(ReceiverId, CallerId,user.Email,details.MainPhotoPath);
-            return View("VideoCallSenderX",model);
+            return View("VideoCallSenderY",model);
             
         }
         public IActionResult VideoCallReceiver(string ReceiverId)
@@ -141,7 +141,7 @@ namespace DateApp.Controllers
             SearchDetails details = repository.GetUserDetails(ReceiverId);
             //
             VideoCallViewModel model = new VideoCallViewModel(ReceiverId, CallerId,user.Email,details.MainPhotoPath);
-            return View("VideoCallReceiverX",model);           
+            return View("VideoCallReceiverZ",model);           
         }
 
     }

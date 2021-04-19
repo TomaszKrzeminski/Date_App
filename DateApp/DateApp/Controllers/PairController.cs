@@ -180,6 +180,12 @@ namespace DateApp.Controllers
         public PartialViewResult UpdateMatches()
         {
             string Id = GetUser().Result.Id;
+            /////
+            notificationchecker.Clients.User(Id).SendAsync("CheckAllNotifications", Id);
+
+            ///
+
+
             SearchDetails details = repository.GetUserDetails(Id);
             PairOptionsViewModel options = new PairOptionsViewModel();
             AppUser user = repository.GetUser(Id);
