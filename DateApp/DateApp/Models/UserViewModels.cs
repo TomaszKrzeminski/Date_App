@@ -8,18 +8,18 @@ namespace DateApp.Models
 {
     public class CreateModel
     {
-        [Required(ErrorMessage="Podaj Imię")]
+        [Required(ErrorMessage = "Podaj Imię")]
         [RegularExpression(@"^[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", ErrorMessage = "Możesz używać tylko  liter")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Podaj Nazwisko")]
         [RegularExpression(@"^[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
         public string Surname { get; set; }
-        [Required(ErrorMessage = "Podaj Email")]       
+        [Required(ErrorMessage = "Podaj Email")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Wybierz płeć")]
         [RegularExpression(@"^[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", ErrorMessage = "Możesz używać tylko cyfr i liter")]
         public string Sex { get; set; }
-        [Required(ErrorMessage = "Podaj datę urodzin")]       
+        [Required(ErrorMessage = "Podaj datę urodzin")]
         public DateTime Dateofbirth { get; set; }
         [Required(ErrorMessage = "Podaj Miasto")]
         [RegularExpression(@"^[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", ErrorMessage = "Możesz używać tylko  liter")]
@@ -184,7 +184,7 @@ namespace DateApp.Models
     public class ChangePhoneNumberView
     {
         [Required]
-        [RegularExpression(@"^[2-9]\d{2}-\d{3}-\d{3}$",ErrorMessage ="Zły format podaj numer składający się z 9 liczb xxx-xxx-xxx")]
+        [RegularExpression(@"^[2-9]\d{2}-\d{3}-\d{3}$", ErrorMessage = "Zły format podaj numer składający się z 9 liczb xxx-xxx-xxx")]
         public string PhoneNumber { get; set; }
         [Required]
         public string UserId { get; set; }
@@ -335,6 +335,9 @@ namespace DateApp.Models
             PairMail = "";
             PairId = "";
             PairMainPhotoPath = "";
+            PhotoPath1 = "";
+            PhotoPath2 = "";
+            PhotoPath3 = "";
         }
 
         public string UserId { get; set; }
@@ -342,7 +345,9 @@ namespace DateApp.Models
         public string PairMail { get; set; }
         public string PairId { get; set; }
         public MatchAction action { get; set; }
-
+        public string PhotoPath1 { get; set; }
+        public string PhotoPath2 { get; set; }
+        public string PhotoPath3 { get; set; }
 
     }
 

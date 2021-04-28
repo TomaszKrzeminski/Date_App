@@ -5,13 +5,17 @@
 <script src='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.37.2/maps/maps-web.min.js'></script>
 <style>
     #map {
-        min-height: 400px;
-        min-width: 400px;
+        min-height: 300px;
+        min-width: 300px;
+        max-height:480px;
+        max-width:800px;
     }
 </style>
 
+    <div class="col-xl-12 col-lg-12 col-md-12 " id='map'></div>
 
-<div class="col col-lg-12" id='map'></div>
+
+
 <script>
 
         var Lat = @Model.UserCoordinates.Latitude;

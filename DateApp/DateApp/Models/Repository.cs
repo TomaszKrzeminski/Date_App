@@ -37,6 +37,7 @@ namespace DateApp.Models
         bool ChangeUserDetails(UserDetailsModel model);
         bool AddPicture(string UserId, PictureType type, string FilePath);
         bool CheckPictureOwner(string Path, string UserId);
+        bool CheckIfPictureBelongsToPair(string Path, string UserId);
         bool RemovePicture(string UserId, PictureType type);
         string GetPhoneNumber(string Id);
         bool ChangePhoneNumber(string Id, string PhoneNumber);
@@ -1139,10 +1140,85 @@ namespace DateApp.Models
 
         }
 
+        //public List<MatchView> GetMatchViews(string UserId, string Pair, bool ExceptUserAction)
+        //{
+
+        //    ///////// Zmienić
+
+
+        //    List<MatchView> list = new List<MatchView>();
+
+        //    try
+        //    {
+        //        List<MatchUser> listmatchuser = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
+        //        List<Match> matches = listmatchuser.Select(m => m.Match).ToList();
+
+        //        matches = IsItaPair(matches, Pair);
+        //        if (ExceptUserAction)
+        //        {
+        //            matches = ExceptAfterUserAction(UserId, matches);
+        //        }
+
+
+
+        //        ///Check if pictures are updated
+        //        foreach (var m in matches)
+        //        {
+        //            AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.FirstUserId).First();
+        //            AppUser user2 = context.Users.Include(s => s.Details).Where(x => x.Id == m.SecondUserId).First();
+
+        //            if (m.MainPhotoUser1 != user.Details.MainPhotoPath)
+        //            {
+        //                m.MainPhotoUser1 = user.Details.MainPhotoPath;
+
+        //            }
+        //            if (m.MainPhotoUser2 != user2.Details.MainPhotoPath)
+        //            {
+        //                m.MainPhotoUser2 = user2.Details.MainPhotoPath;
+        //            }
+        //        }
+
+
+
+        //        foreach (var m in matches)
+        //        {
+        //            if (m.FirstUserId == UserId)
+        //            {
+        //                AppUser user = context.Users.Find(m.SecondUserId);
+        //                list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId });
+        //            }
+        //            else
+        //            {
+        //                AppUser user = context.Users.Find(m.FirstUserId);
+        //                list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser1, PairId = m.FirstUserId });
+        //            }
+        //        }
+
+
+
+
+
+
+        //        return list;
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return list;
+
+        //    }
+
+        //}
+
+
+
+
+
+
         public List<MatchView> GetMatchViews(string UserId, string Pair, bool ExceptUserAction)
         {
 
-            ///////// Zmienić
+            
 
 
             List<MatchView> list = new List<MatchView>();
@@ -1169,6 +1245,8 @@ namespace DateApp.Models
                     if (m.MainPhotoUser1 != user.Details.MainPhotoPath)
                     {
                         m.MainPhotoUser1 = user.Details.MainPhotoPath;
+                        
+                        
                     }
                     if (m.MainPhotoUser2 != user2.Details.MainPhotoPath)
                     {
@@ -1182,13 +1260,17 @@ namespace DateApp.Models
                 {
                     if (m.FirstUserId == UserId)
                     {
-                        AppUser user = context.Users.Find(m.SecondUserId);
-                        list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId });
+                        //AppUser user = context.Users.Find(m.SecondUserId);
+                        //list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId });
+                        AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.SecondUserId).First();
+                        list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId,PhotoPath1=user.Details.PhotoPath1,PhotoPath2=user.Details.PhotoPath2,PhotoPath3=user.Details.PhotoPath3 });
                     }
                     else
                     {
-                        AppUser user = context.Users.Find(m.FirstUserId);
-                        list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser1, PairId = m.FirstUserId });
+                        //AppUser user = context.Users.Find(m.FirstUserId);
+                        //list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser1, PairId = m.FirstUserId });
+                        AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.FirstUserId).First();
+                        list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser1, PairId = m.FirstUserId, PhotoPath1 = user.Details.PhotoPath1, PhotoPath2 = user.Details.PhotoPath2, PhotoPath3 = user.Details.PhotoPath3 });
                     }
                 }
 
@@ -2618,6 +2700,69 @@ namespace DateApp.Models
                 return false;
             }
         }
+
+
+
+        public bool CheckIfPictureBelongsToPair(string Path,string UserId)
+        {
+
+            try
+            {
+                List<string> ListOfUserId = new List<string>();
+                List<string> ListOfUsersPathes = new List<string>(); 
+                List<MatchUser> listmatchuser = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
+                List<Match> matches = listmatchuser.Select(m => m.Match).ToList();
+
+                List<Match> RejectFirst = matches.Where(x => x.RejectFirst =="Yes").ToList();
+                List<Match> RejectSecond = matches.Where(x => x.RejectSecond == "Yes").ToList();
+
+                               
+
+              matches = matches.Except(RejectFirst).ToList();
+              matches = matches.Except(RejectSecond).ToList();
+
+               
+
+                foreach (var item in matches)
+                {
+                    ListOfUserId.Add(item.FirstUserId);
+                    ListOfUserId.Add(item.SecondUserId);
+                }
+
+
+                ListOfUserId = ListOfUserId.Distinct().ToList();
+
+
+                foreach (var item in ListOfUserId)
+                {
+
+                    SearchDetails details = context.Users.Include(x => x.Details).Where(y => y.Id == item).First().Details;
+                    ListOfUsersPathes.Add(details.MainPhotoPath);
+                    ListOfUsersPathes.Add(details.PhotoPath1);
+                    ListOfUsersPathes.Add(details.PhotoPath2);
+                    ListOfUsersPathes.Add(details.PhotoPath3);
+
+
+                }
+
+                string Compare = "/Home/GetPicture/" + Path;
+
+                bool check = ListOfUsersPathes.Any(x => x == Compare); 
+
+
+                return check;
+
+            }
+            catch(Exception  ex)
+
+            {
+
+                return false;
+            }
+
+        }
+
+
 
         public bool CheckPictureOwner(string Path, string UserId)
         {

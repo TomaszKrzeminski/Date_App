@@ -477,7 +477,7 @@ namespace DateApp.Controllers
             string text = Path.Combine(uploads, "photo.png");
             var image = System.IO.File.OpenRead(text);
 
-            if (repository.CheckPictureOwner(id, UserId))
+            if (repository.CheckPictureOwner(id, UserId)||repository.CheckIfPictureBelongsToPair(id,UserId))
             {
                 uploads = Path.Combine(_environment.ContentRootPath, "UserImages");
                 text = Path.Combine(uploads, id);
