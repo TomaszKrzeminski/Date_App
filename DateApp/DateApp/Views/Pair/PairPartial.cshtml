@@ -26,29 +26,35 @@
 
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
                     <form class="formPairDetails" @*id="GoToPair" *@ asp-action="GoToPair" asp-controller="Pair" method="post">
-                        <input type="hidden" value=@Model.match.PairId name="PairId" />
-                        <img class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PairMainPhotoPath>
                         <div class="row">
-                            <div class="col-lg-4"></div>
-                            <div class="col-lg-1">
-                                <img class="img-thumbnail" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath1>
+                            <div id="ImageToChange" class="col-xl-12">
+                                <img id="MainImage" class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PairMainPhotoPath>
                             </div>
-                            <div class="col-lg-1">
-                                <img class="img-thumbnail" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath2>
-                            </div>
-                            <div class="col-lg-1">
-                                <img class="img-thumbnail" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath3>
-                            </div>
-                            <div class="col-lg-1">
-                                <img class="img-thumbnail" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PairMainPhotoPath>
-                            </div>
-                            <div class="col-lg-4"></div>
                         </div>
+                        <input type="hidden" value=@Model.match.PairId name="PairId" />
+
+
                         <div>
                             <label>@Model.match.PairMail</label>
                         </div>
 
                     </form>
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-1">
+                            <img id="Image1" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath1>
+                        </div>
+                        <div class="col-lg-1">
+                            <img id="Image2" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath2>
+                        </div>
+                        <div class="col-lg-1">
+                            <img id="Image3" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath3>
+                        </div>
+                        <div class="col-lg-1">
+                            <img id="Image0" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PairMainPhotoPath>
+                        </div>
+                        <div class="col-lg-4"></div>
+                    </div>
                 </div>
 
 
@@ -150,7 +156,46 @@
 </div>
 
 <script>
+    //// change MainImage
+    $('.SmallImage').on("click", function ()
+    {
+        var ImagePath = $(this).attr("src");
+      
 
+        var data = {};
+        data["Path"] = ImagePath;
+
+
+        $.ajax({
+     url: '@Url.Action("ChangeMainImage", "Pair")',
+     type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+     headers: {
+         RequestVerificationToken:
+             $('input:hidden[name="__RequestVerificationToken"]').val()
+     },
+     success: function (result) {
+         $("#ImageToChange").html(result);
+
+     }
+ });
+        
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+
+    /////
 
     $("#NextMatchCancel").on("click", function () {
 

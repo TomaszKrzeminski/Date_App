@@ -221,8 +221,11 @@ namespace DateApp.Controllers
         }
 
 
-
-
+        [HttpPost]
+        public PartialViewResult ChangeMainImage(string Path)
+        {
+            return PartialView("ChangeMainImage", Path);
+        }
 
 
 
