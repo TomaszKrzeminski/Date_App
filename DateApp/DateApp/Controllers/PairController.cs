@@ -227,7 +227,32 @@ namespace DateApp.Controllers
             return PartialView("ChangeMainImage", Path);
         }
 
+        [HttpPost]
+        public PartialViewResult ActionMyNewPair()
+        {
 
+            PairImagesViewResult result = new PairImagesViewResult();
+
+            string Id = GetUser().Result.Id;
+            List<MatchView> listMatch = repository.GetMatchScreenNotChecked(Id, "Yes", false);
+
+            if (listMatch.Count > 0)
+            {
+                MatchView last = listMatch.ToList().LastOrDefault();
+                SearchDetails details = repository.GetUserDetails(Id);
+                result.PairImagePath = last.PairMainPhotoPath;
+                result.MyImagePath = details.MainPhotoPath;
+                result.MyEmail = GetUser().Result.Email;
+                result.PairEmail = last.PairMail;
+                repository.SetMatchScreenShowed(Id, last.PairId);
+            }
+            else
+            {
+                result = null;
+            }
+
+            return PartialView("ActionMyNewPair", result);
+        }
 
 
 

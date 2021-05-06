@@ -39,8 +39,8 @@ namespace DateApp
 
             if (env.IsDevelopment())
             {
-                //_quartzScheduler = ConfigureQuartz();
-                _quartzScheduler = ConfigureQuartzProduction();
+                _quartzScheduler = ConfigureQuartz();
+                //_quartzScheduler = ConfigureQuartzProduction();
             }
             else
             {
@@ -407,10 +407,7 @@ namespace DateApp
         public IScheduler ConfigureQuartzProduction()
         {
 
-            //NameValueCollection props = new NameValueCollection
-            // {
-            //  { "quartz.serializer.type", "json" },             
-            //  };
+
 
             NameValueCollection properties = new NameValueCollection
         {
@@ -427,7 +424,19 @@ namespace DateApp
             { "quartz.serializer.type", "json" },
         };
 
-
+            //    NameValueCollection properties = new NameValueCollection
+            //{
+            //    { "quartz.scheduler.instanceName", "RemoteServer" },
+            //    { "quartz.scheduler.instanceId", "RemoteServer" },
+            //    { "quartz.jobStore.type", "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz" },
+            //    { "quartz.jobStore.useProperties", "true" },
+            //    { "quartz.jobStore.dataSource", "default" },
+            //    { "quartz.jobStore.tablePrefix", "QRTZ_" },
+            //    { "quartz.dataSource.default.connectionString",
+            //     "Initial Catalog=Quartz;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+            //    { "quartz.threadPool.threadCount", "1" },
+            //    { "quartz.serializer.type", "json" },
+            //};
 
 
 

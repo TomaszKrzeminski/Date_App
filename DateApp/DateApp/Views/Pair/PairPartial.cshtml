@@ -2,26 +2,26 @@
 
 
 
-<div  class="row"   id="PartialMatch" style=" min-height:1900px; border:solid ; " >
-   
-        <div style="min-height:810px;  " class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+<div class="row" id="PartialMatch" style=" min-height:1900px; border:solid ; ">
+
+    <div style="min-height:810px;  " class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
 
 
-            @if (Model.match != null && Model.match.PairId != "")
-            {
+        @if (Model.match != null && Model.match.PairId != "")
+        {
             <div class="row">
 
 
                 @*<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
-            <form class="formPairDetails" asp-action="GoToPair" asp-controller="Pair" method="post">
-                <input type="hidden" value=@Model.match.PairId name="PairId" />
-                <img class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;"  src=@Model.match.PairMainPhotoPath>
-                <div>
-                    <label>@Model.match.PairMail</label>
-                </div>
+                        <form class="formPairDetails" asp-action="GoToPair" asp-controller="Pair" method="post">
+                            <input type="hidden" value=@Model.match.PairId name="PairId" />
+                            <img class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;"  src=@Model.match.PairMainPhotoPath>
+                            <div>
+                                <label>@Model.match.PairMail</label>
+                            </div>
 
-            </form>
-        </div>*@
+                        </form>
+                    </div>*@
 
 
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
@@ -141,7 +141,7 @@
 
 
             </div>
-            }
+        }
 
 
 
@@ -149,18 +149,88 @@
 
 
 
-        </div>
-   
+    </div>
 
+    /////
+
+    @*<div id="dialogMatch" title="LessonSelected">
+        <div id="MatchViewPartial"></div>
+    </div>*@
+
+
+    //////
 
 </div>
 
 <script>
+
+    //// dialog for pair match
+
+    //$(document).ready(function () {
+    //    function start() {
+
+
+    //        $("#dialogMatch").dialog({
+    //            autoOpen: false,
+    //            draggable: false,
+    //            resizable: false,
+    //            width: 600,
+    //            height: 600,
+    //            modal: true,
+    //            show: 'slideDown',
+    //            hide: 'slideUp',
+    //            dialogClass: "no-close"
+    //            //buttons: [
+    //            //    {
+
+    //            //        text: "Anuluj",
+    //            //        click: function () {
+    //            //            $(this).dialog("close");
+    //            //        }
+
+
+    //            //    },
+    //            //    {
+
+    //            //        text: "Potwierdź",
+    //            //        click: function () {
+
+
+    //            //        }
+    //            //    }
+    //            //]
+    //        });
+
+
+
+
+    //    }
+
+
+    //    start();
+
+       
+    //});
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ////
+
     //// change MainImage
     $('.SmallImage').on("click", function ()
     {
         var ImagePath = $(this).attr("src");
-      
+
 
         var data = {};
         data["Path"] = ImagePath;
@@ -180,7 +250,7 @@
 
      }
  });
-        
+
 
 
 
@@ -278,7 +348,7 @@
     }
     );
 
-   
+
 
     var connectionPair = new signalR.HubConnectionBuilder().withUrl("/updatePair").build();
 
@@ -286,7 +356,7 @@
 
 
 
-    connectionPair.on("UpdateMatchesSignal", function ()
+    @*connectionPair.on("UpdateMatchesSignal", function ()
     {
 
         //alert("fire update ");
@@ -313,9 +383,89 @@
 
 
 
+    });*@
+
+     function DialogStart() {
+                 $.ajax({
+                     url: '@Url.Action("ActionMyNewPair", "Pair")',
+                     type: "post",
+                     contentType: 'application/x-www-form-urlencoded',
+                     headers: {
+                         RequestVerificationToken:
+                             $('input:hidden[name="__RequestVerificationToken"]').val()
+                     },
+                     success: function (result2)
+                     {
+                        
+                            
+
+                        
+
+                         if (result2 )
+                         {
+                             $('#MatchViewPartial').empty();
+                             $('#MatchViewPartial').html(result2);
+                             var el = document.getElementById("dialogMatch");
+                             el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+                             
+                         }
+
+
+                                  
+                         
+                         
+
+
+
+
+                     }
+                 });
+             }
+
+
+
+     connectionPair.on("UpdateMatchesSignal", function ()
+    {
+
+        //alert("fire update ");
+
+
+         $.ajax({
+             url: '@Url.Action("UpdateMatches", "Pair")',
+             type: "post",
+             contentType: 'application/x-www-form-urlencoded',
+             headers: {
+                 RequestVerificationToken:
+                     $('input:hidden[name="__RequestVerificationToken"]').val()
+             },
+             success: function (result) {
+
+                 $("#PairOptionsMatch").html(result);
+
+
+
+
+
+             }
+         }).done(
+
+
+
+
+             DialogStart()
+
+
+
+
+              );
+
+
+
+
+
+
+
     });
-
-
 
 
 

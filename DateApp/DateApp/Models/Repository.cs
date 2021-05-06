@@ -1,17 +1,19 @@
-﻿using System;
+﻿using DateApp.Models.DateApp.Models;
+using GeoCoordinatePortable;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GeoCoordinatePortable;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using DateApp.Models.DateApp.Models;
 
 namespace DateApp.Models
 {
 
     public interface IRepository
     {
+        List<MatchView> GetMatchScreenNotChecked(string UserId, string Pair, bool ExceptUserAction);
+        bool SetMatchScreenShowed(string Id, string PairId);
         bool SetScreenShotAsMainPhoto(string Path, string UserId);
         bool CancelEvent(int EventId);
         bool CheckIfEventBelongsToUser(int EventId, string UserId);
@@ -1289,6 +1291,125 @@ namespace DateApp.Models
             }
 
         }
+
+   public     bool SetMatchScreenShowed(string Id, string PairId)
+        {
+            try
+            {
+                List<MatchUser> listmatchuser = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == Id).First().MatchUser.ToList();
+                List<Match> matches = listmatchuser.Select(m => m.Match).ToList();
+
+                matches = IsItaPair(matches, "Yes");
+
+                Match match = matches.Where(x => x.FirstUserId == PairId || x.SecondUserId == PairId).FirstOrDefault();
+                
+                if(match.FirstUserId==Id)
+                {
+                    match.ShowMatchScreenU1 = false;
+                }
+                else
+                {
+                    match.ShowMatchScreenU2 = false;
+
+                }
+                context.SaveChanges();
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+
+        public List<MatchView> GetMatchScreenNotChecked(string UserId, string Pair, bool ExceptUserAction)
+        {
+
+
+
+
+            List<MatchView> list = new List<MatchView>();
+
+            try
+            {
+                List<MatchUser> listmatchuser = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
+                List<Match> matches = listmatchuser.Select(m => m.Match).ToList();
+
+                matches = IsItaPair(matches, Pair);
+                if (ExceptUserAction)
+                {
+                    matches = ExceptAfterUserAction(UserId, matches);
+                }
+
+
+
+                ///Check if pictures are updated
+                foreach (var m in matches)
+                {
+                    AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.FirstUserId).First();
+                    AppUser user2 = context.Users.Include(s => s.Details).Where(x => x.Id == m.SecondUserId).First();
+
+                    if (m.MainPhotoUser1 != user.Details.MainPhotoPath)
+                    {
+                        m.MainPhotoUser1 = user.Details.MainPhotoPath;
+
+
+                    }
+                    if (m.MainPhotoUser2 != user2.Details.MainPhotoPath)
+                    {
+                        m.MainPhotoUser2 = user2.Details.MainPhotoPath;
+                    }
+                }
+
+
+
+                foreach (var m in matches)
+                {
+                    if (m.FirstUserId == UserId&&m.ShowMatchScreenU1==true)
+                    {
+                        
+                        AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.SecondUserId).First();                       
+
+                        list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId, PhotoPath1 = user.Details.PhotoPath1, PhotoPath2 = user.Details.PhotoPath2, PhotoPath3 = user.Details.PhotoPath3 });
+                    }
+                    else if(m.SecondUserId==UserId && m.ShowMatchScreenU2 == true)
+                    {
+                        
+                        AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.FirstUserId).First();
+                        list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser1, PairId = m.FirstUserId, PhotoPath1 = user.Details.PhotoPath1, PhotoPath2 = user.Details.PhotoPath2, PhotoPath3 = user.Details.PhotoPath3 });
+                    }
+                }
+
+
+
+
+
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+
+                return list;
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public int CheckMatches(string UserId)
         {

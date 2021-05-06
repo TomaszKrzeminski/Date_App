@@ -482,7 +482,8 @@ namespace DateApp.Models
             //Addend for notifications
             NewForFirstUser = true;
             NewForSecondUser = true;
-
+            ShowMatchScreenU1 = true;
+            ShowMatchScreenU2 = true;
         }
 
 
@@ -505,10 +506,8 @@ namespace DateApp.Models
         public DateTime Time { get; set; }
         public bool DontShow { get; set; }
         public bool Reject { get; set; }
-        /// <summary>
-        /// Added for notifications
-        /// </summary>
-
+       public bool ShowMatchScreenU1 { get; set; }
+        public bool ShowMatchScreenU2 { get; set; }
 
 
         public IList<MatchUser> MatchUser { get; set; }
