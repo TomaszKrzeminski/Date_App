@@ -25,6 +25,8 @@ namespace DateApp.Controllers
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
         private IConfiguration configuration;
+       
+
 
         public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,IConfiguration configuration, Func<Task<AppUser>> GetUser = null)
         {
@@ -119,7 +121,7 @@ namespace DateApp.Controllers
 
         public async Task<IActionResult> StaticRoute(RoutingViewModel model)
         {
-
+            
             string TomTomKey= configuration.GetValue<string>("TomTomKey");
             ViewBag.TomTomkey = TomTomKey; 
             string  ReverseGeocodingKey= configuration.GetValue<string>("ApiOpenWeather");

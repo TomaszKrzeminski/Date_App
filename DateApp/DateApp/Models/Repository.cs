@@ -12,6 +12,7 @@ namespace DateApp.Models
 
     public interface IRepository
     {
+        int PotentialMatches(string UserId);
         List<MatchView> GetMatchScreenNotChecked(string UserId, string Pair, bool ExceptUserAction);
         bool SetMatchScreenShowed(string Id, string PairId);
         bool SetScreenShotAsMainPhoto(string Path, string UserId);
@@ -1220,7 +1221,7 @@ namespace DateApp.Models
         public List<MatchView> GetMatchViews(string UserId, string Pair, bool ExceptUserAction)
         {
 
-            
+
 
 
             List<MatchView> list = new List<MatchView>();
@@ -1247,8 +1248,8 @@ namespace DateApp.Models
                     if (m.MainPhotoUser1 != user.Details.MainPhotoPath)
                     {
                         m.MainPhotoUser1 = user.Details.MainPhotoPath;
-                        
-                        
+
+
                     }
                     if (m.MainPhotoUser2 != user2.Details.MainPhotoPath)
                     {
@@ -1265,7 +1266,7 @@ namespace DateApp.Models
                         //AppUser user = context.Users.Find(m.SecondUserId);
                         //list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId });
                         AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.SecondUserId).First();
-                        list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId,PhotoPath1=user.Details.PhotoPath1,PhotoPath2=user.Details.PhotoPath2,PhotoPath3=user.Details.PhotoPath3 });
+                        list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId, PhotoPath1 = user.Details.PhotoPath1, PhotoPath2 = user.Details.PhotoPath2, PhotoPath3 = user.Details.PhotoPath3 });
                     }
                     else
                     {
@@ -1292,7 +1293,7 @@ namespace DateApp.Models
 
         }
 
-   public     bool SetMatchScreenShowed(string Id, string PairId)
+        public bool SetMatchScreenShowed(string Id, string PairId)
         {
             try
             {
@@ -1302,8 +1303,8 @@ namespace DateApp.Models
                 matches = IsItaPair(matches, "Yes");
 
                 Match match = matches.Where(x => x.FirstUserId == PairId || x.SecondUserId == PairId).FirstOrDefault();
-                
-                if(match.FirstUserId==Id)
+
+                if (match.FirstUserId == Id)
                 {
                     match.ShowMatchScreenU1 = false;
                 }
@@ -1316,7 +1317,7 @@ namespace DateApp.Models
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -1367,16 +1368,16 @@ namespace DateApp.Models
 
                 foreach (var m in matches)
                 {
-                    if (m.FirstUserId == UserId&&m.ShowMatchScreenU1==true)
+                    if (m.FirstUserId == UserId && m.ShowMatchScreenU1 == true)
                     {
-                        
-                        AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.SecondUserId).First();                       
+
+                        AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.SecondUserId).First();
 
                         list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser2, PairId = m.SecondUserId, PhotoPath1 = user.Details.PhotoPath1, PhotoPath2 = user.Details.PhotoPath2, PhotoPath3 = user.Details.PhotoPath3 });
                     }
-                    else if(m.SecondUserId==UserId && m.ShowMatchScreenU2 == true)
+                    else if (m.SecondUserId == UserId && m.ShowMatchScreenU2 == true)
                     {
-                        
+
                         AppUser user = context.Users.Include(s => s.Details).Where(x => x.Id == m.FirstUserId).First();
                         list.Add(new MatchView() { PairMail = user.Email, PairMainPhotoPath = m.MainPhotoUser1, PairId = m.FirstUserId, PhotoPath1 = user.Details.PhotoPath1, PhotoPath2 = user.Details.PhotoPath2, PhotoPath3 = user.Details.PhotoPath3 });
                     }
@@ -1585,7 +1586,7 @@ namespace DateApp.Models
         }
 
 
-        public bool PairChecked(string UserId,string ReceiverId)
+        public bool PairChecked(string UserId, string ReceiverId)
         {
 
             try
@@ -1614,7 +1615,7 @@ namespace DateApp.Models
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 return false;
@@ -1858,7 +1859,7 @@ namespace DateApp.Models
 
                 //
                 NotificationCheck check = context.NotificationCheck.Where(n => n.AppUserId == Id).FirstOrDefault();
-                if(check!=null)
+                if (check != null)
                 {
                     context.NotificationCheck.Remove(check);
                     context.SaveChanges();
@@ -2824,25 +2825,25 @@ namespace DateApp.Models
 
 
 
-        public bool CheckIfPictureBelongsToPair(string Path,string UserId)
+        public bool CheckIfPictureBelongsToPair(string Path, string UserId)
         {
 
             try
             {
                 List<string> ListOfUserId = new List<string>();
-                List<string> ListOfUsersPathes = new List<string>(); 
+                List<string> ListOfUsersPathes = new List<string>();
                 List<MatchUser> listmatchuser = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
                 List<Match> matches = listmatchuser.Select(m => m.Match).ToList();
 
-                List<Match> RejectFirst = matches.Where(x => x.RejectFirst =="Yes").ToList();
+                List<Match> RejectFirst = matches.Where(x => x.RejectFirst == "Yes").ToList();
                 List<Match> RejectSecond = matches.Where(x => x.RejectSecond == "Yes").ToList();
 
-                               
 
-              matches = matches.Except(RejectFirst).ToList();
-              matches = matches.Except(RejectSecond).ToList();
 
-               
+                matches = matches.Except(RejectFirst).ToList();
+                matches = matches.Except(RejectSecond).ToList();
+
+
 
                 foreach (var item in matches)
                 {
@@ -2868,13 +2869,13 @@ namespace DateApp.Models
 
                 string Compare = "/Home/GetPicture/" + Path;
 
-                bool check = ListOfUsersPathes.Any(x => x == Compare); 
+                bool check = ListOfUsersPathes.Any(x => x == Compare);
 
 
                 return check;
 
             }
-            catch(Exception  ex)
+            catch (Exception ex)
 
             {
 
@@ -2981,6 +2982,47 @@ namespace DateApp.Models
             {
                 return false;
             }
+        }
+
+        public int PotentialMatches(string UserId)
+        {
+            int count = 0;
+            try
+            {
+                List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(x=>x.Match).Where(x => x.Id == UserId).First().MatchUser.ToList();
+                List<Match> matches = list.Select(m => m.Match).ToList();
+                List<Match> list2 = new List<Match>();
+
+                foreach (var item in matches)
+                {
+
+                    if (item.Pair != "Yes"&&item.RejectFirst==""&&item.RejectSecond=="")
+                    {
+                        if (item.FirstUserId == UserId && item.AcceptSecond == "Yes")
+                        {
+                            list2.Add(item);
+                        }
+                        else if (item.SecondUserId == UserId && item.AcceptFirst == "Yes")
+                        {
+                            list2.Add(item);
+                        }
+                    }
+
+
+
+
+
+                }
+
+                count = list2.Count;
+
+                return count;
+            }
+            catch (Exception ex)
+            {
+                return count;
+            }
+
         }
     }
 }

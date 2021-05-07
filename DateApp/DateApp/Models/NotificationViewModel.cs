@@ -54,9 +54,11 @@ namespace DateApp.Models
             NewMessages = 0;
             NewLikes = new TimeToWait();
             NewSuperLikes = new TimeToWait();
+            PotentialMatches = 0;
+
         }
 
-
+        public int PotentialMatches { get; set; }
         public int NewPairs { get; set; }
         public int NewMessages { get; set; }
         public TimeToWait NewLikes { get; set; }

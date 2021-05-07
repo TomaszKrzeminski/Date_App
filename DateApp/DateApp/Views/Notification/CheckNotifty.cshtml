@@ -6,7 +6,7 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
 
     <div class="collapse navbar-collapse " id="navbarCollapse">
-        <div class="navbar-nav col-lg-3">
+        <div class="navbar-nav col-lg-2">
             <a href="#" class="nav-item nav-link active">
 
                 @if (Model.NewMessages > 1)
@@ -20,7 +20,7 @@
 
             </a>
         </div>
-        <div class="navbar-nav col-lg-3">
+        <div class="navbar-nav col-lg-2">
             <a href="#" class="nav-item nav-link active">
 
                 @if (Model.NewPairs > 1)
@@ -34,7 +34,7 @@
             </a>
 
         </div>
-        <div class="navbar-nav col-lg-3">
+        <div class="navbar-nav col-lg-2">
             <a href="#" class="nav-item nav-link active">
                 @if (Model.NewLikes.Days <= 0 && Model.NewLikes.Hours <= 0 && Model.NewLikes.Minutes <= 0)
                 {
@@ -48,7 +48,7 @@
             </a>
 
         </div>
-        <div class="navbar-nav col-lg-3">
+        <div class="navbar-nav col-lg-2">
             <a href="#" class="nav-item nav-link active">
 
                 @if (Model.NewSuperLikes.Days <= 0 && Model.NewSuperLikes.Hours <= 0 && Model.NewSuperLikes.Minutes <= 0)
@@ -60,6 +60,14 @@
                 {
                     <span>Nowe super polubienia za @Model.NewSuperLikes.Days Dni @Model.NewSuperLikes.Hours Godzin @Model.NewSuperLikes.Minutes Minut</span>
                 }
+
+            </a>
+
+        </div>
+        <div class="navbar-nav col-lg-2">
+            <a href="#" class="nav-item nav-link active">
+
+                <span>Potencjalne Pary  @Model.PotentialMatches</span>
 
             </a>
 

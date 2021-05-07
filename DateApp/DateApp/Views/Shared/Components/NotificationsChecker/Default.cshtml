@@ -1,14 +1,11 @@
-﻿@*@model string*@
+﻿
 
 
 
 
-<div class="container-fluid">
+<div id="Show" class="container-fluid">
     <div class="row">
-        <div class="col-lg-12" id="Notify">
-           
-        </div>
-
+        <div class="col-lg-12" id="Notify"></div>
     </div>
 </div>
 
@@ -24,6 +21,56 @@
 <script>
 
 
+    $("#Notify").on("click", function () {
+
+       $(this).empty();
+
+    });
+
+
+
+
+    $("#Notify").on("mouseover", function () {
+
+        var a = $("#Notify").html().length;
+        var b = $("#Notify").text.length;
+       
+
+
+        if ($("#Notify").html().length === 0)
+        {
+
+            
+            $.ajax({
+                url: '@Url.Action("GetNotifty", "Notification")',
+                type: "get",
+                contentType: 'application/x-www-form-urlencoded',
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (result) {
+
+                    $("#Notify").html(result);
+
+                    /// Odśwież statusy
+
+                }
+            }); 
+                        
+
+
+
+
+
+
+
+        }/////
+                              
+    }); /////
+
+
+    
 
       ////Signal R
 
@@ -35,11 +82,11 @@
 
 
 
-    connectionNoti.on("CheckAllNotifications", function (UserId) {     
+    connectionNoti.on("CheckAllNotifications", function (UserId) {
 
 
      var data = {};
-  
+
      data["Id"] = UserId;
 
 
@@ -62,16 +109,16 @@
  });
           /////////////////
 
-        
+
 
     });
 
-       
+
 
 
     connectionNoti.start().then(
 
-      
+
 
     ).catch(function (err) {
         //alert("Błąd  w Notification checker"+ err);
@@ -81,32 +128,6 @@
         //Update();
 
     });
-
-
-
-
-
-
-
-
-
-
-    //////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
 
 
 
@@ -126,47 +147,3 @@
 
 
 
-@*<script>
-
-
-    (function () {
-
-
-        var interval = 20000;
- setInterval(function() {Update()}, interval);
-
- function Update(){
-
-
-     var data = {};
-    var UserId =@Html.Raw( Json.Serialize(@Model));
-     data["Id"] = UserId;
-
-
-        $.ajax({
-     url: '@Url.Action("CheckNotifty", "Notification")',
-     type: "get",
-     contentType: 'application/x-www-form-urlencoded',
-     data: data,
-     headers: {
-         RequestVerificationToken:
-             $('input:hidden[name="__RequestVerificationToken"]').val()
-     },
-            success: function (result) {
-
-         $("#Notify").html(result);
-
-                /// Odśwież statusy
-
-     }
- });
-
-
-        }
-
-
-
-    })();
-
-
-</script>*@
