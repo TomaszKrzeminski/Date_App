@@ -390,11 +390,11 @@ namespace UndergroundSound.Models
 
                 AddCoordinatesToUser("ADMIN@gmail.com", 00.000, 00.000);
                 AddCoordinatesToUser("zdalnerepo1985@gmail.com", 53.409479, 18.442148);
-                AddCoordinatesToUser("U2@gmail.com", 53.408353, 18.414253);
-                AddCoordinatesToUser("U3@gmail.com", 53.405232, 18.406958);
-                AddCoordinatesToUser("U4@gmail.com", 53.116472, 18.007548);
-                AddCoordinatesToUser("U5@gmail.com", 53.349537, 18.423952);
-                AddCoordinatesToUser("U6@gmail.com", 53.347993, 18.418282);
+                AddCoordinatesToUser("U2@gmail.com", 53.412120, 18.444637);
+                AddCoordinatesToUser("U3@gmail.com", 53.412120, 18.444637);
+                AddCoordinatesToUser("U4@gmail.com", 53.412120, 18.444637);
+                AddCoordinatesToUser("U5@gmail.com", 53.412120, 18.444637);
+                AddCoordinatesToUser("U6@gmail.com", 53.412120, 18.444637);
                 AddCoordinatesToUser("U7@gmail.com", 53.351428, 18.432541);
                 AddCoordinatesToUser("U8@gmail.com", 53.131409, 18.018191);
                 AddCoordinatesToUser("U9@gmail.com", 53.416999, 18.458456);

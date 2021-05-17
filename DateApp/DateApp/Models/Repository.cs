@@ -697,7 +697,7 @@ namespace DateApp.Models
             try
             {
                 SearchDetails details = context.Users.Include(x => x.Details).Where(u => u.Id == UserId).First().Details;
-                details.ShowProfile = Show;
+                details.HideProfile = Show;
                 context.SaveChanges();
                 return true;
             }
@@ -799,6 +799,68 @@ namespace DateApp.Models
             return longitude;
         }
 
+
+
+        public bool RemoveHiddenMatches(string UserId)
+        {
+            List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
+            List<Match> matches1 = list.Select(m => m.Match).ToList();
+            List<Match> matchesToRemove = new List<Match>();
+            //List<string> UsersToRemove = new List<string>();
+
+            try
+            {
+
+                foreach (var match in matches1)
+                {
+                    string Id = UserId;
+                    if (match.FirstUserId == UserId)
+                    {
+
+                        Id = match.SecondUserId;
+
+                    }
+                    else
+                    {
+                        Id = match.FirstUserId;
+                    }
+                    SearchDetails det = context.Users.Include(x => x.Details).Where(x => x.Id == Id).First().Details;
+                    if (det.HideProfile == true)
+                    {
+                        //UsersToRemove.Add(det.AppUserId);
+                        matchesToRemove.Add(match);
+                    }
+
+
+                }
+
+                foreach (var item in matchesToRemove)
+                {
+
+                    context.Matches.Remove(item);
+                    MatchUser mu = context.MatchUsers.Where(x => x.MatchId == item.MatchId).First();
+                    context.MatchUsers.Remove(mu);
+                    context.SaveChanges();
+
+                }
+
+
+                
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+
+
+
+        }
+
+
         public bool SearchForMatches(string UserId)
         {
             try
@@ -806,7 +868,16 @@ namespace DateApp.Models
 
                 ///GetUser             
                 AppUser user = context.Users.Include(u => u.MatchUser).Where(x => x.Id == UserId).First();
-                /////
+
+
+                ///// check if user is hidden
+                SearchDetails det1 = context.Users.Include(x => x.Details).Where(x => x.Id == UserId).First().Details;
+                if (det1.HideProfile == true)
+                {
+                    return false;
+                }
+                ////
+
 
 
                 //// Get Coordinates
@@ -827,7 +898,16 @@ namespace DateApp.Models
                 ///Get Matches
                 List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
                 List<Match> matches = list.Select(m => m.Match).ToList();
+               
+                ///// Dont show hidden profiles
+
+
+
                 ///
+
+
+
+
 
                 ///Except Coordinates             
 
@@ -904,6 +984,16 @@ namespace DateApp.Models
                 {
                     AppUser user2 = context.Users.Include(s => s.Details).Where(i => i.Id == c.AppUserId).First();
                     SearchDetails user2SearchDetails = user2.Details;
+
+
+                    //if(user2SearchDetails.HideProfile==false)
+                    //{
+                    //    listMatches.Add(new Match(UserId, c.AppUserId, details.MainPhotoPath, user2SearchDetails.MainPhotoPath));
+                    //}
+
+
+
+
                     listMatches.Add(new Match(UserId, c.AppUserId, details.MainPhotoPath, user2SearchDetails.MainPhotoPath));
                 }
 
@@ -928,7 +1018,7 @@ namespace DateApp.Models
 
                 }
 
-
+                RemoveHiddenMatches(UserId);
 
                 /////////
                 return true;
@@ -1230,6 +1320,10 @@ namespace DateApp.Models
             {
                 List<MatchUser> listmatchuser = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
                 List<Match> matches = listmatchuser.Select(m => m.Match).ToList();
+                ////
+
+
+                //
 
                 matches = IsItaPair(matches, Pair);
                 if (ExceptUserAction)
@@ -2989,14 +3083,14 @@ namespace DateApp.Models
             int count = 0;
             try
             {
-                List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(x=>x.Match).Where(x => x.Id == UserId).First().MatchUser.ToList();
+                List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(x => x.Match).Where(x => x.Id == UserId).First().MatchUser.ToList();
                 List<Match> matches = list.Select(m => m.Match).ToList();
                 List<Match> list2 = new List<Match>();
 
                 foreach (var item in matches)
                 {
 
-                    if (item.Pair != "Yes"&&item.RejectFirst==""&&item.RejectSecond=="")
+                    if (item.Pair != "Yes" && item.RejectFirst == "" && item.RejectSecond == "")
                     {
                         if (item.FirstUserId == UserId && item.AcceptSecond == "Yes")
                         {

@@ -2,33 +2,21 @@
 
 
 
-<div class="row" id="PartialMatch" style=" min-height:1900px; border:solid ; ">
+<div class="row" id="PartialMatch" @*style="min-height:1900px;"*@>
 
-    <div style="min-height:810px;  " class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+    <div style="min-height:810px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
 
 
         @if (Model.match != null && Model.match.PairId != "")
         {
-            <div class="row">
-
-
-                @*<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
-                        <form class="formPairDetails" asp-action="GoToPair" asp-controller="Pair" method="post">
-                            <input type="hidden" value=@Model.match.PairId name="PairId" />
-                            <img class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;"  src=@Model.match.PairMainPhotoPath>
-                            <div>
-                                <label>@Model.match.PairMail</label>
-                            </div>
-
-                        </form>
-                    </div>*@
+            <div class="row text-center">              
 
 
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
-                    <form class="formPairDetails" @*id="GoToPair" *@ asp-action="GoToPair" asp-controller="Pair" method="post">
+                    <form class="formPairDetails"  asp-action="GoToPair" asp-controller="Pair" method="post">
                         <div class="row">
                             <div id="ImageToChange" class="col-xl-12">
-                                <img id="MainImage" class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PairMainPhotoPath>
+                                <img id="MainImage" class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;"  src=@Model.match.PairMainPhotoPath>
                             </div>
                         </div>
                         <input type="hidden" value=@Model.match.PairId name="PairId" />
@@ -42,16 +30,16 @@
                     <div class="row">
                         <div class="col-lg-4"></div>
                         <div class="col-lg-1">
-                            <img id="Image1" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath1>
+                            <img id="Image1" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" src=@Model.match.PhotoPath1>
                         </div>
                         <div class="col-lg-1">
-                            <img id="Image2" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath2>
+                            <img id="Image2" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;"  src=@Model.match.PhotoPath2>
                         </div>
                         <div class="col-lg-1">
-                            <img id="Image3" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PhotoPath3>
+                            <img id="Image3" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" src=@Model.match.PhotoPath3>
                         </div>
                         <div class="col-lg-1">
-                            <img id="Image0" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" @*alt=@Model.match.PairMail*@ src=@Model.match.PairMainPhotoPath>
+                            <img id="Image0" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;"  src=@Model.match.PairMainPhotoPath>
                         </div>
                         <div class="col-lg-4"></div>
                     </div>
@@ -104,9 +92,9 @@
                     }
 
                 </div>
-                <div class="col-xl-1 col-lg-1"></div>
+                <div class="col-xl-12 col-lg-12"></div>
 
-                <div class="col-xl-12  col-lg-12">
+                <div class="col-xl-12  col-lg-12 col-sm-12">
                     <div class="col-xl-1 col-lg-1"></div>
                     <div class="col-xl-10 col-lg-10 text-center">
                         @Model.match.action.Message
@@ -118,13 +106,13 @@
 
 
 
-                <div class="col-xl-3"></div>
-                <div class="col-xl-7">
+                <div class="col-xl-2 col-sm-2"></div>
+                <div class="col-xl-8 col-sm-8">
                     <div class="row">
                         @Html.Partial("TomTomMarkers", Model)
                     </div>
                 </div>
-                <div class="col-xl-2"></div>
+                <div class="col-xl-2 col-sm-2"></div>
 
 
 
@@ -151,66 +139,13 @@
 
     </div>
 
-    /////
-
-    @*<div id="dialogMatch" title="LessonSelected">
-        <div id="MatchViewPartial"></div>
-    </div>*@
-
-
-    //////
+   
 
 </div>
 
 <script>
 
-    //// dialog for pair match
-
-    //$(document).ready(function () {
-    //    function start() {
-
-
-    //        $("#dialogMatch").dialog({
-    //            autoOpen: false,
-    //            draggable: false,
-    //            resizable: false,
-    //            width: 600,
-    //            height: 600,
-    //            modal: true,
-    //            show: 'slideDown',
-    //            hide: 'slideUp',
-    //            dialogClass: "no-close"
-    //            //buttons: [
-    //            //    {
-
-    //            //        text: "Anuluj",
-    //            //        click: function () {
-    //            //            $(this).dialog("close");
-    //            //        }
-
-
-    //            //    },
-    //            //    {
-
-    //            //        text: "Potwierdź",
-    //            //        click: function () {
-
-
-    //            //        }
-    //            //    }
-    //            //]
-    //        });
-
-
-
-
-    //    }
-
-
-    //    start();
-
-       
-    //});
+   
 
 
 

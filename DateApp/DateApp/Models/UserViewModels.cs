@@ -178,7 +178,7 @@ namespace DateApp.Models
         public int Distance { get; set; }
         public string SearchSex { get; set; }
         public int SearchAge { get; set; }
-        public bool ShowProfile { get; set; }
+        public bool HideProfile { get; set; }
     }
 
     public class ChangePhoneNumberView

@@ -36,21 +36,26 @@
 
 </head>
 <body>
-    <div class="container-fluid">
-        @await  Component.InvokeAsync("NotificationsChecker")
-
-   
-        <span class="AntiForge"> @Html.AntiForgeryToken() </span>
-        <div class="row">
-            <div class="col-xl-12">
-                @RenderBody()
+    @*<div class="container-fluid">*@
+        <div class="container-fluid">
+            <div class="row">
+                @await Component.InvokeAsync("NotificationsChecker")
             </div>
+
+
+
+
+            <span class="AntiForge"> @Html.AntiForgeryToken() </span>
+            <div class="row">
+                <div class="col-xl-12 col-sm-12">
+                    @RenderBody()
+                </div>
+            </div>
+
+
+
+
         </div>
-
-
-
-
-    </div>
     <div>
         @RenderSection("scripts", false)
     </div>

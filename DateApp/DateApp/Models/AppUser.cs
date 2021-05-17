@@ -203,7 +203,7 @@ namespace DateApp.Models
             SearchSex = "Kobieta";
             SearchDistance = 50;
             SearchAge = 20;
-            ShowProfile = false;
+            HideProfile = false;
 
             MainPhotoPath = "/AppPictures/photo.png";
             PhotoPath1 = "/AppPictures/photo.png";
@@ -238,7 +238,7 @@ namespace DateApp.Models
             SearchSex = searchsex;
             SearchDistance = 50;
             SearchAge = 20;
-            ShowProfile = false;
+            HideProfile = false;
 
             MainPhotoPath = "/AppPictures/photo.png";
             PhotoPath1 = "/AppPictures/photo.png";
@@ -369,7 +369,7 @@ namespace DateApp.Models
         public string SearchSex { get; set; }
         public int SearchDistance { get; set; }
         public int SearchAge { get; set; }
-        public bool ShowProfile { get; set; }
+        public bool HideProfile { get; set; }
 
         public string MainPhotoPath { get; set; }
         public string PhotoPath1 { get; set; }
