@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DateApp.Controllers
 {
-
+    [Authorize]
     public class EventController : Controller
     {
         private IRepository repository;
@@ -230,78 +230,6 @@ namespace DateApp.Controllers
             return Json(Cities);
         }
 
-
-
-
-
-        //[HttpPost]
-        //public IActionResult AddEvent(AddEventViewModel model)
-        //{
-        //    MovieMP4 mp4 = new MovieMP4();
-        //    PictureJPG jpg = new PictureJPG();
-
-
-        //    if (model.Event.Date != null)
-        //    {
-        //        DateTime now = DateTime.Now;
-        //        TimeSpan span = model.Event.Date - now;
-        //        if (span.Days < 7)
-        //        {
-        //            ModelState.AddModelError("Event.Date", "Możesz dodać wydażenie co najmniej  7 dni wcześniej ");
-        //        }
-
-        //    }
-
-        //    if (!model.CheckExtension(model.PictureFile_1, jpg))
-        //    {
-        //        ModelState.AddModelError("PictureFile_1", "zdjęcie 1 nie jest typu jpg");
-        //    }
-        //    if (!model.CheckExtension(model.PictureFile_2, jpg))
-        //    {
-        //        ModelState.AddModelError("PictureFile_2", "zdjęcie 2 nie jest typu jpg");
-        //    }
-        //    if (!model.CheckExtension(model.PictureFile_3, jpg))
-        //    {
-        //        ModelState.AddModelError("PictureFile_3", "zdjęcie 3 nie jest typu jpg");
-        //    }
-        //    if (!model.CheckExtension(model.MovieFile, mp4))
-        //    {
-        //        ModelState.AddModelError("MovieFile", "film nie jest w formacie mp4");
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-
-        //        if (model.PictureFile_1 != null)
-        //        {
-        //            model.Event.PhotoPath1 = AddPictureEvent(model.PictureFile_1).Result;
-        //        }
-        //        if (model.PictureFile_2 != null)
-        //        {
-        //            model.Event.PhotoPath2 = AddPictureEvent(model.PictureFile_2).Result;
-        //        }
-        //        if (model.PictureFile_3 != null)
-        //        {
-        //            model.Event.PhotoPath3 = AddPictureEvent(model.PictureFile_3).Result;
-        //        }
-        //        if (model.MovieFile != null)
-        //        {
-        //            model.Event.FilePath = AddMovieFileEvent(model.MovieFile).Result;
-        //        }
-
-        //        AppUser user = GetUser().Result;
-        //        model.User = user;
-        //        int eventId = repository.AddEvent(model);
-        //        return RedirectToAction("ShowEvent", new { EventId = eventId });
-        //    }
-        //    else
-        //    {
-        //        return View(model);
-        //    }
-
-        //}
-
-
         [HttpPost]
         public IActionResult AddEvent(AddEventViewModel model)
         {
@@ -369,8 +297,6 @@ namespace DateApp.Controllers
 
         }
 
-
-
         public IActionResult CheckEventAdding(string EventId)
         {
             AppUser user = GetUser().Result;
@@ -379,17 +305,7 @@ namespace DateApp.Controllers
 
 
             return View("CheckEventAdding",EventId);
-        }
-
-
-
-
-
-
-
-
-
-
+        }                                    
 
         [HttpPost]
         public IActionResult ShowEvents(ShowEventViewModel model)
@@ -418,52 +334,7 @@ namespace DateApp.Controllers
 
 
 
-        }
-
-        //public async Task<string> AddPictureEvent(IFormFile file)
-        //{
-        //    string FilePath = "";
-        //    string PathText = "";
-
-        //    if (file != null)
-        //    {
-        //        var uploads = Path.Combine(_environment.WebRootPath, "Images");
-
-        //        if (file.Length > 0)
-        //        {
-
-        //            if (Path.GetExtension(file.FileName) == ".jpg")
-        //            {
-
-        //                PathText = Path.Combine(uploads, file.FileName);
-        //                using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
-        //                {
-        //                    FilePath = "/Images/" + file.FileName;
-        //                    await file.CopyToAsync(fileStream);
-        //                }
-
-
-        //            }
-
-        //        }
-
-
-        //        return FilePath;
-
-
-
-        //    }
-        //    else
-        //    {
-        //        return FilePath;
-        //    }
-
-
-        //}
-
-
-
-        //       
+        }              
 
 
         public async Task<string> AddPictureEvent(IFormFile file)
@@ -580,59 +451,7 @@ namespace DateApp.Controllers
 
 
     }
-
-
-
-
-
-
-
-    //    public async Task<string> AddMovieFileEvent(IFormFile file)
-    //    {
-
-    //        string PathText = "";
-    //        string FilePath = "";
-    //        if (file != null)
-    //        {
-    //            var uploads = Path.Combine(_environment.WebRootPath, "Videos");
-
-    //            if (file.Length > 0)
-    //            {
-
-    //                if (Path.GetExtension(file.FileName) == ".mp4")
-    //                {
-
-    //                    PathText = Path.Combine(uploads, file.FileName);
-    //                    using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
-    //                    {
-    //                        FilePath = "/Videos/" + file.FileName;
-    //                        await file.CopyToAsync(fileStream);
-    //                    }
-
-
-    //                }
-
-    //            }
-
-
-    //            return FilePath;
-
-
-
-    //        }
-    //        else
-    //        {
-    //            return FilePath;
-    //        }
-
-
-    //    }
-
-
-
-
-
-    //}
+   
 
 
 

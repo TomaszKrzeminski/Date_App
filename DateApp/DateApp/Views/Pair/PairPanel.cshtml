@@ -55,10 +55,8 @@
         height: 100%;
         text-align: center;
         z-index: 1000;
-        background-color:gray;
+        background-color: gray;
     }
-
-
 </style>
 
 
@@ -92,7 +90,7 @@
 
     </div>
 
-   
+
 </div>
 
 
@@ -122,23 +120,22 @@
 <script>
 
 
-    function closeDilogMatch()
-    {
+    function closeDilogMatch() {
         var el = document.getElementById("dialogMatch");
         el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 
     }
 
-   
+
 
     $('#dialogMatch').on('click', function () {
 
-       
+
         closeDilogMatch();
 
     });
 
-   
+
 </script>
 
 
@@ -146,14 +143,48 @@
 
 
 
-<script>
-    var x = document.getElementById("Geo");
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
+@*<script>
+        var x = document.getElementById("Geo");
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
         }
+
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+
+
+
+            $.post("/Pair/Coordinates",
+                {
+                    Latitude: latitude,
+                    Longitude: longitude
+                },
+                function (data, status) {
+                });
+
+
+        }
+
+
+        getLocation();
+
+    </script>*@
+
+
+
+
+
+
+@*<script>
+    var x = document.getElementById("Geo");
+
+    function errorCoor() {
+        alert | ("Nie można pobrać lokalizacji sprawdz ustawienia swojej przeglądarki");
     }
 
     function showPosition(position) {
@@ -174,9 +205,99 @@
     }
 
 
+
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, errorCoor, { maximumAge: 60000, timeout: 10000, enableHighAccuracy: true });
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+
+
+    getLocation();
+
+</script>*@
+
+
+
+
+
+
+
+
+<script>
+    var x = document.getElementById("Geo");
+
+
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+
+   
+
+    function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+
+   
+
+
+
+
+
+
+
+
+
+    function errorCoor() {
+        alert | ("Nie można pobrać lokalizacji sprawdz ustawienia swojej przeglądarki");
+    }
+
+    function success(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+
+
+
+        $.post("/Pair/Coordinates",
+            {
+                Latitude: latitude,
+                Longitude: longitude
+            },
+            function (data, status) {
+            });
+
+
+    }
+
+
+
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error, options);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+
+
     getLocation();
 
 </script>
+
+
+
+
+
+
+
 
 
 

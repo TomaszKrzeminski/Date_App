@@ -122,13 +122,6 @@ namespace DateApp.Controllers
 
 
 
-
-
-
-
-
-
-
         public PictureType GetPictureType(string PictureNumber)
         {
             PictureType type = new PictureType();
@@ -210,7 +203,6 @@ namespace DateApp.Controllers
             }
 
         }
-
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -228,10 +220,7 @@ namespace DateApp.Controllers
                 string Message = "Zmiana poszukiwanej płci nie powiodła się";
                 return View("Error", Message);
             }
-        }
-
-
-
+        }               
         public IActionResult StartPage()
         {
             return View();
@@ -280,15 +269,10 @@ namespace DateApp.Controllers
 
 
         }
-
-
         public IActionResult TomTom()
         {
             return View();
         }
-
-
-
         [Authorize]
         public IActionResult Panel()
         {
@@ -314,7 +298,6 @@ namespace DateApp.Controllers
 
             return View(model);
         }
-
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -332,8 +315,6 @@ namespace DateApp.Controllers
             }
 
         }
-
-
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -362,11 +343,7 @@ namespace DateApp.Controllers
                 return View("Error", Message);
             }
 
-        }
-
-
-      
-
+        }     
         [Authorize]
         [ValidateAntiForgeryToken]
         [HttpPost]
@@ -426,11 +403,8 @@ namespace DateApp.Controllers
             return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
 
 
-        }
-
-                          
-
-
+        }                         
+        
         [Authorize]
         [HttpGet]
         public IActionResult GetPicture(string id)
@@ -449,9 +423,6 @@ namespace DateApp.Controllers
 
             return File(image, "image/jpeg");
         }
-
-
-
 
         //public IActionResult Test_CORS()
         //{

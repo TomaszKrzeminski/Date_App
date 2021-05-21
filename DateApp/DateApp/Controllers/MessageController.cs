@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DateApp.Hubs;
 using DateApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace DateApp.Controllers
 {
+    [Authorize]
     public class MessageController : Controller
     {
 

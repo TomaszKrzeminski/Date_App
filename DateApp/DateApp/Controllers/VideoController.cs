@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DateApp.Hubs;
 using DateApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace DateApp.Controllers
 {
+    [Authorize]
     public class VideoController : Controller
     {
 

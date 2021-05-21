@@ -16,6 +16,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DateApp.Controllers
 {
+    [Authorize]
     public class PairController : Controller
     {
 
