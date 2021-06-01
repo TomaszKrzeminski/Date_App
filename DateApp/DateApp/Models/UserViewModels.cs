@@ -306,11 +306,13 @@ namespace DateApp.Models
             UserCoordinates = new CoordinatesString();
             MatchCoordinates = new CoordinatesString();
             match = new MatchView();
+            SpecialVersion = false;
         }
         public CoordinatesString UserCoordinates { get; set; }
         public CoordinatesString MatchCoordinates { get; set; }
 
         public MatchView match { get; set; }
+        public bool SpecialVersion { get; set; }
     }
     public class PairOptionsViewModel
     {

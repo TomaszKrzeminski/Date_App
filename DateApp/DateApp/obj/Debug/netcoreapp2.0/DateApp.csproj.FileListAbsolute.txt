@@ -16,10 +16,10 @@ D:\Pulpit\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.runtimeconfig
 D:\Pulpit\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.runtimeconfig.dev.json
 D:\Pulpit\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.dll
 D:\Pulpit\Date_App\DateApp\DateApp\bin\Debug\netcoreapp2.0\DateApp.pdb
-D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.csprojAssemblyReference.cache
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.csproj.CoreCompileInputs.cache
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfoInputs.cache
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.AssemblyInfo.cs
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.dll
 D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.pdb
+D:\Pulpit\Date_App\DateApp\DateApp\obj\Debug\netcoreapp2.0\DateApp.csprojAssemblyReference.cache

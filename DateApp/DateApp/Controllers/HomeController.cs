@@ -25,10 +25,10 @@ namespace DateApp.Controllers
         private readonly IHostingEnvironment _environment;
         private Func<Task<AppUser>> GetUser;
         private IConfiguration configuration;
-       
 
 
-        public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env,IConfiguration configuration, Func<Task<AppUser>> GetUser = null)
+
+        public HomeController(IRepository repo, UserManager<AppUser> userMgr, IHostingEnvironment env, IConfiguration configuration, Func<Task<AppUser>> GetUser = null)
         {
             repository = repo;
             userManager = userMgr;
@@ -76,17 +76,17 @@ namespace DateApp.Controllers
         }
 
 
-        
+
 
 
 
         public async Task<IActionResult> StaticRoute(RoutingViewModel model)
         {
-            
-            string TomTomKey= configuration.GetValue<string>("TomTomKey");
-            ViewBag.TomTomkey = TomTomKey; 
-            string  ReverseGeocodingKey= configuration.GetValue<string>("ApiOpenWeather");
-            string OpenWeatherKey = configuration.GetValue<string>("US1");          
+
+            string TomTomKey = configuration.GetValue<string>("TomTomKey");
+            ViewBag.TomTomkey = TomTomKey;
+            string ReverseGeocodingKey = configuration.GetValue<string>("ApiOpenWeather");
+            string OpenWeatherKey = configuration.GetValue<string>("US1");
 
             var httpClient1 = new HttpClient();
             var url1 = "https://us1.locationiq.com/v1/reverse.php?key=" + ReverseGeocodingKey + "&lat=" + model.UserLatitude + "&lon=" + model.UserLongitude + "&format=json";
@@ -96,10 +96,10 @@ namespace DateApp.Controllers
             JObject reverseGeocodingObj = JObject.Parse(responseBody1);
 
             string postCode = (string)reverseGeocodingObj["address"]["postcode"];
-            var httpClient = new HttpClient();        
+            var httpClient = new HttpClient();
 
 
-            var url = "http://api.openweathermap.org/data/2.5/weather?q=" + postCode + ",pl&units=metric&APPID="+OpenWeatherKey;
+            var url = "http://api.openweathermap.org/data/2.5/weather?q=" + postCode + ",pl&units=metric&APPID=" + OpenWeatherKey;
             HttpResponseMessage response = await httpClient.GetAsync(url);
 
             string responseBody = await response.Content.ReadAsStringAsync();
@@ -220,7 +220,7 @@ namespace DateApp.Controllers
                 string Message = "Zmiana poszukiwanej płci nie powiodła się";
                 return View("Error", Message);
             }
-        }               
+        }
         public IActionResult StartPage()
         {
             return View();
@@ -343,7 +343,7 @@ namespace DateApp.Controllers
                 return View("Error", Message);
             }
 
-        }     
+        }
         [Authorize]
         [ValidateAntiForgeryToken]
         [HttpPost]
@@ -353,9 +353,9 @@ namespace DateApp.Controllers
 
 
             bool success = false;
-             long size = 20000000;
+            long size = 20000000;
 
-            if (file != null&&file.Length<size)
+            if (file != null && file.Length < size)
             {
                 var uploads = Path.Combine(_environment.ContentRootPath, "UserImages");
                 string FilePath;
@@ -403,8 +403,8 @@ namespace DateApp.Controllers
             return RedirectToRoute(new { controller = "Home", action = "Panel", Id = "MyId" });
 
 
-        }                         
-        
+        }
+
         [Authorize]
         [HttpGet]
         public IActionResult GetPicture(string id)
@@ -414,7 +414,7 @@ namespace DateApp.Controllers
             string text = Path.Combine(uploads, "photo.png");
             var image = System.IO.File.OpenRead(text);
 
-            if (repository.CheckPictureOwner(id, UserId)||repository.CheckIfPictureBelongsToPair(id,UserId))
+            if (repository.CheckPictureOwner(id, UserId) || repository.CheckIfPictureBelongsToPair(id, UserId))
             {
                 uploads = Path.Combine(_environment.ContentRootPath, "UserImages");
                 text = Path.Combine(uploads, id);
@@ -439,11 +439,44 @@ namespace DateApp.Controllers
 
 
 
+        public IActionResult PremiumVersion(string message = "")
+        {
+
+            AppUser user = GetUser().Result;
+            repository.CheckVersionTimeStatus(user.Id);
+            string text = message + "<br/>" + repository.VersionStatus(user.Id);
+            PotentialPairViewModel potentialPairs = new PotentialPairViewModel();
+            if (user.TestVersion == true || user.PremiumVersion == true)
+            {
+                 potentialPairs = repository.GetPotentialPairs(user.Id);
+            }
 
 
+            PremiumVersionViewModel model = new PremiumVersionViewModel();
+            model.potentialPairView = potentialPairs;
+            model.Message = text;
+            model.Code = 0;
+            model.PremiumVersion = user.PremiumVersion;
+            model.TestVersion = user.TestVersion;
+            model.TimePremium = user.TimePremium;
+            model.TimeTest = user.TimeTest;
+            return View(model);
+        }
 
 
+        public RedirectToActionResult ActivateTest()
+        {
+            string Id = GetUser().Result.Id;
+            string message = repository.ActivateTestMode(Id);
+            return RedirectToAction("PremiumVersion", "Home", new { message = message });
+        }
 
+        public RedirectToActionResult ActivatePremium(int Code)
+        {
+            string Id = GetUser().Result.Id;
+            string message = repository.ActivatePremiumMode(Id, Code);
+            return RedirectToAction("PremiumVersion", "Home", message);
+        }
 
 
     }

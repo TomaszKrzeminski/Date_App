@@ -5,130 +5,137 @@
 <div class="row" id="PartialMatch" @*style="min-height:1900px;"*@>
 
     <div style="min-height:810px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-
+        
 
         @if (Model.match != null && Model.match.PairId != "")
         {
-            <div class="row text-center">              
+        <div class="row text-center">
+            @if (Model.SpecialVersion)
+            {
+                <div class="col-lg-12 text-center">
+                    <h4>Aktywna wersja specjalna</h4>
+                    <a asp-action="PremiumVersion" asp-controller="Home" class="btn btn-primary">Przejdz do panelu i sprawdz kto Ciebie polubił</a>
+                </div>
+            }
 
 
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
-                    <form class="formPairDetails"  asp-action="GoToPair" asp-controller="Pair" method="post">
-                        <div class="row">
-                            <div id="ImageToChange" class="col-xl-12">
-                                <img id="MainImage" class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;"  src=@Model.match.PairMainPhotoPath>
-                            </div>
-                        </div>
-                        <input type="hidden" value=@Model.match.PairId name="PairId" />
-
-
-                        <div>
-                            <label>@Model.match.PairMail</label>
-                        </div>
-
-                    </form>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
+                <form class="formPairDetails" asp-action="CheckPair" asp-controller="Pair" method="post">
                     <div class="row">
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-1">
-                            <img id="Image1" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" src=@Model.match.PhotoPath1>
+                        <div id="ImageToChange" class="col-xl-12">
+                            <img id="MainImage" class="img-thumbnail" style="border-style:outset;min-width:160px;min-height:120px; max-height:480px;max-width:640px;" src=@Model.match.PairMainPhotoPath>
                         </div>
-                        <div class="col-lg-1">
-                            <img id="Image2" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;"  src=@Model.match.PhotoPath2>
-                        </div>
-                        <div class="col-lg-1">
-                            <img id="Image3" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" src=@Model.match.PhotoPath3>
-                        </div>
-                        <div class="col-lg-1">
-                            <img id="Image0" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;"  src=@Model.match.PairMainPhotoPath>
-                        </div>
-                        <div class="col-lg-4"></div>
                     </div>
+                    <input type="hidden" value=@Model.match.PairId name="PairId" />
+
+
+                    <div>
+                        <label>@Model.match.PairMail</label>
+                    </div>
+
+                </form>
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-1">
+                        <img id="Image1" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" src=@Model.match.PhotoPath1>
+                    </div>
+                    <div class="col-lg-1">
+                        <img id="Image2" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" src=@Model.match.PhotoPath2>
+                    </div>
+                    <div class="col-lg-1">
+                        <img id="Image3" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" src=@Model.match.PhotoPath3>
+                    </div>
+                    <div class="col-lg-1">
+                        <img id="Image0" class="img-thumbnail SmallImage" style="border-style:outset;min-width:40px;min-height:30px; max-height:120px;max-width:160px;" src=@Model.match.PairMainPhotoPath>
+                    </div>
+                    <div class="col-lg-4"></div>
                 </div>
+            </div>
 
 
 
 
 
 
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-center">
 
-                    <form id="NextMatchCancel" asp-action="ShowNextMatch" asp-controller="Pair">
-                        <input id="CancelId" name="Id" type="hidden" value="@Model.match.PairId">
-                        <input id="CancelDecision" name="Decision" type="hidden" value="Cancel" />
-                        <button type="button" class="btn btn-danger">Odrzuć</button>
+                <form id="NextMatchCancel" asp-action="ShowNextMatch" asp-controller="Pair">
+                    <input id="CancelId" name="Id" type="hidden" value="@Model.match.PairId">
+                    <input id="CancelDecision" name="Decision" type="hidden" value="Cancel" />
+                    <button type="button" class="btn btn-danger">Odrzuć</button>
 
+                </form>
+                @if (Model.match.action.LikeAvailable)
+                {
+                    <form id="NextMatchAccept" asp-action="ShowNextMatch" asp-controller="Pair">
+                        <input id="AcceptId" type="hidden" value="@Model.match.PairId">
+                        <input id="AcceptDecision" type="hidden" value="Accept" />
+                        <button type="button" class="btn btn-warning">Potwierdź</button>
                     </form>
-                    @if (Model.match.action.LikeAvailable)
-                    {
-                        <form id="NextMatchAccept" asp-action="ShowNextMatch" asp-controller="Pair">
-                            <input id="AcceptId" type="hidden" value="@Model.match.PairId">
-                            <input id="AcceptDecision" type="hidden" value="Accept" />
-                            <button type="button" class="btn btn-warning">Potwierdź</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <div>
-                            <button type="button" class="btn btn-outline-warning" disabled>Potwierdź</button>
-                        </div>
-
-                    }
-
-                    @if (Model.match.action.SuperLikeAvailable)
-                    {
-
-                        <form id="NextMatchSuperLike" asp-action="ShowNextMatch" asp-controller="Pair">
-                            <input id="SuperLikeId" type="hidden" value="@Model.match.PairId">
-                            <input id="SuperLikeDecision" type="hidden" value="SuperLike" />
-                            <button type="button" class="btn btn-info">Super Like</button>
-                        </form>
-
-                    }
-                    else
-                    {
-                        <div>
-                            <button type="button" class="btn btn-outline-info" disabled>Super Like</button>
-                        </div>
-                    }
-
-                </div>
-                <div class="col-xl-12 col-lg-12"></div>
-
-                <div class="col-xl-12  col-lg-12 col-sm-12">
-                    <div class="col-xl-1 col-lg-1"></div>
-                    <div class="col-xl-10 col-lg-10 text-center">
-                        @Model.match.action.Message
+                }
+                else
+                {
+                    <div>
+                        <button type="button" class="btn btn-outline-warning" disabled>Potwierdź</button>
                     </div>
-                    <div class="col-xl-1 col-lg-1"></div>
 
-                </div>
+                }
 
+                @if (Model.match.action.SuperLikeAvailable)
+                {
 
+                    <form id="NextMatchSuperLike" asp-action="ShowNextMatch" asp-controller="Pair">
+                        <input id="SuperLikeId" type="hidden" value="@Model.match.PairId">
+                        <input id="SuperLikeDecision" type="hidden" value="SuperLike" />
+                        <button type="button" class="btn btn-info">Super Like</button>
+                    </form>
 
-
-                <div class="col-xl-2 col-sm-2"></div>
-                <div class="col-xl-8 col-sm-8">
-                    <div class="row">
-                        @Html.Partial("TomTomMarkers", Model)
+                }
+                else
+                {
+                    <div>
+                        <button type="button" class="btn btn-outline-info" disabled>Super Like</button>
                     </div>
-                </div>
-                <div class="col-xl-2 col-sm-2"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                }
 
             </div>
+            <div class="col-xl-12 col-lg-12"></div>
+
+            <div class="col-xl-12  col-lg-12 col-sm-12">
+                <div class="col-xl-1 col-lg-1"></div>
+                <div class="col-xl-10 col-lg-10 text-center">
+                    @Model.match.action.Message
+                </div>
+                <div class="col-xl-1 col-lg-1"></div>
+
+            </div>
+
+
+
+
+            <div class="col-xl-2 col-sm-2"></div>
+            <div class="col-xl-8 col-sm-8">
+                <div class="row">
+                    @Html.Partial("TomTomMarkers", Model)
+                </div>
+            </div>
+            <div class="col-xl-2 col-sm-2"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
         }
 
 

@@ -221,6 +221,30 @@ namespace DateApp.Controllers
             return View("PairDetails", detailsmodel);
         }
 
+        public IActionResult CheckPair(string PairId)
+        {
+            string id = PairId;
+            SearchDetails details = repository.GetUserDetails(id);
+            AppUser user = repository.GetUser(id);
+            if (details == null)
+            {
+                return RedirectToRoute(new { controller = "Pair", action = "PairPanel" });
+            }
+
+            Coordinates pairCoordinates = repository.GetCoordinates(PairId);
+            string Id = GetUser().Result.Id;
+            //bool check = repository.PairChecked(Id, PairId);
+
+            Coordinates userCoordinates = repository.GetCoordinates(Id);
+
+            RoutingViewModel model = new RoutingViewModel(userCoordinates.Longitude.ToString().Replace(',', '.'), userCoordinates.Latitude.ToString().Replace(',', '.'), pairCoordinates.Longitude.ToString().Replace(',', '.'), pairCoordinates.Latitude.ToString().Replace(',', '.'));
+            PairDetailsViewModel detailsmodel = new PairDetailsViewModel() { DetailsId = details.Id, MainPhotoPath = details.MainPhotoPath ?? "/AppPictures/photo.png", PhotoPath1 = details.PhotoPath1 ?? "/AppPictures/photo.png", PhotoPath2 = details.PhotoPath2 ?? "/AppPictures/photo.png", PhotoPath3 = details.PhotoPath3 ?? "/AppPictures/photo.png", Description = details.Description, CityOfResidence = details.CityOfResidence, JobPosition = details.JobPosition, CompanyName = details.CompanyName, School = details.School, UserId = details.AppUserId, Age = user.Age, Name = user.FirstName, Surname = user.Surname, Email = user.Email, Dateofbirth = user.Dateofbirth, City = user.City, Sex = user.Sex };
+            detailsmodel.routingViewModel = model;
+            return View("CheckPair", detailsmodel);
+        }
+
+
+
 
         [HttpPost]
         public PartialViewResult ChangeMainImage(string Path)
@@ -274,6 +298,11 @@ namespace DateApp.Controllers
                 options.UserMainPhotoPath = details.MainPhotoPath;
                 options.UserName = user.FirstName + " " + user.Surname;
                 PairPartialViewModel pair = new PairPartialViewModel();
+                /////
+
+                pair.SpecialVersion = repository.CheckVersionTimeStatus(Id);
+
+                /////
                 pair.match = repository.GetMatchViews(Id, "", true).FirstOrDefault();
 
                 if (pair.match != null && pair.match.PairId != "")

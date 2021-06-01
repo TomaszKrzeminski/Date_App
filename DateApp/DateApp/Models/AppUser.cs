@@ -27,12 +27,16 @@ namespace DateApp.Models
             {
                 Details = new SearchDetails("Empty", "Mężczyzna");
             }
-
+            PremiumVersion = false;
+            TestVersion = false;
             ReportUsers = new List<ReportUser>();
             coordinates = new Coordinates();
             MatchUser = new List<MatchUser>();
             LoginHistory = new List<LoginHistory>();
             Notification = new NotificationCheck(false, DateTime.Now);
+            TimeTest = new DateTime(1900, 1, 1);
+            TimePremium = new DateTime(1900, 1, 1);
+            TestVersionUsed = false;
         }
 
 
@@ -61,6 +65,11 @@ namespace DateApp.Models
             MatchUser = new List<MatchUser>();
             LoginHistory = new List<LoginHistory>();
             Notification = new NotificationCheck(false, DateTime.Now);
+            PremiumVersion = false;
+            TestVersion = false;
+            TimePremium = new DateTime(1900,1,1);
+            TimeTest = new DateTime(1900, 1, 1);
+            TestVersionUsed = false;
         }
 
         public int Age { get; set; }
@@ -69,13 +78,17 @@ namespace DateApp.Models
         public string Sex { get; set; }
         public DateTime Dateofbirth { get; set; }
         public string City { get; set; }
+        public DateTime TimePremium { get; set; }
+        public DateTime TimeTest { get; set; }
 
         public int SearchDetailsId { get; set; }
         public SearchDetails Details { get; set; }
 
         public int NotificationCheckId { get; set; }
         public NotificationCheck Notification { get; set; }
-
+        public bool PremiumVersion { get; set; }
+        public bool TestVersion { get; set; }
+        public bool TestVersionUsed { get; set; }
         public int CoordinatesId { get; set; }
         public Coordinates coordinates { get; set; }
 
@@ -123,19 +136,19 @@ namespace DateApp.Models
 
 
         public int EventId { get; set; }
-        [Required(ErrorMessage ="Podaj nazwę")]
+        [Required(ErrorMessage = "Podaj nazwę")]
         public string EventName { get; set; }
-        [Required(ErrorMessage ="Podaj Datę")]
+        [Required(ErrorMessage = "Podaj Datę")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy HH:MM}")]
         public DateTime Date { get; set; }
-        [Required(ErrorMessage ="Podaj kod")]
+        [Required(ErrorMessage = "Podaj kod")]
         public string ZipCode { get; set; }
-        [Required(ErrorMessage ="Podaj nazwę miasta")]
+        [Required(ErrorMessage = "Podaj nazwę miasta")]
         public string City { get; set; }
 
         public string Latitude { get; set; }
         public string Longitude { get; set; }
-        [Required(ErrorMessage ="Podaj opis")]
+        [Required(ErrorMessage = "Podaj opis")]
         public string Description { get; set; }
         public string FilePath { get; set; }
         public string PhotoPath1 { get; set; }
@@ -506,7 +519,7 @@ namespace DateApp.Models
         public DateTime Time { get; set; }
         public bool DontShow { get; set; }
         public bool Reject { get; set; }
-       public bool ShowMatchScreenU1 { get; set; }
+        public bool ShowMatchScreenU1 { get; set; }
         public bool ShowMatchScreenU2 { get; set; }
 
 

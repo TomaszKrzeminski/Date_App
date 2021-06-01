@@ -77,6 +77,11 @@ namespace DateApp.Models
         string GetUserToNotify();
         bool SetNotify(string UserId);
         bool JoinEvent(int EventId, string UserId);
+        string ActivateTestMode(string UserId);
+        string ActivatePremiumMode(string UserId, int Code);
+        string VersionStatus(string UserId);
+        bool CheckVersionTimeStatus(string UserId);
+        PotentialPairViewModel GetPotentialPairs(string UserId);
 
     }
 
@@ -187,6 +192,29 @@ namespace DateApp.Models
 
         }
 
+        public bool CheckIfSpecialVersionsAreActive(string UserId)
+        {
+            try
+            {
+                AppUser user = context.Users.Find(UserId);
+                if (user.TestVersion == true || user.PremiumVersion == true)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
         public MatchAction MatchAction2(string PairId, string UserId, string Decision)
         {
             MatchAction action = new MatchAction();
@@ -197,6 +225,7 @@ namespace DateApp.Models
 
             try
             {
+                bool SpecialMode = CheckIfSpecialVersionsAreActive(UserId);
                 bool UserIdIsFirst;
                 Match match = new Match();
 
@@ -218,7 +247,8 @@ namespace DateApp.Models
                 if (Decision == "Accept")
                 {
 
-                    if (details.CheckIfLikeIsAvailable())
+
+                    if (details.CheckIfLikeIsAvailable() || SpecialMode)
                     {
                         if (UserIdIsFirst)
                         {
@@ -229,7 +259,12 @@ namespace DateApp.Models
                             match.AcceptSecond = "Yes";
                         }
 
-                        details.ReduceLike();
+
+                        if (SpecialMode == false)
+                        {
+                            details.ReduceLike();
+                        }
+
 
                     }
                     else
@@ -257,7 +292,7 @@ namespace DateApp.Models
                 {
 
 
-                    if (details.CheckIfSuperLikeIsAvailable())
+                    if (details.CheckIfSuperLikeIsAvailable() || SpecialMode == true)
                     {
                         if (UserIdIsFirst)
                         {
@@ -268,7 +303,12 @@ namespace DateApp.Models
                             match.SuperLikeSecond = "Yes";
                         }
 
-                        details.ReduceSuperLike();
+                        if (SpecialMode == false)
+                        {
+                            details.ReduceSuperLike();
+                        }
+
+
                     }
                     else
                     {
@@ -845,7 +885,7 @@ namespace DateApp.Models
                 }
 
 
-                
+
 
 
                 return true;
@@ -898,7 +938,7 @@ namespace DateApp.Models
                 ///Get Matches
                 List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(y => y.Match).Where(u => u.Id == UserId).First().MatchUser.ToList();
                 List<Match> matches = list.Select(m => m.Match).ToList();
-               
+
                 ///// Dont show hidden profiles
 
 
@@ -3117,6 +3157,202 @@ namespace DateApp.Models
                 return count;
             }
 
+        }
+
+
+
+
+        public string ActivateTestMode(string UserId)
+        {
+            string text = "Błąd przy aktywacji wersji testowej";
+
+            try
+            {
+                AppUser user = context.Users.Where(x => x.Id == UserId).FirstOrDefault();
+                if (user.TestVersionUsed == false)
+                {
+                    user.TestVersionUsed = true;
+                    user.TestVersion = true;
+                    DateTime today = DateTime.Now;
+                    today = today.AddDays(1);
+                    user.TimeTest = today;
+                    context.SaveChanges();
+                    return "Aktywowano wersję Testową ";
+                }
+                else if (user.TestVersion == true && user.TimeTest.Day <= DateTime.Now.Day)
+                {
+                    return "Wersja testowa aktywna";
+                }
+                else
+                {
+                    return text;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return text;
+            }
+        }
+
+        public string ActivatePremiumMode(string UserId, int Code)
+        {
+            try
+            {
+                //AppUser user = context.Users.Where(x => x.Id == UserId).FirstOrDefault();
+                //user.PremiumVersion = true;
+                //DateTime today = DateTime.Now;
+                //today = today.AddMonths(1);
+                //user.TimePremium = today;
+                //context.SaveChanges();
+
+                return "Tryb premium nie jest jeszcze dostępny";
+            }
+            catch (Exception ex)
+            {
+                return "Błąd przy aktywacji wersji premium";
+            }
+        }
+
+        public string VersionStatus(string UserId)
+        {
+            string text = "";
+
+            try
+            {
+                AppUser user = context.Users.Where(x => x.Id == UserId).FirstOrDefault();
+                if (user.TestVersion == false)
+                {
+
+                    text += "<p>Wersja testowa nieaktywna</p>" + "<br/>";
+                }
+                else if (user.TestVersion == true && user.TimeTest.Day <= DateTime.Now.Day)
+                {
+                    text += "<p class='text-success'>Wersja testowa aktywna do " + user.TimeTest.Date.ToShortDateString() +"</p>"+ "<br/>";
+                }
+
+
+                if (user.PremiumVersion == true)
+                {
+                    text += "<p class='text-success'>Wersja premium aktywna do " + user.TimePremium.Date +"</p>"+ "<br/>";
+                }
+                else
+                {
+                    text += "<p>Wersja premium nieaktywna</p>" + "<br/>";
+                }
+
+                return text;
+
+            }
+            catch (Exception ex)
+            {
+                return text;
+            }
+        }
+
+        public bool CheckVersionTimeStatus(string UserId)
+        {
+            bool Premium = false;
+            bool Test = false;
+            try
+            {
+                AppUser user = context.Users.Find(UserId);
+                DateTime today = DateTime.Now;
+                if (user.TestVersion == true)
+                {
+                    DateTime time = user.TimeTest;
+                    time = time.AddDays(1);
+
+                    if (today > time)
+                    {
+                        user.TestVersion = false;
+                        user.TestVersionUsed = true;
+                        Test = false;
+                    }
+                    else
+                    {
+                        Test = true;
+                    }
+
+
+                }
+
+                if (user.PremiumVersion == true)
+                {
+                    DateTime time = user.TimePremium;
+                    time = time.AddMonths(1);
+                    if (time > today)
+                    {
+                        user.PremiumVersion = false;
+                    }
+                    else
+                    {
+                        Premium = true;
+                    }
+
+                }
+
+                context.SaveChanges();
+
+                if (Premium == true || Test == true)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public PotentialPairViewModel GetPotentialPairs(string UserId)
+        {
+            PotentialPairViewModel model = new PotentialPairViewModel();
+            try
+            {              
+
+                List<MatchUser> list = context.Users.Include(x => x.MatchUser).ThenInclude(x => x.Match).Where(x => x.Id == UserId).First().MatchUser.ToList();
+                List<Match> matches = list.Select(m => m.Match).ToList();
+               
+
+                foreach (var item in matches)
+                {
+
+                    if (item.Pair != "Yes" && item.RejectFirst == "" && item.RejectSecond == "")
+                    {
+                        if (item.FirstUserId == UserId && item.AcceptSecond == "Yes")
+                        {
+                            PotentialPair pair = new PotentialPair();
+                            pair.PairId = item.SecondUserId;
+                            pair.MainPhotoPath = item.MainPhotoUser2;
+                            AppUser user = context.Users.Find(item.SecondUserId);
+                            pair.Email = user.Email;
+                            model.list.Add(pair);
+                        }
+                        else if (item.SecondUserId == UserId && item.AcceptFirst == "Yes")
+                        {
+                            PotentialPair pair = new PotentialPair();
+                            pair.PairId = item.FirstUserId;
+                            pair.MainPhotoPath = item.MainPhotoUser1;
+                            AppUser user = context.Users.Find(item.FirstUserId);
+                            pair.Email = user.Email;
+                            model.list.Add(pair);
+                        }
+                    }
+                }
+
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                return model;
+            }
         }
     }
 }

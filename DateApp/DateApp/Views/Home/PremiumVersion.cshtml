@@ -1,0 +1,114 @@
+﻿@model PremiumVersionViewModel
+@{
+    ViewData["Title"] = "PremiumVersion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 @*class="text-danger"*@>
+                @Html.Raw(Model.Message)
+            </h3>
+            
+        </div>
+
+        <div class="col-lg-6">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+
+                        </th>
+                        <th>
+                            Ustawienia wersji
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Aktywuj wersję Premium</td>
+                        <td>
+                            <form asp-action="ActivatePremium" asp-controller="Home">
+                                <label>Kod Aktywacyjny</label>
+                                <input name="Code" />
+                                <button class="btn btn-warning" type="submit">Aktywuj</button>
+                            </form>
+                        </td>
+
+
+                    </tr>
+
+                    @if (Model.TestVersion == false)
+                    {
+                        <tr>
+                            <td>Aktywuj wersję próbną na jeden dzień</td>
+                            <td>
+                                <form asp-action="ActivateTest" asp-controller="Home">
+                                    <button class="btn btn-primary" type="submit">Aktywuj</button>
+                                </form>
+                            </td>
+
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+
+
+
+
+
+        </div>
+        <div class="col-lg-6">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Polubili Ciebie</th>
+                        <th>Email</th>
+                        <th>Zdjęcie</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.potentialPairView.list.Select((value, index) => new { value, index }))
+                    {
+                        <tr>
+                            <td>
+                                @(item.index + 1)
+                            </td>
+                            <td>
+                                @item.value.Email
+
+                            </td>
+                            <td>
+                                <img class="img-thumbnail" style="max-height:30px; max-width:30px;" src="@item.value.MainPhotoPath" />
+
+                            </td>
+                            <td>
+                                <a asp-action="CheckPair" asp-controller="Pair" asp-route-PairId=@item.value.PairId class="btn btn-warning">Zobacz</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+
+
+
+
+
+
+
+</div>
+
+

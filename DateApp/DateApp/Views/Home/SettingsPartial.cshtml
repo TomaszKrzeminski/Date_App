@@ -69,7 +69,7 @@
     <div style="min-height:1400px;border-style:solid;" class="col-lg-6">
         <div class="row">
             <div class="col-lg-12" style="min-height:200px;border-style:solid;background-color:#fd267d;">
-                <div class="row">             
+                <div class="row">
 
                     <div class="col-lg-6 col-sm-12 col-md-12" style="max-height:80px;max-width:80px;min-height:40px;min-width:40px;">
                         <a>
@@ -88,40 +88,40 @@
                             <img alt="0" class="img-thumbnail" src=~/AppPictures/GoToParty.png>
                         </a>
 
-                    </div>               
-                                                                                                                                    
+                    </div>
+
                 </div>
 
 
 
-            </div>           
+            </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <label><span class="font-weight-bold">Liczba lików  :</span><span class="font-weight-bold"> @Model.Likes</span>  </label>
             </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <label>   <span class="font-weight-bold">Liczba super lików  :</span><span class="font-weight-bold"> @Model.SuperLikes</span>    </label>
             </div>
-          
+
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <label><span class="font-weight-bold">Email  : </span>   <span class="font-weight-bold">@Model.Email</span> </label>
             </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
-               
-                   
-                        @if (Model.PhoneNumber == "Update")
-                        {
-                            <a asp-action="ChangePhoneNumber" asp-controller="Home" class="btn btn-primary text-center">Numer Telefonu</a>
-                        }
-                        else
-                        {
-                            <a asp-action="ChangePhoneNumber" asp-controller="Home" class="btn btn-primary text-center"> @Model.PhoneNumber</a>
-                        }
 
-                    
-                   
-                </div>            
 
-            
+                @if (Model.PhoneNumber == "Update")
+                {
+                    <a asp-action="ChangePhoneNumber" asp-controller="Home" class="btn btn-primary text-center">Numer Telefonu</a>
+                }
+                else
+                {
+                    <a asp-action="ChangePhoneNumber" asp-controller="Home" class="btn btn-primary text-center"> @Model.PhoneNumber</a>
+                }
+
+
+
+            </div>
+
+
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <label>Lokalizacja</label>   <h3 id="GeoLocation"></h3>
                 <h3 id="GeoLocation2"></h3>
@@ -131,7 +131,7 @@
                     @Html.Partial("TomTomPartial", Model.Coordinates)
                 </div>
 
-            </div>           
+            </div>
             <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
                 <form id="DistanceForm" asp-action="SetDistance" asp-controller="Home">
                     <div id="sliderD"></div>
@@ -183,11 +183,11 @@
                         <span class="slider"></span>
                     </label>
                     <label><span class="font-weight-bold">Ukryj Profil</span></label>
-                </form>      
-                                                                                 
+                </form>
+
             </div>
 
-            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">               
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
 
                 <form asp-action="RemoveUserWithToken1" asp-controller="Admin" method="post">
                     <label class="switch">
@@ -206,6 +206,15 @@
 
                     </label>
                     <button class="btn btn-warning" type="submit">Wyloguj</button>
+
+                </form>
+            </div>
+            <div class="box col-lg-12" style="min-height:100px;border-style:solid;">
+                <form asp-action="PremiumVersion" asp-controller="Home">
+                    <label class="switch">
+
+                    </label>
+                    <button class="btn btn-secondary" type="submit">Wersja Premium</button>
 
                 </form>
             </div>
