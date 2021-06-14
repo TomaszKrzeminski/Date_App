@@ -34,6 +34,7 @@ namespace DateApp.Models
         LoginDetails GetLoginDetails();
         AppUser GetUser(string UserId);
         List<AppUser> GetUsers(string Text);
+        AppUser GetUserWithEmail(string Email);
         bool CountLogin(string Id);
         bool CountLogout(string Id);
         Task<bool> CountLogout2(string Id);
@@ -3352,6 +3353,19 @@ namespace DateApp.Models
             catch (Exception ex)
             {
                 return model;
+            }
+        }
+
+        public AppUser GetUserWithEmail(string Email)
+        {
+            try
+            {
+                AppUser user = context.Users.Where(x => x.Email == Email).FirstOrDefault();
+                return user;
+            }
+            catch(Exception ex)
+            {
+                return null;
             }
         }
     }

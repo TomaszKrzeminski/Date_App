@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.2": {
+      "AspNetCore.Authentication.Cookies.Owin/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication.Cookies": "2.1.0",
+          "Microsoft.AspNetCore.DataProtection.Abstractions": "2.1.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/AspNetCore.Authentication.Cookies.Owin.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/AspNetCore.Authentication.Cookies.Owin.dll": {}
+        }
+      },
       "Castle.Core/4.1.1": {
         "type": "package",
         "dependencies": {
@@ -346,16 +359,16 @@
           "lib/netcoreapp2.0/Microsoft.AspNetCore.ApplicationInsights.HostingStartup.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Authentication/2.0.4": {
+      "Microsoft.AspNetCore.Authentication/2.2.0-preview1-35029": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Authentication.Core": "2.0.3",
-          "Microsoft.AspNetCore.DataProtection": "2.0.3",
-          "Microsoft.AspNetCore.Http": "2.0.3",
-          "Microsoft.AspNetCore.Http.Extensions": "2.0.3",
-          "Microsoft.Extensions.Logging.Abstractions": "2.0.2",
-          "Microsoft.Extensions.Options": "2.0.2",
-          "Microsoft.Extensions.WebEncoders": "2.0.2"
+          "Microsoft.AspNetCore.Authentication.Core": "2.2.0-preview1-35029",
+          "Microsoft.AspNetCore.DataProtection": "2.2.0-preview1-35029",
+          "Microsoft.AspNetCore.Http": "2.2.0-preview1-35029",
+          "Microsoft.AspNetCore.Http.Extensions": "2.2.0-preview1-35029",
+          "Microsoft.Extensions.Logging.Abstractions": "2.2.0-preview1-35029",
+          "Microsoft.Extensions.Options": "2.2.0-preview1-35029",
+          "Microsoft.Extensions.WebEncoders": "2.2.0-preview1-35029"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.dll": {}
@@ -378,10 +391,10 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Abstractions.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Authentication.Cookies/2.0.4": {
+      "Microsoft.AspNetCore.Authentication.Cookies/2.1.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Authentication": "2.0.4"
+          "Microsoft.AspNetCore.Authentication": "2.1.0"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Cookies.dll": {}
@@ -390,12 +403,12 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Cookies.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Authentication.Core/2.1.0": {
+      "Microsoft.AspNetCore.Authentication.Core/2.2.0-preview1-35029": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Authentication.Abstractions": "2.1.0",
-          "Microsoft.AspNetCore.Http": "2.1.0",
-          "Microsoft.AspNetCore.Http.Extensions": "2.1.0"
+          "Microsoft.AspNetCore.Authentication.Abstractions": "2.2.0-preview1-35029",
+          "Microsoft.AspNetCore.Http": "2.2.0-preview1-35029",
+          "Microsoft.AspNetCore.Http.Extensions": "2.2.0-preview1-35029"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Core.dll": {}
@@ -416,10 +429,10 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Facebook.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Authentication.Google/2.0.4": {
+      "Microsoft.AspNetCore.Authentication.Google/2.2.0-preview1-35029": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Authentication.OAuth": "2.0.4"
+          "Microsoft.AspNetCore.Authentication.OAuth": "2.2.0-preview1-35029"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Google.dll": {}
@@ -453,11 +466,11 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.MicrosoftAccount.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Authentication.OAuth/2.0.4": {
+      "Microsoft.AspNetCore.Authentication.OAuth/2.2.0-preview1-35029": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Authentication": "2.0.4",
-          "Newtonsoft.Json": "10.0.1"
+          "Microsoft.AspNetCore.Authentication": "2.2.0-preview1-35029",
+          "Newtonsoft.Json": "11.0.2"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.OAuth.dll": {}
@@ -585,7 +598,7 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Cors.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Cryptography.Internal/2.0.3": {
+      "Microsoft.AspNetCore.Cryptography.Internal/2.2.0-preview1-35029": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.Internal.dll": {}
@@ -606,17 +619,18 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll": {}
         }
       },
-      "Microsoft.AspNetCore.DataProtection/2.0.3": {
+      "Microsoft.AspNetCore.DataProtection/2.2.0-preview1-35029": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Cryptography.Internal": "2.0.3",
-          "Microsoft.AspNetCore.DataProtection.Abstractions": "2.0.3",
-          "Microsoft.AspNetCore.Hosting.Abstractions": "2.0.3",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "2.0.2",
-          "Microsoft.Extensions.Options": "2.0.2",
-          "Microsoft.Win32.Registry": "4.4.0",
-          "System.Security.Cryptography.Xml": "4.4.2"
+          "Microsoft.AspNetCore.Cryptography.Internal": "2.2.0-preview1-35029",
+          "Microsoft.AspNetCore.DataProtection.Abstractions": "2.2.0-preview1-35029",
+          "Microsoft.AspNetCore.Hosting.Abstractions": "2.2.0-preview1-35029",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.2.0-preview1-35029",
+          "Microsoft.Extensions.Logging.Abstractions": "2.2.0-preview1-35029",
+          "Microsoft.Extensions.Options": "2.2.0-preview1-35029",
+          "Microsoft.Win32.Registry": "4.5.0",
+          "System.Security.Cryptography.Xml": "4.5.0",
+          "System.Security.Principal.Windows": "4.5.0"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.DataProtection.dll": {}
@@ -625,7 +639,7 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.DataProtection.dll": {}
         }
       },
-      "Microsoft.AspNetCore.DataProtection.Abstractions/2.0.3": {
+      "Microsoft.AspNetCore.DataProtection.Abstractions/2.2.0-preview1-35029": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.DataProtection.Abstractions.dll": {}
@@ -2617,12 +2631,12 @@
           "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {}
         }
       },
-      "Microsoft.Extensions.WebEncoders/2.0.2": {
+      "Microsoft.Extensions.WebEncoders/2.2.0-preview1-35029": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.0.0",
-          "Microsoft.Extensions.Options": "2.0.2",
-          "System.Text.Encodings.Web": "4.4.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.2.0-preview1-35029",
+          "Microsoft.Extensions.Options": "2.2.0-preview1-35029",
+          "System.Text.Encodings.Web": "4.5.0"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.Extensions.WebEncoders.dll": {}
@@ -2946,6 +2960,46 @@
         },
         "runtime": {
           "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.Owin/4.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Owin": "1.0.0"
+        },
+        "compile": {
+          "lib/net45/Microsoft.Owin.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Owin.dll": {}
+        }
+      },
+      "Microsoft.Owin.Security/4.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Owin": "4.2.0",
+          "Owin": "1.0.0"
+        },
+        "compile": {
+          "lib/net45/Microsoft.Owin.Security.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Owin.Security.dll": {}
+        }
+      },
+      "Microsoft.Owin.Security.Google/4.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Owin": "4.2.0",
+          "Microsoft.Owin.Security": "4.2.0",
+          "Newtonsoft.Json": "10.0.1",
+          "Owin": "1.0.0"
+        },
+        "compile": {
+          "lib/net45/Microsoft.Owin.Security.Google.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Owin.Security.Google.dll": {}
         }
       },
       "Microsoft.Rest.ClientRuntime/2.3.8": {
@@ -3485,6 +3539,15 @@
         },
         "build": {
           "build/netcoreapp1.0/NUnit3TestAdapter.props": {}
+        }
+      },
+      "Owin/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Owin.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Owin.dll": {}
         }
       },
       "Portable.BouncyCastle/1.8.5": {
@@ -5475,8 +5538,12 @@
           }
         }
       },
-      "System.Security.Cryptography.Xml/4.4.2": {
+      "System.Security.Cryptography.Xml/4.5.0": {
         "type": "package",
+        "dependencies": {
+          "System.Security.Cryptography.Pkcs": "4.5.0",
+          "System.Security.Permissions": "4.5.0"
+        },
         "compile": {
           "ref/netstandard2.0/System.Security.Cryptography.Xml.dll": {}
         },
@@ -5941,12 +6008,15 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.0",
         "dependencies": {
+          "AspNetCore.Authentication.Cookies.Owin": "1.0.0",
           "GeoCoordinate.NetCore": "1.0.0.1",
           "MailKit": "2.9.0",
           "Microsoft.AspNetCore": "2.1.0",
           "Microsoft.AspNetCore.All": "2.0.9",
+          "Microsoft.AspNetCore.Authentication.Google": "2.2.0-preview1-35029",
           "Microsoft.AspNetCore.SignalR": "1.1.0",
           "Microsoft.Data.SqlClient": "2.1.0-preview1.20235.1",
+          "Microsoft.Owin.Security.Google": "4.2.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.0.4",
           "Newtonsoft.Json": "13.0.1-beta1",
           "Quartz": "3.2.0",
@@ -5962,6 +6032,19 @@
     }
   },
   "libraries": {
+    "AspNetCore.Authentication.Cookies.Owin/1.0.0": {
+      "sha512": "i5FNz5iiunNM1XrtHaBMs8FVasE3jgYOzjBNxi6ywzyGeogxb3xOBVGCqEJh/qcnhuR168FsMf8kc3FOwftROg==",
+      "type": "package",
+      "path": "aspnetcore.authentication.cookies.owin/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "aspnetcore.authentication.cookies.owin.1.0.0.nupkg.sha512",
+        "aspnetcore.authentication.cookies.owin.nuspec",
+        "lib/netstandard2.0/AspNetCore.Authentication.Cookies.Owin.dll",
+        "lib/netstandard2.0/AspNetCore.Authentication.Cookies.Owin.xml"
+      ]
+    },
     "Castle.Core/4.1.1": {
       "sha512": "O+88tWlRvtYLTn4dgAENyOgaLcExeox73ledI92d72z4U9IGSiiO8n/gnTnWgEMpBuXIdcyzrXHdGtn0c5Dz/A==",
       "type": "package",
@@ -6169,16 +6252,16 @@
         "microsoft.aspnetcore.applicationinsights.hostingstartup.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Authentication/2.0.4": {
-      "sha512": "l0heNGuAAFV7g37Zmyj7p8v/K9SEjKATJ6wrneu5UGjH4F8X2kbxFZOkBGB4gs1o8EFriXwJ158osb4yiYgMTg==",
+    "Microsoft.AspNetCore.Authentication/2.2.0-preview1-35029": {
+      "sha512": "D/Iu3LsSiKiS27i3nkC0bDovcfm6wwHg/3DS5jDVaSMpLiS4h1WUhI4qwKbCnxAWeAB6zyBpzrSWCgOi9R766g==",
       "type": "package",
-      "path": "microsoft.aspnetcore.authentication/2.0.4",
+      "path": "microsoft.aspnetcore.authentication/2.2.0-preview1-35029",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.xml",
-        "microsoft.aspnetcore.authentication.2.0.4.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.2.2.0-preview1-35029.nupkg.sha512",
         "microsoft.aspnetcore.authentication.nuspec"
       ]
     },
@@ -6195,29 +6278,29 @@
         "microsoft.aspnetcore.authentication.abstractions.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Authentication.Cookies/2.0.4": {
-      "sha512": "OMqgweMKbyo9IZvPBityEg8Tq+w5QgF/sEHSepQBZ1VDwMM6mW61QkALikpdMXnnJSxUYqo6De2fPDMNBDC/pQ==",
+    "Microsoft.AspNetCore.Authentication.Cookies/2.1.0": {
+      "sha512": "Fo7DLSWI3RywisVegE30LmgreLU0/mo6rn+RO/4UIlckqZJAmxkzSufzYxJd0bVIQu28ytfEYh6lPxLJRcTzZQ==",
       "type": "package",
-      "path": "microsoft.aspnetcore.authentication.cookies/2.0.4",
+      "path": "microsoft.aspnetcore.authentication.cookies/2.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Cookies.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Cookies.xml",
-        "microsoft.aspnetcore.authentication.cookies.2.0.4.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.cookies.2.1.0.nupkg.sha512",
         "microsoft.aspnetcore.authentication.cookies.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Authentication.Core/2.1.0": {
-      "sha512": "NKbmBzPW2zTaZLNKkCIL7LMpr4XfXVOPJ5SNzikTe2PX3juLkupb/5oTF45wiw5srUbU6QD0cY9u3jgYUELwnQ==",
+    "Microsoft.AspNetCore.Authentication.Core/2.2.0-preview1-35029": {
+      "sha512": "FnMthxfyzUE/EdAY5XGjUUtGyqcafkhysb+T36DhwRO8chOs70sOpvSMgNGvAgojCwSN04knRupK1YvZttwocg==",
       "type": "package",
-      "path": "microsoft.aspnetcore.authentication.core/2.1.0",
+      "path": "microsoft.aspnetcore.authentication.core/2.2.0-preview1-35029",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Core.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Core.xml",
-        "microsoft.aspnetcore.authentication.core.2.1.0.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.core.2.2.0-preview1-35029.nupkg.sha512",
         "microsoft.aspnetcore.authentication.core.nuspec"
       ]
     },
@@ -6234,16 +6317,16 @@
         "microsoft.aspnetcore.authentication.facebook.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Authentication.Google/2.0.4": {
-      "sha512": "5sCLyuZibG0H1fj+GggVKywK/OXzpuZiHSMHwELEJT2LANnzbEXWZoqlJ+K+NteRBwa2RT/BnZl+GcJuVLQnXw==",
+    "Microsoft.AspNetCore.Authentication.Google/2.2.0-preview1-35029": {
+      "sha512": "+WblBHWVpTwPCZdvVVvY1LJvchNWthl9L/RWCo8Gfq4edF05LmPlGWtOnKjryrqeSeyPStA6stP4ZZKhEDC+uA==",
       "type": "package",
-      "path": "microsoft.aspnetcore.authentication.google/2.0.4",
+      "path": "microsoft.aspnetcore.authentication.google/2.2.0-preview1-35029",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Google.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Google.xml",
-        "microsoft.aspnetcore.authentication.google.2.0.4.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.google.2.2.0-preview1-35029.nupkg.sha512",
         "microsoft.aspnetcore.authentication.google.nuspec"
       ]
     },
@@ -6273,16 +6356,16 @@
         "microsoft.aspnetcore.authentication.microsoftaccount.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Authentication.OAuth/2.0.4": {
-      "sha512": "jxd0KREUnMsUuHO7vjvWbQynfpY8se3WFy5wGoS7AEaAtpo9z54wdb6OnmVdZPbB+WqNCSJGinZCvBQdiFDEPg==",
+    "Microsoft.AspNetCore.Authentication.OAuth/2.2.0-preview1-35029": {
+      "sha512": "CXgdv8k3j3wWO5Ef7zTm28V7tkH8kQh2UykdVlx2Af0p3Q1BEBTohb+LQcyiAV+Y37MK1j1JT+U1dFhRlBFT3A==",
       "type": "package",
-      "path": "microsoft.aspnetcore.authentication.oauth/2.0.4",
+      "path": "microsoft.aspnetcore.authentication.oauth/2.2.0-preview1-35029",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.OAuth.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.OAuth.xml",
-        "microsoft.aspnetcore.authentication.oauth.2.0.4.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.oauth.2.2.0-preview1-35029.nupkg.sha512",
         "microsoft.aspnetcore.authentication.oauth.nuspec"
       ]
     },
@@ -6405,16 +6488,16 @@
         "microsoft.aspnetcore.cors.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Cryptography.Internal/2.0.3": {
-      "sha512": "Dr5NqOIkyDlDYr5UPR6Pcl24bga7CwKiVIxyLO22oBn8TE2e4puq6NdNGEmAz70wE2Spf3yfAcHvHlnUOIvqrg==",
+    "Microsoft.AspNetCore.Cryptography.Internal/2.2.0-preview1-35029": {
+      "sha512": "ZnlDd1NGEsabauBQgCKdpJzKbH64Umh3TrkOlwGoBXG3GWmpYAPsMRHJXMG9hiWx6mAQU/vfXHDAv9K3kpR0vg==",
       "type": "package",
-      "path": "microsoft.aspnetcore.cryptography.internal/2.0.3",
+      "path": "microsoft.aspnetcore.cryptography.internal/2.2.0-preview1-35029",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.Internal.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.Internal.xml",
-        "microsoft.aspnetcore.cryptography.internal.2.0.3.nupkg.sha512",
+        "microsoft.aspnetcore.cryptography.internal.2.2.0-preview1-35029.nupkg.sha512",
         "microsoft.aspnetcore.cryptography.internal.nuspec"
       ]
     },
@@ -6431,29 +6514,29 @@
         "microsoft.aspnetcore.cryptography.keyderivation.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.DataProtection/2.0.3": {
-      "sha512": "SS/h6ysQv6m5XZPQV9eeqs+leVnggjk/2qfFzwaepGj4uAdSxbWKyLE/SGHw8KIuKF4VZOWUAbx6bAAVz1a6Rw==",
+    "Microsoft.AspNetCore.DataProtection/2.2.0-preview1-35029": {
+      "sha512": "3pf0Zzy2RbkCOWc0EUAlHbQTJODgAbREzAtU2ZO+oK+pCE1Sh7iKCTE0+ODQdWCyJ/PQt2O9dsNll2h3cqqo3g==",
       "type": "package",
-      "path": "microsoft.aspnetcore.dataprotection/2.0.3",
+      "path": "microsoft.aspnetcore.dataprotection/2.2.0-preview1-35029",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.DataProtection.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.DataProtection.xml",
-        "microsoft.aspnetcore.dataprotection.2.0.3.nupkg.sha512",
+        "microsoft.aspnetcore.dataprotection.2.2.0-preview1-35029.nupkg.sha512",
         "microsoft.aspnetcore.dataprotection.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.DataProtection.Abstractions/2.0.3": {
-      "sha512": "gWO31WeigvdDYxzbg3TwOLmEOCSZSkSLGAMIx/XmJRkYGs90OgkPEFRSRoXLWlCiSvxTPtpsqr4HbiY0n+zajw==",
+    "Microsoft.AspNetCore.DataProtection.Abstractions/2.2.0-preview1-35029": {
+      "sha512": "F/30/sjQbAgE7akNsdmNa0ODge4xDrFe/ex9mH2krM9SjFb3yAk7raBt+LqjnvTMDSJLgUQkOVKVHK1zBR/sow==",
       "type": "package",
-      "path": "microsoft.aspnetcore.dataprotection.abstractions/2.0.3",
+      "path": "microsoft.aspnetcore.dataprotection.abstractions/2.2.0-preview1-35029",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.AspNetCore.DataProtection.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.DataProtection.Abstractions.xml",
-        "microsoft.aspnetcore.dataprotection.abstractions.2.0.3.nupkg.sha512",
+        "microsoft.aspnetcore.dataprotection.abstractions.2.2.0-preview1-35029.nupkg.sha512",
         "microsoft.aspnetcore.dataprotection.abstractions.nuspec"
       ]
     },
@@ -8510,16 +8593,16 @@
         "microsoft.extensions.primitives.nuspec"
       ]
     },
-    "Microsoft.Extensions.WebEncoders/2.0.2": {
-      "sha512": "dNrJTE9EV1vL5X7r5+8m5AqK26xR/PJTgpcVAaJg7qI77LbgtVqJp21MeW3tpbbOrQEPVFjdFfweFagVAEY9cg==",
+    "Microsoft.Extensions.WebEncoders/2.2.0-preview1-35029": {
+      "sha512": "HO7irdD5MzZly9ULREQfKC6Br6uKK5Ar+AlEYI29FgR5WfeBbuv22EI1JHC4bPDuNyO7cKsWeYLmTzBZu+tvxw==",
       "type": "package",
-      "path": "microsoft.extensions.webencoders/2.0.2",
+      "path": "microsoft.extensions.webencoders/2.2.0-preview1-35029",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.Extensions.WebEncoders.dll",
         "lib/netstandard2.0/Microsoft.Extensions.WebEncoders.xml",
-        "microsoft.extensions.webencoders.2.0.2.nupkg.sha512",
+        "microsoft.extensions.webencoders.2.2.0-preview1-35029.nupkg.sha512",
         "microsoft.extensions.webencoders.nuspec"
       ]
     },
@@ -9264,6 +9347,45 @@
         "runtime.json",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "Microsoft.Owin/4.2.0": {
+      "sha512": "NPPwhK+oSf6JWAy6m2Dq7xYIVnEvUTeMM1mVaOobkiVsOaHPAu8E05/fKAjrDBBDCC14z32jwnZyPs3z9UNV5w==",
+      "type": "package",
+      "path": "microsoft.owin/4.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Microsoft.Owin.XML",
+        "lib/net45/Microsoft.Owin.dll",
+        "microsoft.owin.4.2.0.nupkg.sha512",
+        "microsoft.owin.nuspec"
+      ]
+    },
+    "Microsoft.Owin.Security/4.2.0": {
+      "sha512": "w/cWWNkc4sBRYHmY49VSfgKGEXVbBNecnrLR6sHf/shkRpFvitduo6dGUy/CwL3bQEFPEbuyQeXmMVVXQj3R4Q==",
+      "type": "package",
+      "path": "microsoft.owin.security/4.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Microsoft.Owin.Security.XML",
+        "lib/net45/Microsoft.Owin.Security.dll",
+        "microsoft.owin.security.4.2.0.nupkg.sha512",
+        "microsoft.owin.security.nuspec"
+      ]
+    },
+    "Microsoft.Owin.Security.Google/4.2.0": {
+      "sha512": "tIwKhlIYIZsMJ6DFnCPOrthhzCdRo+qzmcfq/k8Pnu/asx/HkbCYJEeyJ4/pjhfWtj2YRrrJWUVsoJvQm/7U3A==",
+      "type": "package",
+      "path": "microsoft.owin.security.google/4.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Microsoft.Owin.Security.Google.XML",
+        "lib/net45/Microsoft.Owin.Security.Google.dll",
+        "microsoft.owin.security.google.4.2.0.nupkg.sha512",
+        "microsoft.owin.security.google.nuspec"
       ]
     },
     "Microsoft.Rest.ClientRuntime/2.3.8": {
@@ -10054,6 +10176,17 @@
         "build/netcoreapp1.0/nunit.engine.netstandard.dll",
         "nunit3testadapter.3.11.0.nupkg.sha512",
         "nunit3testadapter.nuspec"
+      ]
+    },
+    "Owin/1.0.0": {
+      "sha512": "OseTFniKmyp76mEzOBwIKGBRS5eMoYNkMKaMXOpxx9jv88+b6mh1rSaw43vjBOItNhaLFG3d0a20PfHyibH5sw==",
+      "type": "package",
+      "path": "owin/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        "lib/net40/Owin.dll",
+        "owin.1.0.0.nupkg.sha512",
+        "owin.nuspec"
       ]
     },
     "Portable.BouncyCastle/1.8.5": {
@@ -14696,10 +14829,10 @@
         "system.security.cryptography.x509certificates.nuspec"
       ]
     },
-    "System.Security.Cryptography.Xml/4.4.2": {
-      "sha512": "1m+fKVrApgKYMRuE0MF0vGjqy4XqAp1rCtyAzMXhJajMDDytMh/rHk9hp4M7KKk3QQZoWJUvyUY7xcw74w+JiQ==",
+    "System.Security.Cryptography.Xml/4.5.0": {
+      "sha512": "i2Jn6rGXR63J0zIklImGRkDIJL4b1NfPSEbIVHBlqoIb12lfXIigCbDRpDmIEzwSo/v1U5y/rYJdzZYSyCWxvg==",
       "type": "package",
-      "path": "system.security.cryptography.xml/4.4.2",
+      "path": "system.security.cryptography.xml/4.5.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -14711,7 +14844,7 @@
         "ref/net461/System.Security.Cryptography.Xml.xml",
         "ref/netstandard2.0/System.Security.Cryptography.Xml.dll",
         "ref/netstandard2.0/System.Security.Cryptography.Xml.xml",
-        "system.security.cryptography.xml.4.4.2.nupkg.sha512",
+        "system.security.cryptography.xml.4.5.0.nupkg.sha512",
         "system.security.cryptography.xml.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
@@ -16144,5 +16277,47 @@
         "warn": true
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.Owin 4.2.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.2'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.Owin",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.Owin.Security 4.2.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.2'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.Owin.Security",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.Owin.Security.Google 4.2.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.2'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.Owin.Security.Google",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Owin 1.0.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.2'. This package may not be fully compatible with your project.",
+      "libraryId": "Owin",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    }
+  ]
 }

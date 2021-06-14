@@ -414,6 +414,8 @@ namespace DateApp.Controllers
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(CreateModel model)
+
+
         {
             DateTime Now = DateTime.Now;
             TimeSpan ts = Now - model.Dateofbirth;
@@ -441,7 +443,8 @@ namespace DateApp.Controllers
                     City = model.City,
                     Dateofbirth = model.Dateofbirth,
                     Email = model.Email,
-                    SecurityStamp = SecurityStamp
+                    SecurityStamp = SecurityStamp,
+                    EmailConfirmed = true
                 };
 
                 IdentityResult result = await userManager.CreateAsync(user, model.Password);

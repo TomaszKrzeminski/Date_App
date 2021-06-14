@@ -22,6 +22,7 @@
 </style>
 
 
+
 <div style="height:1024px; background: url(/AppPictures/paris.jpg);" class="container-fluid">
     <div class="row">
         <div class="col-lg-5 col-md-4 col-sm-3"></div>
@@ -50,7 +51,23 @@
             </form>
 
         </div>
-        <div class="col-lg-5 col-md-4 col-sm-3"></div>
+        <div class="col-lg-5 col-md-4 col-sm-3">
+            <br />
+            <br />
+            <form class="for" asp-action="ExternalLogin" method="Post" >
+               
+                <input id="Input_Token" asp-for="Token" type="hidden" />
+                <div>
+                    <button class="btn btn-primary" type="submit">Zaloguj się poprzez Google</button>                   
+                </div>
+               
+
+
+            </form>
+
+
+
+        </div>
     </div>
 </div>
 

@@ -20,6 +20,10 @@ using Quartz.Impl;
 using DateApp.Jobs;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace DateApp
 {
@@ -62,15 +66,15 @@ namespace DateApp
         {
             //CORS policy
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: "_myAllowSpecificOrigins",
-                    builder =>
-                    {
-                        builder.WithOrigins("http://example.com",
-                                            "http://www.contoso.com");
-                    });
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(name: "_myAllowSpecificOrigins",
+            //        builder =>
+            //        {
+            //            builder.WithOrigins("http://example.com",
+            //                                "http://www.contoso.com");
+            //        });
+            //});
 
 
 
@@ -89,7 +93,7 @@ namespace DateApp
 
 
             //
-            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+            //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             //
 
 
@@ -98,18 +102,12 @@ namespace DateApp
                 string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DateAppDevelopment;Trusted_Connection=True;MultipleActiveResultSets=true";
                 services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionString));
 
-                //services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
-
             }
             else
             {
                 services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:DateAppIdentity:ConnectionString"]));
             }
 
-
-
-
-            //services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
 
             //RemoveUser Token
 
@@ -169,6 +167,153 @@ namespace DateApp
 
             services.AddSingleton(provider => _quartzScheduler);
 
+            ///facebook login
+            ///
+
+
+            //services.AddSingleton<IProfileService, ProfileService>();
+            //        services.AddAuthentication(options =>
+            //        {
+            //            options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //            options.DefaultSignInScheme = TemporaryAuthenticationDefaults.AuthenticationScheme;
+            //            options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //        })
+            //.AddFacebook(options =>
+            //{
+            //    options.AppId = "464507421510109";
+            //    options.AppSecret = "4749606313209ea08c3c0be5cf372212";
+            //})   
+            //.AddCookie(options => options.LoginPath = "/account/login")
+            //.AddCookie(TemporaryAuthenticationDefaults.AuthenticationScheme);
+
+
+            //    services
+            //.AddAuthentication(o =>
+            //{
+
+            //    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //})
+            //.AddCookie()
+            //.AddGoogle(options =>
+            //{
+
+            //    options.ClientId = "971555969656-v7va6436ne30770g71soovep0eto6l2q.apps.googleusercontent.com";
+            //    options.ClientSecret = "_hWsJTDIUavThkAdJTfYaVOr";
+            //    options.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v1/certs";
+            //});
+
+
+
+            services.AddAuthentication(
+                options =>
+                {
+                    //options.DefaultAuthenticateScheme = IdentityConstants.ExternalScheme;
+                    //options.DefaultChallengeScheme = IdentityConstants.ExternalScheme;
+                }
+                )
+            .AddGoogle(o =>
+            {
+                o.ClientId= Configuration["Authentication:Google:ClientId"];
+                o.ClientSecret= Configuration["Authentication:Google:ClientSecret"];
+                //o.ClientId = "971555969656-v7va6436ne30770g71soovep0eto6l2q.apps.googleusercontent.com";
+                //o.ClientSecret = "_hWsJTDIUavThkAdJTfYaVOr";
+                o.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
+                o.ClaimActions.Clear();
+                o.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+                o.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+                o.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
+                o.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
+                o.ClaimActions.MapJsonKey("urn:google:profile", "link");
+                o.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+            });
+
+
+
+
+
+
+            //options.ClientId = "971555969656-v7va6436ne30770g71soovep0eto6l2q.apps.googleusercontent.com";
+            //options.ClientSecret = "_hWsJTDIUavThkAdJTfYaVOr";
+
+
+            //options.SignInScheme = IdentityConstants.ExternalScheme;
+            //options.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v1/certs";
+
+
+
+       
+
+            //            { "web":{ project_id":"dateapptest-316109","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"U1rKzh4KpJQzq9LF0_l7rMTj","redirect_uris":["https://localhost:44385/signin-google","https://localhost:44385/Account/GoogleResponse"]
+            //    }
+            //}
+
+
+
+
+            //     services.AddAuthentication()
+            //.AddFacebook(
+            //         options =>
+            //         {
+            //             options.AppId = "464507421510109";
+            //             options.AppSecret = "4749606313209ea08c3c0be5cf372212";
+            //         }
+
+
+            //              ).AddCookie(
+            //              );
+
+
+
+
+
+
+
+
+            //     services.AddAuthentication(options =>
+            //     {
+            //         options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+            //         options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+            //         options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            //     })
+            //.AddFacebook(
+            //         options =>
+            //         {
+            //             options.AppId = "464507421510109";
+            //             options.AppSecret = "4749606313209ea08c3c0be5cf372212";
+            //         }
+
+
+            //         ).AddCookie(
+            //         );
+            ///
+
+            //        services.AddAuthentication(OAuthValidationDefaults.AuthenticationScheme)
+            //.AddOAuthValidation();
+            //services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
+            //            services.AddAuthentication(options =>
+            //            {
+            //                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+            //                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+            //                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            //            }).AddFacebook(options =>
+            //            {
+            //                options.AppId = "464507421510109";
+            //                options.AppSecret = "4749606313209ea08c3c0be5cf372212";
+
+            //            });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -195,14 +340,7 @@ namespace DateApp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppIdentityDbContext context)
         {
 
-            /// same site flag
-            //app.UseCookiePolicy();
-            //app.UseAuthentication();
-            //app.UseSession();
-            ///
 
-
-            //stop quartz 3
 
 
 
@@ -223,8 +361,23 @@ namespace DateApp
 
 
             app.UseStaticFiles();
+            ///
+
+
+            ///
+
+
+
             app.UseAuthentication();
-            app.UseSignalR(config =>{config.MapHub<UpdatePairHub>("/updatePair"); }); 
+
+            //
+
+
+
+
+            //
+
+            app.UseSignalR(config => { config.MapHub<UpdatePairHub>("/updatePair"); });
             ////
             app.UseSignalR(config => { config.MapHub<MessageHub>("/messages"); });
             ////
@@ -338,7 +491,7 @@ namespace DateApp
 
 
             ///CORS
-            app.UseCors(MyAllowSpecificOrigins);
+            //app.UseCors(MyAllowSpecificOrigins);
             ///
 
 

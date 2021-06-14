@@ -14,7 +14,7 @@ namespace DateApp.Controllers
     {
 
 
-        private IRepository repository;       
+        private IRepository repository;
         private Func<Task<AppUser>> GetUser;
         private UserManager<AppUser> userManager;
 
@@ -33,7 +33,7 @@ namespace DateApp.Controllers
             }
 
         }
-                                 
+
 
 
 
@@ -46,17 +46,25 @@ namespace DateApp.Controllers
 
         public IActionResult GetNotifty()
         {
-            string Id = GetUser().Result.Id;
-            NotificationViewModel model = repository.GetNotifications(Id);
-            int count = repository.PotentialMatches(Id);
-            model.PotentialMatches = count;
-            return View("CheckNotifty", model);
+            try
+            {
+                string Id = GetUser().Result.Id;
+                NotificationViewModel model = repository.GetNotifications(Id);
+                int count = repository.PotentialMatches(Id);
+                model.PotentialMatches = count;
+                return View("CheckNotifty", model);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View("~/Account/Login");
         }
 
         public IActionResult CheckNotifty(string Id)
         {
 
-           
+
             NotificationViewModel model = repository.GetNotifications(Id);
             int count = repository.PotentialMatches(Id);
             model.PotentialMatches = count;
