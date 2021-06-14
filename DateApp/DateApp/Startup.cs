@@ -225,7 +225,15 @@ namespace DateApp
                 o.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
                 o.ClaimActions.MapJsonKey("urn:google:profile", "link");
                 o.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
-            });
+            }).AddFacebook(options=>
+            {
+                options.AppId = "464507421510109";
+                options.AppSecret = "4749606313209ea08c3c0be5cf372212";
+            }
+
+
+
+                );
 
 
 

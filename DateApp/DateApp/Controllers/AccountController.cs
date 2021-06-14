@@ -54,8 +54,103 @@ namespace DateApp.Controllers
             return new ChallengeResult("Google", properties);
         }
 
+        [Route("facebook-login")]
+        public IActionResult FacebookLogin()
+        {
+            string redirectUrl = Url.Action("FacebookResponse", "Account");
+            //var auth = HttpContext.AuthenticateAsync(/*IdentityConstants.ExternalScheme*/GoogleDefaults.AuthenticationScheme);
+            var properties = signInManager.ConfigureExternalAuthenticationProperties("Facebook", redirectUrl);
+            return new ChallengeResult("Facebook", properties);
+        }
+
+        [Route("facebook-response")]
+        [AllowAnonymous]
+        public async Task<IActionResult> FacebookResponse()
+        {
 
 
+            try
+            {
+                var result1 = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+
+                if (result1.Succeeded)
+                {
+                    var claims = result1.Principal.Identities
+                        .FirstOrDefault().Claims.Select(claim => new
+                        {
+                            claim.Issuer,
+                            claim.OriginalIssuer,
+                            claim.Type,
+                            claim.Value
+                        });
+
+                }
+
+
+                ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    return View("ErrorLogin", "Błąd podczas logowania za pomocą facebooka");
+                }
+
+
+                var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+                string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Panel", "Home", null);
+                }
+                else
+                {
+                    //AppUser user = new AppUser
+                    //{
+                    //    Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                    //    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
+                    //};
+                    AppUser user = repository.GetUserWithEmail(info.Principal.FindFirst(ClaimTypes.Email).Value);
+                    if (user != null)
+                    {
+                        //IdentityResult identResult = await userManager.CreateAsync(user);
+                        //if (identResult.Succeeded)
+                        //{
+                        /* identResult =*/
+                        await userManager.AddLoginAsync(user, info);
+                        //if (identResult.Succeeded)
+                        //{
+                        await signInManager.SignInAsync(user, false);
+                        IdentityResult r1 = userManager.RemoveFromRoleAsync(user, "NewUser").Result;
+                        IdentityResult r2 = userManager.AddToRoleAsync(user, "UserRole").Result;
+                        return RedirectToAction("Panel", "Home", null);
+                        //}
+                        //}
+                    }
+
+
+
+                }
+                //CreateModel model = new CreateModel();
+                //CreateModel create = new CreateModel();
+                //create.Dateofbirth = new DateTime(1990, 12, 1);
+                //create.Sex = "";
+                //ModelState.AddModelError("Custom", "Nie posiadasz konta  zarejestruj się na DateApp ");
+                //model.Email =info.Principal.FindFirst(ClaimTypes.Email).Value ?? "";
+                //model.Name= info.Principal.FindFirst(ClaimTypes.Name).Value ?? ""; ;
+                //model.Surname= info.Principal.FindFirst(ClaimTypes.Surname).Value ?? ""; ;
+
+                //return View("~/Views/Admin/Create.cshtml",model);
+
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return View("ErrorLogin", "Problem z logowaniem za pomocą Facebooka spróbuj za pomocą loginu i hasła");
+        }
 
 
 
@@ -145,15 +240,7 @@ namespace DateApp.Controllers
 
             return View("ErrorLogin", "Problem z logowaniem za pomocą Google spróbuj za pomocą loginu i hasła");
         }
-
-
-
-
-
-
-
-
-
+                                    
         [Authorize]
         public async Task<IActionResult> Logout()
         {

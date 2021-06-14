@@ -51,16 +51,16 @@
             </form>
 
         </div>
-        <div class="col-lg-5 col-md-4 col-sm-3">
+        <div class="col-lg-2 col-md-2 col-sm-2">
             <br />
             <br />
-            <form class="for" asp-action="ExternalLogin" method="Post" >
-               
+            <form class="for" asp-action="ExternalLogin" method="Post">
+
                 <input id="Input_Token" asp-for="Token" type="hidden" />
                 <div>
-                    <button class="btn btn-primary" type="submit">Zaloguj się poprzez Google</button>                   
+                    <button class="btn btn-info" type="submit">Zaloguj się poprzez Google</button>
                 </div>
-               
+
 
 
             </form>
@@ -68,6 +68,30 @@
 
 
         </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <br />
+            <br />
+            <form class="for" asp-action="FacebookLogin" method="Post">
+
+                <input id="Input_Token" asp-for="Token" type="hidden" />
+                <div>
+                    <button class="btn btn-primary" type="submit">Zaloguj się poprzez Facebooka</button>
+                </div>
+
+
+
+            </form>
+
+
+
+        </div>
+        
+
+
+
+
+
+
     </div>
 </div>
 
